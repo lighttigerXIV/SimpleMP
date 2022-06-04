@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Simple MP</string>
+
+
+    <string name="menuHome">Home</string>
+    <string name="menuArtists">Artists</string>
+    <string name="menuAlbums">Albums</string>
+    <string name="menuPlaylists">Playlists</string>
+
+
+    <string name="notificationChannelName">Playback</string>
+    <string name="notificationChannelDescription">Simple MP Playback</string>
+
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="previousSong">Previous Song</string>
+    <string name="pauseSong">Pause Song</string>
+
+
+</resources>
