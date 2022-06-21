@@ -2,21 +2,18 @@ package com.lighttigerxiv.simple.mp
 
 import android.annotation.SuppressLint
 import android.content.*
-import android.media.MediaPlayer
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
-import android.support.v4.media.session.MediaSessionCompat
 import android.util.Size
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlin.concurrent.thread
 
 
 class FragmentHome : Fragment() {
@@ -25,16 +22,23 @@ class FragmentHome : Fragment() {
     private lateinit var fragmentContext: Context
     private lateinit var fragmentView: View
     private lateinit var rvSongs: RecyclerView
-    private lateinit var songsList: ArrayList<Song>
+    private lateinit var originalSongsList: ArrayList<Song>
 
 
+
+    //Others
     private lateinit var smpService: SimpleMPService
+    private var serviceBounded = false
+    private lateinit var adapterSongsRV: AdapterSongsRV
 
-    var serviceStarted = false
-    var serviceBounded = false
 
-    /////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////
 
+
+    fun setSelectedMusic( position: Int){
+
+        adapterSongsRV.setPlayingMusic(position)
+    }
 
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View? {
@@ -51,22 +55,22 @@ class FragmentHome : Fragment() {
             fragmentView = view
 
 
-            initializeVariables()
+            assignVariables()
 
             val serviceIntent = Intent( fragmentContext, SimpleMPService::class.java )
             fragmentContext.bindService( serviceIntent, connection, Context.BIND_AUTO_CREATE )
 
 
-            songsList = getSongsList()
+            originalSongsList = getSongsList()
 
 
             if(savedInstanceState != null){
 
-                serviceStarted = savedInstanceState.getBoolean( "serviceStarted" )
+                serviceBounded = savedInstanceState.getBoolean( "serviceBounded" )
             }
 
 
-            val adapterSongsRV = AdapterSongsRV(songsList)
+            adapterSongsRV = AdapterSongsRV(originalSongsList)
 
             rvSongs.adapter = adapterSongsRV
 
@@ -74,34 +78,43 @@ class FragmentHome : Fragment() {
             adapterSongsRV.setOnItemClickListener( object : AdapterSongsRV.OnItemClickListener{
                 override fun onItemClick(position: Int) {
 
-
                     if( serviceBounded ){
 
                         SimpleMPService.startService(fragmentContext)
-                        smpService.playSong( fragmentContext, songsList, position )
+
+                        val updatedSongsList = ArrayList(originalSongsList)
+
+                        for( song in originalSongsList )
+                            updatedSongsList.add(song)
+
+
+                        if( smpService.isPlaylistShuffled() )
+                            smpService.toggleShuffle()
+
+
+                        adapterSongsRV.setPlayingMusic(position)
+                        smpService.setPlaylist( updatedSongsList )
+                        smpService.setInitialSongPosition( position )
+                        smpService.playSong( fragmentContext )
+
+
                     }
-
-
-
                 }
             })
         }
-        catch ( exc: Exception ){ println("Exception-> $exc") }
+        catch ( exc: Exception ){}
     }
 
 
-
-
-    private fun initializeVariables(){
+    private fun assignVariables(){
 
         fragmentContext = fragmentView.context
-
         rvSongs = fragmentView.findViewById(R.id.rvSongs_FragmentHome)
+
+
         rvSongs.layoutManager = LinearLayoutManager(fragmentContext)
-        rvSongs.addItemDecoration( RVSpacer(10) )
+        rvSongs.addItemDecoration( RecyclerViewDivider( fragmentContext ) )
     }
-
-
 
 
     @SuppressLint("Range")
@@ -124,9 +137,18 @@ class FragmentHome : Fragment() {
 
                     val title = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.TITLE ) )
 
-                    val albumArt = fragmentContext.contentResolver.loadThumbnail( songUri, Size(500,500), null )
+                    val albumArt: Bitmap = try{
+
+                        fragmentContext.contentResolver.loadThumbnail( songUri, Size(500,500), null )
+
+                    } catch (ignore: Exception){
+
+                        BitmapFactory.decodeResource( resources, R.drawable.icon_music_record )
+                    }
+
 
                     val duration = cursor.getInt( cursor.getColumnIndex(MediaStore.Audio.Media.DURATION) )
+
 
                     val artist = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST) )
 
@@ -140,8 +162,8 @@ class FragmentHome : Fragment() {
                     song.duration = duration
                     song.artist = artist
 
-
-                    songsList.add( song )
+                    if( duration > 60000 )
+                        songsList.add( song )
                 }
                 while (cursor.moveToNext())
             }
@@ -159,24 +181,13 @@ class FragmentHome : Fragment() {
             val binder = service as SimpleMPService.LocalBinder
             smpService = binder.getService()
             serviceBounded = true
+
+
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
 
             serviceBounded = false
         }
-    }
-
-
-    override fun onStop() {
-        super.onStop()
-
-        fragmentContext.unbindService( connection )
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        outState.putBoolean( "serviceStarted", serviceStarted )
     }
 }

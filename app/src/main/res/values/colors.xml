@@ -9,10 +9,14 @@
     <color name="white">#FFFFFFFF</color>
 
 
-
-    <color name="mainPurple">#6900FF</color>
-    <color name="darkMainPurple">#2A0069</color>
-    <color name="background">#fafafa</color>
-    <color name="accent">#FFFFFFFF</color>
+    <color name="mainPurple">#AF78FF</color>
+    <color name="darkMainPurple">#55308C</color>
+    <color name="background">#F8F8F8</color>
+    <color name="accent">#FFFFFF</color>
     <color name="accentBorder">#E7E7E7</color>
+    <color name="text">@color/black</color>
+    <color name="subText">#5F5F5F</color>
+    <color name="divider">#DBDBDB</color>
+
+    <color name="icon">@color/black</color>
 </resources>

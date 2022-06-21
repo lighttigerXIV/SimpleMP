@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="background">#121212</color>
-    <color name="accent">#212121</color>
+    <color name="background">#141414</color>
+    <color name="accent">#181818</color>
     <color name="accentBorder">@color/background</color>
+    <color name="icon">@color/white</color>
+    <color name="text">@color/white</color>
+    <color name="subText">#C3C3C3</color>
+    <color name="divider">#242424</color>
 </resources>

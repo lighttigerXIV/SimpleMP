@@ -6,26 +6,16 @@ import android.os.IBinder
 import androidx.core.content.ContextCompat.startActivity
 import com.lighttigerxiv.simple.mp.SimpleMPService.Companion.startService
 
-class NotificationActionReceiver: BroadcastReceiver() {
-
-
-
+class ReceiverPreviousSong: BroadcastReceiver() {
 
 
     override fun onReceive(context: Context, intent: Intent?) {
 
-        val action = intent?.getStringExtra("action")
 
         val notificationActionsServiceIntent = Intent( context, NotificationActionService::class.java )
 
-        if( action == "playPause" ){
-
-            notificationActionsServiceIntent.putExtra( "action", action )
-        }
+        notificationActionsServiceIntent.putExtra( "action", "previous" )
 
         context.startService( notificationActionsServiceIntent )
     }
-
-
-
 }

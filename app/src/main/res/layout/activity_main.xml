@@ -14,21 +14,29 @@
         android:gravity="bottom"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView_ActivityMain"
         app:layout_constraintTop_toTopOf="parent"
-        app:umanoPanelHeight="55dp"
-        app:umanoShadowHeight="4dp">
+        app:umanoPanelHeight="60dp"
+        app:umanoShadowHeight="0dp">
 
         <FrameLayout
             android:id="@+id/frameLayout_ActivityMain"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/background">
 
         </FrameLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clSlideContent_ActivityMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/accent">
+            android:background="@drawable/card_background">
 
+            <include
+                layout="@layout/sliding_panel"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
@@ -36,8 +44,10 @@
         android:id="@+id/bottomNavigationView_ActivityMain"
         style="@style/Custom_BottomNav"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@drawable/navigation_bar_background"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        app:itemIconTint="@color/icon"
+        app:itemTextColor="@color/text"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

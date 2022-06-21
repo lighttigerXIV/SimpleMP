@@ -4,7 +4,6 @@
     android:id="@+id/clMain_RVSongs"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_accent_round"
     android:padding="10dp">
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -31,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="2dp"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@color/subText"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/albumArt_RVSongs"

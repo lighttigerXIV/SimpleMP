@@ -12,6 +12,15 @@
     <string name="notificationChannelDescription">Simple MP Playback</string>
 
 
+    <string name="NoSongSelected">No song selected</string>
+
+
+    <string name="emptyDescription">‎</string>
+    <string name="threeDots">...</string>
+
+
+
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="previousSong">Previous Song</string>
     <string name="pauseSong">Pause Song</string>

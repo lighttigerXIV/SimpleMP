@@ -33,7 +33,30 @@
         <service android:name=".SimpleMPService" />
         <service android:name=".NotificationActionService"/>
 
-        <receiver android:name=".NotificationActionReceiver" />
+        <receiver android:name="ReceiverOpenApp"/>
+
+        <receiver android:name=".ReceiverPreviousSong"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON    " />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".ReceiverPlayPause"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".ReceiverSkipSong"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>

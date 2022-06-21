@@ -1,7 +1,5 @@
 package com.lighttigerxiv.simple.mp
 
-import android.graphics.Color
-import android.media.MediaPlayer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +12,24 @@ import com.google.android.material.imageview.ShapeableImageView
 class AdapterSongsRV( private val songsList : ArrayList<Song> ): RecyclerView.Adapter<AdapterSongsRV.ViewHolder>() {
 
     private lateinit var clickListener:  OnItemClickListener
+    private var playingMusic = -1
+    private var uncolorLastMusicPosition = -1
 
     interface OnItemClickListener{ fun onItemClick( position: Int ) }
 
     fun setOnItemClickListener( listener: OnItemClickListener){ clickListener = listener }
+
+    fun setPlayingMusic( position: Int){
+
+        if( playingMusic != -1 ){
+
+            uncolorLastMusicPosition = playingMusic
+            this.notifyItemChanged( playingMusic )
+        }
+
+        playingMusic = position
+        this.notifyItemChanged( playingMusic )
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -34,6 +46,20 @@ class AdapterSongsRV( private val songsList : ArrayList<Song> ): RecyclerView.Ad
         holder.albumArt.setImageBitmap(songAlbumArt)
         holder.title.text = songTitle
         holder.artist.text = songArtist
+
+
+        if( playingMusic == position ){
+
+            holder.title.setTextColor( ContextCompat.getColor( holder.itemView.context, R.color.mainPurple) )
+        }
+        else if( uncolorLastMusicPosition == position ){
+
+            holder.title.setTextColor( ContextCompat.getColor( holder.itemView.context, R.color.text) )
+        }
+        else{
+
+            holder.title.setTextColor( ContextCompat.getColor( holder.itemView.context, R.color.text) )
+        }
 
 
 

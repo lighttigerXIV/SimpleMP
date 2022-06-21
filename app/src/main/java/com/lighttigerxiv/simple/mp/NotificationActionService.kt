@@ -35,9 +35,14 @@ class NotificationActionService: Service() {
             val binder = service as SimpleMPService.LocalBinder
             smpService = binder.getService()
 
+            if( action == "previous" )
+                smpService.previousSong( applicationContext )
+
             if( action == "playPause" )
                 smpService.pauseResumeMusic( applicationContext )
 
+            if( action == "skip" )
+                smpService.skipSong( applicationContext )
 
             unbindService( this )
         }

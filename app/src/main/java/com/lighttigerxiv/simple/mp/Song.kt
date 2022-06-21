@@ -12,4 +12,5 @@ class Song(){
     var albumArt: Bitmap? = null
     var duration: Int = 0
     var artist: String = ""
+    var selected: Boolean = false
 }
