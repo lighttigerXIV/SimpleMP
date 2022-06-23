@@ -34,12 +34,11 @@ class FragmentHome : Fragment() {
 
     ////////////////////////////////////////////////////////////////////////////////////////////
 
+    fun updateCurrentSong(){
 
-    fun setSelectedMusic( position: Int){
-
-        adapterSongsRV.setPlayingMusic(position)
+        adapterSongsRV.setCurrentSongPath( smpService.getCurrentSongPath() )
+        adapterSongsRV.notifyItemRangeChanged( 0, adapterSongsRV.getPlayListSize() - 1 )
     }
-
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View? {
 
@@ -92,12 +91,9 @@ class FragmentHome : Fragment() {
                             smpService.toggleShuffle()
 
 
-                        adapterSongsRV.setPlayingMusic(position)
                         smpService.setPlaylist( updatedSongsList )
                         smpService.setInitialSongPosition( position )
                         smpService.playSong( fragmentContext )
-
-
                     }
                 }
             })
@@ -114,6 +110,7 @@ class FragmentHome : Fragment() {
 
         rvSongs.layoutManager = LinearLayoutManager(fragmentContext)
         rvSongs.addItemDecoration( RecyclerViewDivider( fragmentContext ) )
+        rvSongs.itemAnimator?.changeDuration = 0
     }
 
 

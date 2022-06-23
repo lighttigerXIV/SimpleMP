@@ -96,7 +96,6 @@ class ActivityMain : AppCompatActivity(){
 
 
 
-
             createNotificationChannel()
 
 
@@ -215,7 +214,7 @@ class ActivityMain : AppCompatActivity(){
             override fun onMusicSelected(playList: ArrayList<Song>, position: Int) {
 
                 if( selectedFragment == 0 )
-                    fragmentHome.setSelectedMusic(position)
+                    fragmentHome.updateCurrentSong()
 
 
                 musicWasSelected = true
@@ -547,7 +546,8 @@ class ActivityMain : AppCompatActivity(){
             handleShuffleMusic()
             handleLoopMusic()
 
-            if( restorePlayer)
+
+            if( restorePlayer or smpService.isMusicPlayingOrPaused())
                 restorePlayer()
 
         }
@@ -578,6 +578,11 @@ class ActivityMain : AppCompatActivity(){
         if( smpService.isPlaylistShuffled() ){
 
             ivShuffleSlidePlayer.setColorFilter( ContextCompat.getColor( applicationContext, R.color.mainPurple ) )
+        }
+
+        if( smpService.isLooping() ){
+
+            ivLoopSongSlidePlayer.setColorFilter( ContextCompat.getColor( applicationContext, R.color.mainPurple ) )
         }
 
         if( slidingPanel.panelState == PanelState.EXPANDED ){

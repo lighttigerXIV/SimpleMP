@@ -196,7 +196,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/ivPreviousSong_SlidePlayer"
                 app:layout_constraintEnd_toStartOf="@+id/ivPreviousSong_SlidePlayer"
                 app:layout_constraintTop_toTopOf="@+id/ivPreviousSong_SlidePlayer"
-                app:srcCompat="@drawable/icon_shuffle"
+                app:srcCompat="@drawable/icon_shuffle_regular"
                 app:tint="@color/icon" />
 
             <ImageView

@@ -28,7 +28,7 @@ class SimpleMPService: Service() {
     private var playList = ArrayList<Song>()
     private var shuffledPlaylist = ArrayList<Song>()
     private var currentSongPosition: Int = 0
-    private var currentSongPath: String? = null
+    private var currentSongPath: String = ""
     private var loop = false
     private lateinit var audioManager: AudioManager
 
@@ -41,6 +41,7 @@ class SimpleMPService: Service() {
 
 
     //Player States
+    private var serviceStarted = false
     private var musicShuffled = false
 
 
@@ -72,18 +73,18 @@ class SimpleMPService: Service() {
         return mBinder
     }
 
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
         return START_STICKY
     }
+
 
     override fun onCreate() {
         super.onCreate()
 
         notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
-
-
 
 
     fun setPlaylist( pPlaylist: ArrayList<Song> ){
@@ -99,6 +100,9 @@ class SimpleMPService: Service() {
 
 
     fun isPlaylistShuffled(): Boolean{ return musicShuffled }
+
+
+    fun isMusicPlayingOrPaused(): Boolean{ return serviceStarted }
 
 
     fun toggleShuffle(){
@@ -159,6 +163,10 @@ class SimpleMPService: Service() {
         return mediaPlayer.isPlaying
     }
 
+
+    fun getCurrentSongPath(): String{ return currentSongPath }
+
+
    ///////////////////////////////////////////    Focus    /////////////////////////////////////////////
 
 
@@ -204,6 +212,8 @@ class SimpleMPService: Service() {
 
 
     fun playSong(context: Context){
+
+        serviceStarted = true
 
         val songPath: String
         val songTitle: String
@@ -274,7 +284,7 @@ class SimpleMPService: Service() {
                 .setContentText(songArtist)
                 .setLargeIcon( songAlbumArt )
                 .addAction( R.drawable.icon_previous_notification, "Previous Music", pendingPreviousSongIntent )
-                .addAction( R.drawable.icon_pause, "Play Pause Music", pendingPlayPauseIntent )
+                .addAction( R.drawable.icon_pause_notification, "Play Pause Music", pendingPlayPauseIntent )
                 .addAction( R.drawable.icon_next_notification, "Next Music", pendingSkipSongIntent )
                 .setStyle( androidx.media.app.NotificationCompat.MediaStyle()
                     .setMediaSession(mediaSession.sessionToken)
@@ -424,7 +434,7 @@ class SimpleMPService: Service() {
     private fun pauseMusic( context: Context ){
 
 
-        val playPauseIcon = R.drawable.icon_play
+        val playPauseIcon = R.drawable.icon_play_notification
         mediaPlayer.pause()
 
 
@@ -458,7 +468,7 @@ class SimpleMPService: Service() {
 
         if( mediaPlayer.isPlaying ) {
 
-            playPauseIcon = R.drawable.icon_play
+            playPauseIcon = R.drawable.icon_play_notification
             mediaPlayer.pause()
 
             if( musicPausedListener != null)
@@ -467,7 +477,7 @@ class SimpleMPService: Service() {
         }
         else {
 
-            playPauseIcon = R.drawable.icon_pause
+            playPauseIcon = R.drawable.icon_pause_notification
 
 
             if( musicResumedListener != null )

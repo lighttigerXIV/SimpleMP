@@ -1,11 +1,11 @@
 <resources>
     <style name="Theme.SimpleMP" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorPrimary">@color/mainPurple</item>
+        <item name="colorPrimaryVariant">@color/mainPurple</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/mainPurple</item>
+        <item name="colorSecondaryVariant">@color/mainPurple</item>
+        <item name="colorOnSecondary">@color/white</item>
 
         <item name="android:textColor">@color/text</item>
 

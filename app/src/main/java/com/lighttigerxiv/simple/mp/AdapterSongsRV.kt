@@ -12,24 +12,16 @@ import com.google.android.material.imageview.ShapeableImageView
 class AdapterSongsRV( private val songsList : ArrayList<Song> ): RecyclerView.Adapter<AdapterSongsRV.ViewHolder>() {
 
     private lateinit var clickListener:  OnItemClickListener
-    private var playingMusic = -1
-    private var uncolorLastMusicPosition = -1
+    private var currentSongPath = ""
 
     interface OnItemClickListener{ fun onItemClick( position: Int ) }
 
     fun setOnItemClickListener( listener: OnItemClickListener){ clickListener = listener }
 
-    fun setPlayingMusic( position: Int){
+    fun setCurrentSongPath( path: String){ currentSongPath = path }
 
-        if( playingMusic != -1 ){
+    fun getPlayListSize(): Int{ return songsList.size }
 
-            uncolorLastMusicPosition = playingMusic
-            this.notifyItemChanged( playingMusic )
-        }
-
-        playingMusic = position
-        this.notifyItemChanged( playingMusic )
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -41,6 +33,7 @@ class AdapterSongsRV( private val songsList : ArrayList<Song> ): RecyclerView.Ad
         val songAlbumArt = songsList[position].albumArt
         val songTitle = songsList[position].title
         val songArtist = songsList[position].artist
+        val songPath = songsList[position].path
 
 
         holder.albumArt.setImageBitmap(songAlbumArt)
@@ -48,14 +41,12 @@ class AdapterSongsRV( private val songsList : ArrayList<Song> ): RecyclerView.Ad
         holder.artist.text = songArtist
 
 
-        if( playingMusic == position ){
+
+        if( currentSongPath == songPath ){
 
             holder.title.setTextColor( ContextCompat.getColor( holder.itemView.context, R.color.mainPurple) )
         }
-        else if( uncolorLastMusicPosition == position ){
 
-            holder.title.setTextColor( ContextCompat.getColor( holder.itemView.context, R.color.text) )
-        }
         else{
 
             holder.title.setTextColor( ContextCompat.getColor( holder.itemView.context, R.color.text) )
