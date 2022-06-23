@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 
-class AdapterSongsRV( private val songsList : ArrayList<Song> ): RecyclerView.Adapter<AdapterSongsRV.ViewHolder>() {
+class AdapterSongsRV( private var songsList : ArrayList<Song> ): RecyclerView.Adapter<AdapterSongsRV.ViewHolder>() {
 
     private lateinit var clickListener:  OnItemClickListener
     private var currentSongPath = ""
@@ -21,6 +21,8 @@ class AdapterSongsRV( private val songsList : ArrayList<Song> ): RecyclerView.Ad
     fun setCurrentSongPath( path: String){ currentSongPath = path }
 
     fun getPlayListSize(): Int{ return songsList.size }
+
+    fun setPlaylist( songsList: ArrayList<Song> ){ this.songsList = songsList }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

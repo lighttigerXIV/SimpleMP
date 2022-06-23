@@ -26,5 +26,11 @@
     <string name="previousSong">Previous Song</string>
     <string name="pauseSong">Pause Song</string>
 
+    <string name="Settings">Settings</string>
+    <string name="SortAZ">Sort A..Z</string>
+    <string name="SortZA">Sort Z..A</string>
+    <string name="SortByArtist">Sort By Artist</string>
+    <string name="SortByDate">Sort By Date</string>
+    <string name="SortDefault">Default Sort</string>
 
 </resources>

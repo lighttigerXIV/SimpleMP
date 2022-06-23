@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menuDefault"
+        android:title="@string/SortDefault" />
+    <item
+        android:id="@+id/menuSortByDate"
+        android:title="@string/SortByDate" />
+    <item
+        android:id="@+id/menuSortAZ"
+        android:title="@string/SortAZ" />
+    <item
+        android:id="@+id/menuSortZA"
+        android:title="@string/SortZA" />
+    <item
+        android:id="@+id/menuSortByArtist"
+        android:title="@string/SortByArtist" />
+    <item
+        android:id="@+id/menuSettings"
+        android:title="@string/Settings" />
+</menu>

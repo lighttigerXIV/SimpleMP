@@ -57,6 +57,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/etSearch_FragmentHome"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/etSearch_FragmentHome"
-        app:srcCompat="@drawable/icon_more_regular" />
+        app:srcCompat="@drawable/icon_more_regular"
+        app:tint="@color/icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

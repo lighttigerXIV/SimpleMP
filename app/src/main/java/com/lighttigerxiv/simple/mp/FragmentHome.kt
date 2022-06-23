@@ -2,8 +2,10 @@ package com.lighttigerxiv.simple.mp
 
 import android.annotation.SuppressLint
 import android.content.*
+import android.content.Context.MODE_PRIVATE
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
@@ -11,6 +13,8 @@ import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +25,7 @@ class FragmentHome : Fragment() {
     //UI
     private lateinit var fragmentContext: Context
     private lateinit var fragmentView: View
+    private lateinit var ivMenu: ImageView
     private lateinit var rvSongs: RecyclerView
     private lateinit var originalSongsList: ArrayList<Song>
 
@@ -36,8 +41,11 @@ class FragmentHome : Fragment() {
 
     fun updateCurrentSong(){
 
-        adapterSongsRV.setCurrentSongPath( smpService.getCurrentSongPath() )
-        adapterSongsRV.notifyItemRangeChanged( 0, adapterSongsRV.getPlayListSize() - 1 )
+        if( serviceBounded ){
+
+            adapterSongsRV.setCurrentSongPath( smpService.getCurrentSongPath() )
+            adapterSongsRV.notifyItemRangeChanged( 0, adapterSongsRV.getPlayListSize() - 1 )
+        }
     }
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View? {
@@ -97,14 +105,57 @@ class FragmentHome : Fragment() {
                     }
                 }
             })
+
+
+
+            val popupView = fragmentView.findViewById<View>( R.id.ivMenu_FragmentHome )
+            val popupMenu = PopupMenu( fragmentContext, popupView )
+            popupMenu.menuInflater.inflate( R.menu.menu_more_fragment_home, popupMenu.menu )
+
+            ivMenu.setOnClickListener {
+
+                popupMenu.setOnMenuItemClickListener {
+                    when (it.itemId) {
+
+                        R.id.menuDefault-> setSortMode( "Default" )
+
+                        R.id.menuSortByDate-> setSortMode( "Date" )
+
+                        R.id.menuSortAZ-> setSortMode( "AZ" )
+
+                        R.id.menuSortZA-> setSortMode( "ZA" )
+
+                        R.id.menuSortByArtist-> setSortMode( "Artist" )
+                    }
+                    true
+                }
+
+                popupMenu.show()
+            }
         }
         catch ( exc: Exception ){}
+    }
+
+
+    private fun setSortMode( sortMode: String ){
+
+        fragmentContext.getSharedPreferences( "Settings", MODE_PRIVATE )
+            .edit()
+            .putString( "sort", sortMode )
+            .apply()
+
+
+        originalSongsList = getSongsList()
+
+        adapterSongsRV.setPlaylist( originalSongsList )
+        adapterSongsRV.notifyItemRangeChanged( 0, adapterSongsRV.getPlayListSize() )
     }
 
 
     private fun assignVariables(){
 
         fragmentContext = fragmentView.context
+        ivMenu = fragmentView.findViewById(R.id.ivMenu_FragmentHome)
         rvSongs = fragmentView.findViewById(R.id.rvSongs_FragmentHome)
 
 
@@ -136,7 +187,16 @@ class FragmentHome : Fragment() {
 
                     val albumArt: Bitmap = try{
 
-                        fragmentContext.contentResolver.loadThumbnail( songUri, Size(500,500), null )
+                        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+
+                            fragmentContext.contentResolver.loadThumbnail( songUri, Size(500,500), null )
+                        }
+                        else{
+
+                            BitmapFactory.decodeResource( resources, R.drawable.icon_music_record )
+                        }
+
+
 
                     } catch (ignore: Exception){
 
@@ -145,19 +205,11 @@ class FragmentHome : Fragment() {
 
 
                     val duration = cursor.getInt( cursor.getColumnIndex(MediaStore.Audio.Media.DURATION) )
-
-
+                    val year = cursor.getInt( cursor.getColumnIndex(MediaStore.Audio.Media.YEAR) )
                     val artist = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST) )
 
-                    val song = Song()
 
-                    song.id = id
-                    song.path = songPath
-                    song.uri = songUri
-                    song.title = title
-                    song.albumArt = albumArt
-                    song.duration = duration
-                    song.artist = artist
+                    val song = Song( id, songPath, songUri, title, albumArt, duration, artist, year )
 
                     if( duration > 60000 )
                         songsList.add( song )
@@ -165,6 +217,15 @@ class FragmentHome : Fragment() {
                 while (cursor.moveToNext())
             }
             cursor.close()
+        }
+
+
+        when ( fragmentContext.getSharedPreferences( "Settings", MODE_PRIVATE ).getString( "sort", "default" ) ) {
+
+            "Date" -> songsList.sortByDescending { it.year }
+            "AZ" -> songsList.sortBy { it.title }
+            "ZA" -> songsList.sortByDescending { it.title }
+            "Artist"-> songsList.sortBy { it.artist }
         }
 
         return songsList
@@ -178,8 +239,7 @@ class FragmentHome : Fragment() {
             val binder = service as SimpleMPService.LocalBinder
             smpService = binder.getService()
             serviceBounded = true
-
-
+            updateCurrentSong()
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {

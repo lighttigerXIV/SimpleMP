@@ -572,6 +572,8 @@ class ActivityMain : AppCompatActivity(){
 
         slidingPanel.panelHeight = 165
 
+        if( homeWasOpened ) fragmentHome.updateCurrentSong()
+
 
         setSlidingPanelData( albumArt, title, artist, duration )
 
