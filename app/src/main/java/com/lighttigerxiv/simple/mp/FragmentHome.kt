@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
+import android.util.Base64
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +45,7 @@ class FragmentHome : Fragment() {
         if( serviceBounded ){
 
             adapterSongsRV.setCurrentSongPath( smpService.getCurrentSongPath() )
-            adapterSongsRV.notifyItemRangeChanged( 0, adapterSongsRV.getPlayListSize() - 1 )
+            adapterSongsRV.notifyItemRangeChanged( 0, adapterSongsRV.getPlayListSize() )
         }
     }
 
@@ -185,22 +186,24 @@ class FragmentHome : Fragment() {
 
                     val title = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.TITLE ) )
 
-                    val albumArt: Bitmap = try{
+                    lateinit var albumArt: Bitmap
+
+                    try{
 
                         if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
 
-                            fragmentContext.contentResolver.loadThumbnail( songUri, Size(500,500), null )
+                            albumArt = fragmentContext.contentResolver.loadThumbnail( songUri, Size(500,500), null )
                         }
                         else{
 
-                            BitmapFactory.decodeResource( resources, R.drawable.icon_music_record )
+                            val albumBytes = Base64.decode(cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM) ), Base64.DEFAULT)
+                            albumArt = BitmapFactory.decodeByteArray( albumBytes, 0, albumBytes.size )
                         }
-
 
 
                     } catch (ignore: Exception){
 
-                        BitmapFactory.decodeResource( resources, R.drawable.icon_music_record )
+                        albumArt = BitmapFactory.decodeResource( resources, R.drawable.icon_music_record )
                     }
 
 
