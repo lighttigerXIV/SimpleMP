@@ -5,11 +5,11 @@ import android.content.*
 import android.content.Context.MODE_PRIVATE
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
-import android.util.Base64
 import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
@@ -166,6 +166,7 @@ class FragmentHome : Fragment() {
     }
 
 
+    @Suppress("DEPRECATION")
     @SuppressLint("Range")
     private fun getSongsList(): ArrayList<Song>{
 
@@ -187,23 +188,23 @@ class FragmentHome : Fragment() {
                     val title = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.TITLE ) )
 
                     lateinit var albumArt: Bitmap
+                    val albumID = cursor.getLong( cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID) )
 
-                    try{
+                    albumArt = try{
 
                         if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
 
-                            albumArt = fragmentContext.contentResolver.loadThumbnail( songUri, Size(500,500), null )
-                        }
-                        else{
+                            fragmentContext.contentResolver.loadThumbnail( songUri, Size(500,500), null )
+                        } else{
 
-                            val albumBytes = Base64.decode(cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM) ), Base64.DEFAULT)
-                            albumArt = BitmapFactory.decodeByteArray( albumBytes, 0, albumBytes.size )
+                            val sArtWorkUri = Uri.parse( "content://media/external/audio/albumart" )
+                            val albumArtUri = ContentUris.withAppendedId(sArtWorkUri, albumID)
+                            MediaStore.Images.Media.getBitmap( fragmentContext.contentResolver, albumArtUri )
                         }
-
 
                     } catch (ignore: Exception){
 
-                        albumArt = BitmapFactory.decodeResource( resources, R.drawable.icon_music_record )
+                        BitmapFactory.decodeResource( resources, R.drawable.icon_music_record )
                     }
 
 
