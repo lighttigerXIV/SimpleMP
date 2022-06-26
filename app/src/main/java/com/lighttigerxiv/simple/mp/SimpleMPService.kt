@@ -63,6 +63,11 @@ class SimpleMPService: Service() {
             context.startForegroundService(startIntent)
 
         }
+
+        fun stopService(context: Context) {
+            val stopIntent = Intent(context, SimpleMPService::class.java)
+            context.stopService(stopIntent)
+        }
     }
 
 
@@ -258,6 +263,11 @@ class SimpleMPService: Service() {
                 getPendingIntent( 0, PendingIntent.FLAG_IMMUTABLE )
             }
 
+            //Stop Service
+            val stopIntent = Intent(context, ReceiverStop::class.java )
+            val pendingStopIntent = PendingIntent.getBroadcast( context, 1, stopIntent, PendingIntent.FLAG_IMMUTABLE )
+
+
             //Previous Music
             val previousSongIntent = Intent(context, ReceiverPreviousSong::class.java )
             val pendingPreviousSongIntent = PendingIntent.getBroadcast( context, 1, previousSongIntent, PendingIntent.FLAG_IMMUTABLE )
@@ -283,12 +293,13 @@ class SimpleMPService: Service() {
                 .setContentIntent( pendingOpenAppIntent )
                 .setContentText(songArtist)
                 .setLargeIcon( songAlbumArt )
+                .addAction( R.drawable.icon_stop_notification, "Stop Player", pendingStopIntent )
                 .addAction( R.drawable.icon_previous_notification, "Previous Music", pendingPreviousSongIntent )
                 .addAction( R.drawable.icon_pause_notification, "Play Pause Music", pendingPlayPauseIntent )
                 .addAction( R.drawable.icon_next_notification, "Next Music", pendingSkipSongIntent )
                 .setStyle( androidx.media.app.NotificationCompat.MediaStyle()
                     .setMediaSession(mediaSession.sessionToken)
-                    .setShowActionsInCompactView(0, 1, 2)
+                    .setShowActionsInCompactView(1, 2, 3)
                 )
                 .setPriority( NotificationCompat.PRIORITY_LOW )
                 .build()
@@ -410,6 +421,15 @@ class SimpleMPService: Service() {
     fun isLooping(): Boolean{ return loop }
 
 
+    fun killApp(){
+
+        println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        mediaPlayer.stop()
+        stopForeground(true)
+        stopSelf()
+    }
+
+
     fun skipSong(context: Context){
 
         if( (currentSongPosition + 1) < playList.size ){
@@ -493,7 +513,7 @@ class SimpleMPService: Service() {
         val pendingPlayPauseIntent = PendingIntent.getBroadcast( context, 1, playPauseIntent, PendingIntent.FLAG_IMMUTABLE )
 
 
-        notification.actions[1] = Notification.Action( playPauseIcon, "Play Music", pendingPlayPauseIntent )
+        notification.actions[2] = Notification.Action( playPauseIcon, "Play Music", pendingPlayPauseIntent )
 
 
 

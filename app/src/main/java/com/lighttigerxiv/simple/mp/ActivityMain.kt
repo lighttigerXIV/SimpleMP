@@ -695,6 +695,5 @@ class ActivityMain : AppCompatActivity(){
         if( grantResults[0] == PackageManager.PERMISSION_GRANTED )
             permissionsGranted = true; loadFragmentHome()
 
-
     }
 }

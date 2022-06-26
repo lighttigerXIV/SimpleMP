@@ -21,11 +21,6 @@
         android:theme="@style/Theme.SimpleMP"
         tools:targetApi="31">
         <activity
-            android:name=".ActivityAlbum"
-            android:exported="false"
-            android:label="@string/title_activity_album"
-            android:theme="@style/Theme.SimpleMP.NoActionBar" />
-        <activity
             android:name=".ActivityMain"
             android:exported="true">
             <intent-filter>
@@ -39,6 +34,13 @@
         <service android:name=".NotificationActionService" />
 
         <receiver android:name=".ReceiverOpenApp" />
+        <receiver
+            android:name=".ReceiverStop"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON    " />
+            </intent-filter>
+        </receiver>
         <receiver
             android:name=".ReceiverPreviousSong"
             android:exported="true">
