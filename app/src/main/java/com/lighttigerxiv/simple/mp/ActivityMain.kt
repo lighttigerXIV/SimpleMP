@@ -68,6 +68,7 @@ class ActivityMain : AppCompatActivity(){
     private var fragmentHome = FragmentHome()
     private var fragmentArtists = FragmentArtists()
     private var fragmentAlbums = FragmentAlbums()
+    private var fragmentAlbum = FragmentAlbum()
     private var fragmentPlaylists = FragmentPlaylists()
 
 
@@ -76,6 +77,7 @@ class ActivityMain : AppCompatActivity(){
     private var homeWasOpened = false
     private var artistsWasOpened = false
     private var albumsWasOpened = false
+    private var albumIsOpen = false
     private var playListsWasOpened = false
 
     private lateinit var smpService: SimpleMPService
@@ -137,6 +139,7 @@ class ActivityMain : AppCompatActivity(){
 
 
             handleFragmentChanges()
+
         }
         catch (exc: Exception) { println("Exception-> $exc") }
     }
@@ -213,8 +216,8 @@ class ActivityMain : AppCompatActivity(){
         smpService.setOnMusicSelectedListener( object: SimpleMPService.OnMusicSelectedListener{
             override fun onMusicSelected(playList: ArrayList<Song>, position: Int) {
 
-                if( selectedFragment == 0 )
-                    fragmentHome.updateCurrentSong()
+                if( selectedFragment == 0 ) fragmentHome.updateCurrentSong()
+                if( albumIsOpen ) fragmentAlbum.updateCurrentSong()
 
 
                 musicWasSelected = true
@@ -354,8 +357,13 @@ class ActivityMain : AppCompatActivity(){
             if( selectedFragment == 1 )
                 fragmentManager.beginTransaction().hide( fragmentArtists ).commit()
 
-            if( selectedFragment == 2 )
-                fragmentManager.beginTransaction().hide( fragmentAlbums ).commit()
+            if( selectedFragment == 2 ) {
+
+                if( albumIsOpen )
+                    fragmentManager.beginTransaction().hide( fragmentAlbum ).commit()
+                else
+                    fragmentManager.beginTransaction().hide(fragmentAlbums).commit()
+            }
 
             if( selectedFragment == 3 )
                 fragmentManager.beginTransaction().hide( fragmentPlaylists ).commit()
@@ -401,8 +409,17 @@ class ActivityMain : AppCompatActivity(){
                         albumsWasOpened = true
                     }
 
-                    else
-                        fragmentManager.beginTransaction().show( fragmentAlbums ).commit()
+                    else{
+
+                        if( albumIsOpen )
+                            fragmentManager.beginTransaction().show( fragmentAlbum ).commit()
+
+                        else
+                            fragmentManager.beginTransaction().show( fragmentAlbums ).commit()
+                    }
+
+
+                    handleAlbumOpened()
                 }
 
                 menuPlaylists->{
@@ -573,6 +590,7 @@ class ActivityMain : AppCompatActivity(){
         slidingPanel.panelHeight = 165
 
         if( homeWasOpened ) fragmentHome.updateCurrentSong()
+        if( albumIsOpen ) fragmentAlbum.updateCurrentSong()
 
 
         setSlidingPanelData( albumArt, title, artist, duration )
@@ -608,6 +626,36 @@ class ActivityMain : AppCompatActivity(){
             ivPlayPauseMiniPlayer.setImageDrawable( iconPlay )
             ivPlayPauseSlidePlayer.setImageDrawable( iconPlayRound )
         }
+    }
+
+
+    private fun handleAlbumOpened(){
+
+        fragmentAlbums.setOnAlbumOpenedListener( object : FragmentAlbums.OnAlbumOpenedListener{
+            override fun onAlbumOpened(albumID: Long) {
+
+
+                val bundle = Bundle()
+                bundle.putLong( "albumID", albumID )
+                fragmentAlbum = FragmentAlbum()
+                fragmentAlbum.arguments = bundle
+                albumIsOpen = true
+
+
+                fragmentManager.beginTransaction().hide( fragmentAlbums ).commit()
+                fragmentManager.beginTransaction().add( frameLayout, fragmentAlbum, "album" ).commit()
+
+                fragmentAlbum.setOnBackPressed(object : FragmentAlbum.OnBackPressed{
+                    override fun onBackPressed() {
+
+                        fragmentManager.beginTransaction().remove( fragmentAlbum ).commit()
+                        fragmentManager.beginTransaction().show( fragmentAlbums ).commit()
+
+                        albumIsOpen = false
+                    }
+                })
+            }
+        })
     }
 
 

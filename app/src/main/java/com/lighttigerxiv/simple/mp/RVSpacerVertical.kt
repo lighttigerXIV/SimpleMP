@@ -4,7 +4,7 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-class RVSpacer( private val height: Int ): RecyclerView.ItemDecoration() {
+class RVSpacerVertical(private val height: Int ): RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(
         outRect: Rect,

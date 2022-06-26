@@ -3,17 +3,14 @@ package com.lighttigerxiv.simple.mp
 import android.annotation.SuppressLint
 import android.content.*
 import android.content.Context.MODE_PRIVATE
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.provider.MediaStore
-import android.util.Size
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
@@ -26,9 +23,10 @@ class FragmentHome : Fragment() {
     //UI
     private lateinit var fragmentContext: Context
     private lateinit var fragmentView: View
+    private lateinit var etSearch: EditText
     private lateinit var ivMenu: ImageView
     private lateinit var rvSongs: RecyclerView
-    private lateinit var originalSongsList: ArrayList<Song>
+    private lateinit var songsList: ArrayList<Song>
 
 
 
@@ -38,7 +36,7 @@ class FragmentHome : Fragment() {
     private lateinit var adapterSongsRV: AdapterSongsRV
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     fun updateCurrentSong(){
 
@@ -69,7 +67,7 @@ class FragmentHome : Fragment() {
             fragmentContext.bindService( serviceIntent, connection, Context.BIND_AUTO_CREATE )
 
 
-            originalSongsList = getSongsList()
+            songsList = GetSongs.getSongsList( fragmentContext )
 
 
             if(savedInstanceState != null){
@@ -78,7 +76,7 @@ class FragmentHome : Fragment() {
             }
 
 
-            adapterSongsRV = AdapterSongsRV(originalSongsList)
+            adapterSongsRV = AdapterSongsRV(songsList)
 
             rvSongs.adapter = adapterSongsRV
 
@@ -90,23 +88,20 @@ class FragmentHome : Fragment() {
 
                         SimpleMPService.startService(fragmentContext)
 
-                        val updatedSongsList = ArrayList(originalSongsList)
-
-                        for( song in originalSongsList )
-                            updatedSongsList.add(song)
-
 
                         if( smpService.isPlaylistShuffled() )
                             smpService.toggleShuffle()
 
 
-                        smpService.setPlaylist( updatedSongsList )
+                        smpService.setPlaylist( adapterSongsRV.getPlaylist() )
                         smpService.setInitialSongPosition( position )
                         smpService.playSong( fragmentContext )
                     }
                 }
             })
 
+
+            handleSearch()
 
 
             val popupView = fragmentView.findViewById<View>( R.id.ivMenu_FragmentHome )
@@ -138,17 +133,37 @@ class FragmentHome : Fragment() {
     }
 
 
+    private fun handleSearch(){
+
+        etSearch.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+                val tempSongsList = ArrayList<Song>()
+                val searchText = s.toString().trim()
+
+
+                for( song in songsList )
+                    if( song.title.trim().lowercase().contains(searchText) or song.artist.trim().lowercase().contains( searchText ) )
+                        tempSongsList.add( song )
+
+
+                adapterSongsRV.setPlaylist( tempSongsList )
+                adapterSongsRV.notifyDataSetChanged()
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+
     private fun setSortMode( sortMode: String ){
 
-        fragmentContext.getSharedPreferences( "Settings", MODE_PRIVATE )
-            .edit()
-            .putString( "sort", sortMode )
-            .apply()
-
-
-        originalSongsList = getSongsList()
-
-        adapterSongsRV.setPlaylist( originalSongsList )
+        fragmentContext.getSharedPreferences( "Settings", MODE_PRIVATE ).edit().putString( "sort", sortMode ).apply()
+        songsList = GetSongs.getSongsList(fragmentContext)
+        adapterSongsRV.setPlaylist( songsList )
         adapterSongsRV.notifyItemRangeChanged( 0, adapterSongsRV.getPlayListSize() )
     }
 
@@ -156,83 +171,13 @@ class FragmentHome : Fragment() {
     private fun assignVariables(){
 
         fragmentContext = fragmentView.context
+        etSearch = fragmentView.findViewById(R.id.etSearch_FragmentHome)
         ivMenu = fragmentView.findViewById(R.id.ivMenu_FragmentHome)
         rvSongs = fragmentView.findViewById(R.id.rvSongs_FragmentHome)
 
 
         rvSongs.layoutManager = LinearLayoutManager(fragmentContext)
-        rvSongs.addItemDecoration( RecyclerViewDivider( fragmentContext ) )
         rvSongs.itemAnimator?.changeDuration = 0
-    }
-
-
-    @Suppress("DEPRECATION")
-    @SuppressLint("Range")
-    private fun getSongsList(): ArrayList<Song>{
-
-        val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-        val cursor = fragmentContext.contentResolver.query(uri, null, null, null, null)
-        val songsList = ArrayList<Song>()
-
-
-        if( cursor != null ){
-            if( cursor.moveToNext() ){
-                do{
-
-                    val id = cursor.getLong(cursor.getColumnIndex( MediaStore.Audio.Media._ID) )
-
-                    val songPath = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.DATA) )
-
-                    val songUri = ContentUris.withAppendedId( uri, id )
-
-                    val title = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.TITLE ) )
-
-                    lateinit var albumArt: Bitmap
-                    val albumID = cursor.getLong( cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID) )
-
-                    albumArt = try{
-
-                        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-
-                            fragmentContext.contentResolver.loadThumbnail( songUri, Size(500,500), null )
-                        } else{
-
-                            val sArtWorkUri = Uri.parse( "content://media/external/audio/albumart" )
-                            val albumArtUri = ContentUris.withAppendedId(sArtWorkUri, albumID)
-                            MediaStore.Images.Media.getBitmap( fragmentContext.contentResolver, albumArtUri )
-                        }
-
-                    } catch (ignore: Exception){
-
-                        BitmapFactory.decodeResource( resources, R.drawable.icon_music_record )
-                    }
-
-
-                    val duration = cursor.getInt( cursor.getColumnIndex(MediaStore.Audio.Media.DURATION) )
-                    val year = cursor.getInt( cursor.getColumnIndex(MediaStore.Audio.Media.YEAR) )
-                    val artist = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST) )
-
-
-                    val song = Song( id, songPath, songUri, title, albumArt, duration, artist, year )
-
-                    if( duration > 60000 )
-                        songsList.add( song )
-                }
-                while (cursor.moveToNext())
-            }
-            cursor.close()
-        }
-
-
-        when ( fragmentContext.getSharedPreferences( "Settings", MODE_PRIVATE ).getString( "sort", "default" ) ) {
-
-            "Date" -> songsList.sortByDescending { it.year }
-            "AZ" -> songsList.sortBy { it.title }
-            "ZA" -> songsList.sortByDescending { it.title }
-            "Artist"-> songsList.sortBy { it.artist }
-        }
-
-        return songsList
     }
 
 

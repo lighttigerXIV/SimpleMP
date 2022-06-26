@@ -9,6 +9,8 @@ data class Song(
     val path: String,
     val uri: Uri?,
     val title: String,
+    val albumName: String,
+    val albumID: Long,
     val albumArt: Bitmap?,
     val duration: Int,
     val artist: String,

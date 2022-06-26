@@ -24,6 +24,8 @@ class AdapterSongsRV( private var songsList : ArrayList<Song> ): RecyclerView.Ad
 
     fun setPlaylist( songsList: ArrayList<Song> ){ this.songsList = songsList }
 
+    fun getPlaylist(): ArrayList<Song>{ return this.songsList }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 

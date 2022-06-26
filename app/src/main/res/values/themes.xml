@@ -33,4 +33,13 @@
         <item name="cornerSize">4dp</item>
     </style>
 
+    <style name="Theme.SimpleMP.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.SimpleMP.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.SimpleMP.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>
