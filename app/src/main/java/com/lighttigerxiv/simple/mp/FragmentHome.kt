@@ -164,7 +164,7 @@ class FragmentHome : Fragment() {
         fragmentContext.getSharedPreferences( "Settings", MODE_PRIVATE ).edit().putString( "sort", sortMode ).apply()
         songsList = GetSongs.getSongsList(fragmentContext)
         adapterSongsRV.setPlaylist( songsList )
-        adapterSongsRV.notifyItemRangeChanged( 0, adapterSongsRV.getPlayListSize() )
+        rvSongs.adapter = adapterSongsRV
     }
 
 

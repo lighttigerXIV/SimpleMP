@@ -59,6 +59,7 @@ class ActivityMain : AppCompatActivity(){
 
 
     //Other
+    private var permissionsGranted = false
     private var menuHome: Int? = null
     private var menuArtists: Int? = null
     private var menuAlbums: Int? = null
@@ -95,26 +96,14 @@ class ActivityMain : AppCompatActivity(){
         try{
 
             assignVariables()
-
-
-
             createNotificationChannel()
-
-
             checkPermissions()
-
-
-            slidingPanel.panelHeight = 0
-
-
-            val serviceIntent = Intent( applicationContext, SimpleMPService::class.java )
-            applicationContext.bindService( serviceIntent, connection, Context.BIND_AUTO_CREATE )
+            handleFragmentChanges()
 
             if( savedInstanceState == null ){
 
-                selectedFragment = 0
-                fragmentManager.beginTransaction().add( frameLayout, fragmentHome, "home" ).commit()
-                homeWasOpened = true
+                if( permissionsGranted ) loadFragmentHome()
+
             }
             else{
 
@@ -130,16 +119,6 @@ class ActivityMain : AppCompatActivity(){
                     restorePlayer = true
 
             }
-
-
-            ivClosePlayerSlidePlayer.setOnClickListener{
-
-                slidingPanel.panelState = PanelState.COLLAPSED
-            }
-
-
-            handleFragmentChanges()
-
         }
         catch (exc: Exception) { println("Exception-> $exc") }
     }
@@ -176,6 +155,25 @@ class ActivityMain : AppCompatActivity(){
         menuArtists = R.id.menuArtists
         menuAlbums = R.id.menuAlbums
         menuPlaylists = R.id.menuPlaylists
+    }
+
+
+    private fun loadFragmentHome(){
+
+        slidingPanel.panelHeight = 0
+
+
+        val serviceIntent = Intent( applicationContext, SimpleMPService::class.java )
+        applicationContext.bindService( serviceIntent, connection, Context.BIND_AUTO_CREATE )
+
+        selectedFragment = 0
+        fragmentManager.beginTransaction().add( frameLayout, fragmentHome, "home" ).commit()
+        homeWasOpened = true
+
+        ivClosePlayerSlidePlayer.setOnClickListener{
+
+            slidingPanel.panelState = PanelState.COLLAPSED
+        }
     }
 
 
@@ -451,6 +449,10 @@ class ActivityMain : AppCompatActivity(){
 
             ActivityCompat.requestPermissions( this, arrayOf( Manifest.permission.READ_EXTERNAL_STORAGE ), 1 )
         }
+        else{
+
+            permissionsGranted = true
+        }
     }
 
 
@@ -686,4 +688,13 @@ class ActivityMain : AppCompatActivity(){
             super.onBackPressed()
     }
 
+
+    override fun onRequestPermissionsResult( requestCode: Int, permissions: Array<out String>, grantResults: IntArray, ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if( grantResults[0] == PackageManager.PERMISSION_GRANTED )
+            permissionsGranted = true; loadFragmentHome()
+
+
+    }
 }
