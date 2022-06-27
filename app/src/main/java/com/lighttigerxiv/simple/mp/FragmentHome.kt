@@ -35,15 +35,22 @@ class FragmentHome : Fragment() {
     //Others
     private lateinit var smpService: SimpleMPService
     private var serviceBounded = false
-    private lateinit var adapterSongsRV: AdapterSongsRV
+    private lateinit var adapterRVSongs: AdapterRVSongs
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     fun updateCurrentSong(){
 
-        adapterSongsRV.setCurrentSongPath( smpService.getCurrentSongPath() )
-        adapterSongsRV.notifyItemRangeChanged( 0, adapterSongsRV.getPlayListSize() )
+        adapterRVSongs.setCurrentSongPath( smpService.getCurrentSongPath() )
+        adapterRVSongs.notifyItemRangeChanged( 0, adapterRVSongs.getPlayListSize() )
+    }
+
+
+    fun resetRecyclerView(){
+
+        adapterRVSongs.setCurrentSongPath( "" )
+        adapterRVSongs.notifyItemRangeChanged( 0, adapterRVSongs.getPlayListSize() )
     }
 
 
@@ -68,8 +75,8 @@ class FragmentHome : Fragment() {
             songsList = GetSongs.getSongsList( fragmentContext )
 
 
-            adapterSongsRV = AdapterSongsRV(songsList)
-            rvSongs.adapter = adapterSongsRV
+            adapterRVSongs = AdapterRVSongs(songsList)
+            rvSongs.adapter = adapterRVSongs
 
 
             handleSearch()
@@ -103,17 +110,14 @@ class FragmentHome : Fragment() {
             @SuppressLint("NotifyDataSetChanged")
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
-                val tempSongsList = ArrayList<Song>()
+                val filteredSongsList = ArrayList(songsList)
                 val searchText = s.toString().trim()
 
-
-                for( song in songsList )
-                    if( song.title.trim().lowercase().contains(searchText) or song.artist.trim().lowercase().contains( searchText ) )
-                        tempSongsList.add( song )
+                filteredSongsList.removeIf { !it.title.trim().lowercase().contains(searchText) and !it.artistName.trim().lowercase().contains( searchText ) }
 
 
-                adapterSongsRV.setPlaylist( tempSongsList )
-                adapterSongsRV.notifyDataSetChanged()
+                adapterRVSongs.setPlaylist( filteredSongsList )
+                adapterRVSongs.notifyDataSetChanged()
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -155,14 +159,14 @@ class FragmentHome : Fragment() {
 
         fragmentContext.getSharedPreferences( "Settings", MODE_PRIVATE ).edit().putString( "sort", sortMode ).apply()
         songsList = GetSongs.getSongsList(fragmentContext)
-        adapterSongsRV.setPlaylist( songsList )
-        adapterSongsRV.notifyDataSetChanged()
+        adapterRVSongs.setPlaylist( songsList )
+        adapterRVSongs.notifyDataSetChanged()
     }
 
 
     private fun handleMusicClicked(){
 
-        adapterSongsRV.setOnItemClickListener( object : AdapterSongsRV.OnItemClickListener{
+        adapterRVSongs.setOnItemClickListener( object : AdapterRVSongs.OnItemClickListener{
             override fun onItemClick(position: Int) {
 
                 if( serviceBounded ){
@@ -173,7 +177,7 @@ class FragmentHome : Fragment() {
                         smpService.toggleShuffle()
 
 
-                    smpService.setPlaylist( adapterSongsRV.getPlaylist() )
+                    smpService.setPlaylist( adapterRVSongs.getPlaylist() )
                     smpService.setInitialSongPosition( position )
                     smpService.playSong( fragmentContext )
                 }

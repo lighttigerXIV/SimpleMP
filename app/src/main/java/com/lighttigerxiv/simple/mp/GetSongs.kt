@@ -14,7 +14,7 @@ class GetSongs {
 
     companion object{
 
-        @Suppress("DEPRECATION")
+
         @SuppressLint("Range")
         fun getSongsList(context: Context ): ArrayList<Song>{
 
@@ -33,29 +33,14 @@ class GetSongs {
                         val title = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.TITLE ) )
                         val albumName = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM))
                         val albumID = cursor.getLong( cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID) )
-                        val albumArt: Bitmap = try{
-
-                            if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-
-                                context.contentResolver.loadThumbnail( songUri, Size(500,500), null )
-                            } else{
-
-                                val sArtWorkUri = Uri.parse( "content://media/external/audio/albumart" )
-                                val albumArtUri = ContentUris.withAppendedId(sArtWorkUri, albumID)
-                                MediaStore.Images.Media.getBitmap( context.contentResolver, albumArtUri )
-                            }
-
-                        } catch (ignore: Exception){
-
-                            BitmapFactory.decodeResource( context.resources, R.drawable.icon_music_record )
-                        }
                         val duration = cursor.getInt( cursor.getColumnIndex(MediaStore.Audio.Media.DURATION) )
-                        val artist = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST) )
+                        val artistName = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST) )
+                        val artistID = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID) )
                         val year = cursor.getInt( cursor.getColumnIndex(MediaStore.Audio.Media.YEAR) )
 
 
 
-                        val song = Song( id, songPath, songUri, title, albumName , albumID , albumArt, duration, artist, year )
+                        val song = Song( id, songPath, songUri, title, albumName , albumID , null, duration, artistName, artistID, year )
 
                         if( duration > 60000 )
                             songsList.add( song )
@@ -66,15 +51,39 @@ class GetSongs {
             }
 
 
-            when ( context.getSharedPreferences( "Settings", Context.MODE_PRIVATE).getString( "sort", "default" ) ) {
+            when ( context.getSharedPreferences( "Settings", Context.MODE_PRIVATE).getString( "sort", "Default" ) ) {
 
+                "Default"-> songsList.reverse()
                 "Date" -> songsList.sortByDescending { it.year }
                 "AZ" -> songsList.sortBy { it.title }
                 "ZA" -> songsList.sortByDescending { it.title }
-                "Artist"-> songsList.sortBy { it.artist }
+                "Artist"-> songsList.sortBy { it.artistName }
             }
 
             return songsList
+        }
+
+        @Suppress("DEPRECATION")
+        fun getSongAlbumArt( context: Context, songUri: Uri, albumID: Long ): Bitmap{
+
+            val albumArt: Bitmap = try{
+
+                if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+
+                    context.contentResolver.loadThumbnail( songUri, Size(500,500), null )
+                } else{
+
+                    val sArtWorkUri = Uri.parse( "content://media/external/audio/albumart" )
+                    val albumArtUri = ContentUris.withAppendedId(sArtWorkUri, albumID)
+                    MediaStore.Images.Media.getBitmap( context.contentResolver, albumArtUri )
+                }
+
+            } catch (ignore: Exception){
+
+                BitmapFactory.decodeResource( context.resources, R.drawable.icon_music_record )
+            }
+
+            return albumArt
         }
     }
 }

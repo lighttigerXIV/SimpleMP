@@ -16,7 +16,6 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.imageview.ShapeableImageView
 
 
 class FragmentAlbum : Fragment() {
@@ -33,7 +32,7 @@ class FragmentAlbum : Fragment() {
     private var songsList = ArrayList<Song>()
 
 
-    private lateinit var adapterSongsRV: AdapterSongsRV
+    private lateinit var adapterRVSongs: AdapterRVSongs
     private lateinit var smpService: SimpleMPService
     private var serviceBounded = false
 
@@ -42,9 +41,15 @@ class FragmentAlbum : Fragment() {
 
         if( serviceBounded ){
 
-            adapterSongsRV.setCurrentSongPath( smpService.getCurrentSongPath() )
-            adapterSongsRV.notifyItemRangeChanged( 0, adapterSongsRV.getPlayListSize() )
+            adapterRVSongs.setCurrentSongPath( smpService.getCurrentSongPath() )
+            adapterRVSongs.notifyItemRangeChanged( 0, adapterRVSongs.getPlayListSize() )
         }
+    }
+
+    fun resetRecyclerView(){
+
+        adapterRVSongs.setCurrentSongPath( "" )
+        adapterRVSongs.notifyItemRangeChanged( 0, adapterRVSongs.getPlayListSize() )
     }
 
 
@@ -72,14 +77,15 @@ class FragmentAlbum : Fragment() {
         songsList.removeIf { it.albumID != albumID }
 
 
-        adapterSongsRV = AdapterSongsRV(songsList)
-        rvSongs.adapter = adapterSongsRV
+        adapterRVSongs = AdapterRVSongs(songsList)
+        rvSongs.adapter = adapterRVSongs
 
 
 
-        val albumArt = songsList[0].albumArt
+        val songUri = songsList[0].uri
+        val albumArt = GetSongs.getSongAlbumArt( fragmentContext, songUri, albumID )
         val albumName = songsList[0].albumName
-        val albumArtist = songsList[0].artist
+        val albumArtist = songsList[0].artistName
 
 
         ivAlbumArt.setImageBitmap( albumArt )
@@ -87,7 +93,7 @@ class FragmentAlbum : Fragment() {
         tvAlbumArtist.text = albumArtist
 
 
-        adapterSongsRV.setOnItemClickListener( object : AdapterSongsRV.OnItemClickListener{
+        adapterRVSongs.setOnItemClickListener( object : AdapterRVSongs.OnItemClickListener{
             override fun onItemClick(position: Int) {
 
                 if( serviceBounded ){
@@ -99,7 +105,7 @@ class FragmentAlbum : Fragment() {
                         smpService.toggleShuffle()
 
 
-                    smpService.setPlaylist( adapterSongsRV.getPlaylist() )
+                    smpService.setPlaylist( adapterRVSongs.getPlaylist() )
                     smpService.setInitialSongPosition( position )
                     smpService.playSong( fragmentContext )
                     updateCurrentSong()

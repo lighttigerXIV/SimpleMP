@@ -68,15 +68,18 @@ class ActivityMain : AppCompatActivity(){
 
     private var fragmentHome = FragmentHome()
     private var fragmentArtists = FragmentArtists()
+    private var fragmentArtist = FragmentArtist()
+    private var fragmentArtistAlbum = FragmentAlbum()
     private var fragmentAlbums = FragmentAlbums()
     private var fragmentAlbum = FragmentAlbum()
     private var fragmentPlaylists = FragmentPlaylists()
 
 
-
     private var selectedFragment = 0
     private var homeWasOpened = false
     private var artistsWasOpened = false
+    private var artistIsOpen = false
+    private var artistAlbumIsOpen = false
     private var albumsWasOpened = false
     private var albumIsOpen = false
     private var playListsWasOpened = false
@@ -92,62 +95,34 @@ class ActivityMain : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        try{
 
-            assignVariables()
-            createNotificationChannel()
-            checkPermissions()
-
+        assignVariables()
+        createNotificationChannel()
+        checkPermissions()
 
 
-            //Service Bounding
-            val serviceIntent = Intent( applicationContext, SimpleMPService::class.java )
-            applicationContext.bindService( serviceIntent, connection, Context.BIND_AUTO_CREATE )
+
+        //Service Bounding
+        val serviceIntent = Intent( applicationContext, SimpleMPService::class.java )
+        applicationContext.bindService( serviceIntent, connection, Context.BIND_AUTO_CREATE )
 
 
-            if( savedInstanceState == null ){
+        if( savedInstanceState == null ){
 
-                if( permissionsGranted ) loadFragmentHome()
+            if( permissionsGranted ) loadFragmentHome()
 
-            }
-            else{
-
-                selectedFragment = savedInstanceState.getInt( "selectedFragment")
-                homeWasOpened = savedInstanceState.getBoolean( "homeWasOpened" )
-                artistsWasOpened = savedInstanceState.getBoolean( "artistWasOpened" )
-                albumsWasOpened = savedInstanceState.getBoolean( "albumsWasOpened" )
-                albumIsOpen = savedInstanceState.getBoolean( "albumIsOpen" )
-                playListsWasOpened = savedInstanceState.getBoolean( "playlistsWasOpened")
-                musicWasSelected = savedInstanceState.getBoolean( "musicWasSelected" )
-
-
-                fragmentHome = if( homeWasOpened )
-                    fragmentManager.findFragmentByTag("home") as FragmentHome else FragmentHome()
-
-
-                fragmentArtists = if( artistsWasOpened )
-                    fragmentManager.findFragmentByTag("artists") as FragmentArtists else FragmentArtists()
-
-
-                fragmentAlbums = if( albumsWasOpened )
-                    fragmentManager.findFragmentByTag( "albums" ) as FragmentAlbums else FragmentAlbums()
-
-
-                fragmentAlbum = if( albumIsOpen )
-                    fragmentManager.findFragmentByTag("album") as FragmentAlbum else FragmentAlbum()
-
-
-                fragmentPlaylists = if( playListsWasOpened )
-                    fragmentManager.findFragmentByTag("playlists") as FragmentPlaylists else FragmentPlaylists()
-
-            }
-
-            handleFragmentChanges()
-            handleSlidePlayerListeners()
-            handleAlbumOpened()
-            handleAlbumBackPressed()
         }
-        catch (exc: Exception) { println("Exception-> $exc") }
+        else restoreLifecycle( savedInstanceState )
+
+
+        handleFragmentChanges()
+        handleSlidePlayerListeners()
+        handleArtistOpened()
+        handleArtistBackPressed()
+        handleArtistAlbumOpened()
+        handleArtistAlbumBackPressed()
+        handleAlbumOpened()
+        handleAlbumBackPressed()
     }
 
 
@@ -185,6 +160,48 @@ class ActivityMain : AppCompatActivity(){
     }
 
 
+    private fun restoreLifecycle( sis: Bundle ){
+
+        selectedFragment = sis.getInt( "selectedFragment")
+        homeWasOpened = sis.getBoolean( "homeWasOpened" )
+        artistsWasOpened = sis.getBoolean( "artistsWasOpened" )
+        artistIsOpen = sis.getBoolean("artistIsOpen")
+        artistAlbumIsOpen = sis.getBoolean("artistAlbumIsOpen")
+        albumsWasOpened = sis.getBoolean( "albumsWasOpened" )
+        albumIsOpen = sis.getBoolean( "albumIsOpen" )
+        playListsWasOpened = sis.getBoolean( "playlistsWasOpened")
+        musicWasSelected = sis.getBoolean( "musicWasSelected" )
+
+
+        fragmentHome = if( homeWasOpened )
+            fragmentManager.findFragmentByTag("home") as FragmentHome else FragmentHome()
+
+
+        fragmentArtists = if( artistsWasOpened )
+            fragmentManager.findFragmentByTag("artists") as FragmentArtists else FragmentArtists()
+
+
+        fragmentArtist = if( artistIsOpen )
+            fragmentManager.findFragmentByTag("artist") as FragmentArtist else FragmentArtist()
+
+
+        fragmentArtistAlbum = if( artistAlbumIsOpen )
+            fragmentManager.findFragmentByTag("artistAlbum") as FragmentAlbum else FragmentAlbum()
+
+
+        fragmentAlbums = if( albumsWasOpened )
+            fragmentManager.findFragmentByTag( "albums" ) as FragmentAlbums else FragmentAlbums()
+
+
+        fragmentAlbum = if( albumIsOpen )
+            fragmentManager.findFragmentByTag("album") as FragmentAlbum else FragmentAlbum()
+
+
+        fragmentPlaylists = if( playListsWasOpened )
+            fragmentManager.findFragmentByTag("playlists") as FragmentPlaylists else FragmentPlaylists()
+    }
+
+
     private fun loadFragmentHome(){
 
         slidingPanel.panelHeight = 0
@@ -192,21 +209,15 @@ class ActivityMain : AppCompatActivity(){
         selectedFragment = 0
         fragmentManager.beginTransaction().add( frameLayout, fragmentHome, "home" ).commit()
         homeWasOpened = true
-
-
     }
 
 
-    private fun handleSliding(){
+    private fun handlePanelSliding(){
 
         slidingPanel.addPanelSlideListener( object : PanelSlideListener{
             override fun onPanelSlide(panel: View, slideOffset: Float) {}
 
-            override fun onPanelStateChanged(
-                panel: View,
-                previousState: PanelState,
-                newState: PanelState,
-            ) {
+            override fun onPanelStateChanged( panel: View, previousState: PanelState, newState: PanelState ) {
 
                 if( newState == PanelState.DRAGGING ){
 
@@ -233,16 +244,20 @@ class ActivityMain : AppCompatActivity(){
         smpService.setOnMusicSelectedListener( object: SimpleMPService.OnMusicSelectedListener{
             override fun onMusicSelected(playList: ArrayList<Song>, position: Int) {
 
-                if( selectedFragment == 0 ) fragmentHome.updateCurrentSong()
+                if( homeWasOpened ) fragmentHome.updateCurrentSong()
                 if( albumIsOpen ) fragmentAlbum.updateCurrentSong()
+                if( artistIsOpen ) fragmentArtist.updateCurrentSong()
+                if( artistAlbumIsOpen ) fragmentArtistAlbum.updateCurrentSong()
 
 
                 musicWasSelected = true
                 slidingPanel.panelHeight = 165
 
-                val songAlbumArt = playList[position].albumArt
+                val songUri = playList[position].uri
+                val songAlbumID = playList[position].albumID
+                val songAlbumArt = GetSongs.getSongAlbumArt( applicationContext, songUri, songAlbumID )
                 val songTitle = playList[position].title
-                val songArtist = playList[position].artist
+                val songArtist = playList[position].artistName
                 val songDuration = playList[position].duration
 
                 setSlidingPanelData( songAlbumArt, songTitle, songArtist, songDuration )
@@ -270,8 +285,6 @@ class ActivityMain : AppCompatActivity(){
         tvSongArtistSlidePlayer.text = artist
 
 
-
-
         val seekBarSeconds = duration.rem(1000 * 60 *60).div(1000)
         val songMinutes = seekBarSeconds.div(60)
         val songSeconds = seekBarSeconds.rem(60)
@@ -292,7 +305,7 @@ class ActivityMain : AppCompatActivity(){
         tvSongSeconds.text = durationInSeconds
 
 
-        ivPlayPauseMiniPlayer.visibility = View.VISIBLE
+        slidingPanel.panelHeight = 165
     }
 
 
@@ -355,7 +368,6 @@ class ActivityMain : AppCompatActivity(){
     }
 
 
-    //Pauses/Plays the music when button is clicked
     private fun handlePauseResumeMusic(){
 
         ivPlayPauseMiniPlayer.setOnClickListener{ smpService.pauseResumeMusic( applicationContext ) }
@@ -369,8 +381,17 @@ class ActivityMain : AppCompatActivity(){
             if( selectedFragment == 0 )
                 fragmentManager.beginTransaction().hide( fragmentHome ).commit()
 
-            if( selectedFragment == 1 )
-                fragmentManager.beginTransaction().hide( fragmentArtists ).commit()
+            if( selectedFragment == 1 ){
+
+                if( artistIsOpen )
+                    fragmentManager.beginTransaction().hide( fragmentArtist ).commit()
+
+                if( artistAlbumIsOpen )
+                    fragmentManager.beginTransaction().hide( fragmentArtistAlbum ).commit()
+
+                if( !artistIsOpen and !artistAlbumIsOpen )
+                    fragmentManager.beginTransaction().hide( fragmentArtists ).commit()
+            }
 
             if( selectedFragment == 2 ) {
 
@@ -410,8 +431,17 @@ class ActivityMain : AppCompatActivity(){
                         artistsWasOpened = true
                     }
 
-                    else
-                        fragmentManager.beginTransaction().show( fragmentArtists ).commit()
+                    else{
+
+                        if( artistIsOpen )
+                            fragmentManager.beginTransaction().show( fragmentArtist ).commit()
+
+                        else if( artistAlbumIsOpen )
+                            fragmentManager.beginTransaction().show( fragmentArtistAlbum ).commit()
+
+                        else
+                            fragmentManager.beginTransaction().show( fragmentArtists ).commit()
+                    }
                 }
 
                 menuAlbums->{
@@ -505,6 +535,24 @@ class ActivityMain : AppCompatActivity(){
     }
 
 
+    private fun handleMusicStopped(){
+
+        smpService.setOnMediaPlayerStoppedListener( object : SimpleMPService.OnMediaPlayerStoppedListener{
+            override fun onMediaPlayerStopped() {
+
+                slidingPanel.panelState = PanelState.HIDDEN
+                slidingPanel.panelHeight = 0
+
+
+                if( homeWasOpened ) fragmentHome.resetRecyclerView()
+                if( albumIsOpen ) fragmentAlbum.resetRecyclerView()
+                if( artistIsOpen ) fragmentArtist.resetRecyclerView()
+                if( artistAlbumIsOpen ) fragmentArtistAlbum.resetRecyclerView()
+            }
+        })
+    }
+
+
     private fun handleShuffleMusic(){
 
         ivShuffleSlidePlayer.setOnClickListener {
@@ -570,48 +618,128 @@ class ActivityMain : AppCompatActivity(){
         val playList = smpService.getCurrentPlaylist()
         val position: Int = smpService.getCurrentPosition()
 
-        val albumArt = playList[position].albumArt
-        val title = playList[position].title
-        val artist = playList[position].artist
-        val duration = playList[position].duration
 
+        if( position == -1 ){
 
-        slidingPanel.panelHeight = 165
-
-
-        setSlidingPanelData( albumArt, title, artist, duration )
-
-        if( smpService.isPlaylistShuffled() ){
-
-            ivShuffleSlidePlayer.setColorFilter( ContextCompat.getColor( applicationContext, R.color.mainPurple ) )
-        }
-
-        if( smpService.isLooping() ){
-
-            ivLoopSongSlidePlayer.setColorFilter( ContextCompat.getColor( applicationContext, R.color.mainPurple ) )
-        }
-
-        if( slidingPanel.panelState == PanelState.EXPANDED ){
-
-            clMiniPlayer.visibility = View.GONE
-        }
-
-        if( smpService.isMusicPlaying() ){
-
-            val iconPause = ContextCompat.getDrawable( applicationContext, R.drawable.icon_pause )
-            val iconPauseRound = ContextCompat.getDrawable( applicationContext, R.drawable.icon_pause_round )
-
-            ivPlayPauseMiniPlayer.setImageDrawable( iconPause )
-            ivPlayPauseSlidePlayer.setImageDrawable( iconPauseRound )
+            slidingPanel.panelHeight = 0
         }
         else{
 
-            val iconPlay = ContextCompat.getDrawable( applicationContext, R.drawable.icon_play )
-            val iconPlayRound = ContextCompat.getDrawable( applicationContext, R.drawable.icon_play_round )
+            val songUri = playList[position].uri
+            val albumID = playList[position].albumID
+            val albumArt = GetSongs.getSongAlbumArt( applicationContext, songUri, albumID )
+            val title = playList[position].title
+            val artist = playList[position].artistName
+            val duration = playList[position].duration
 
-            ivPlayPauseMiniPlayer.setImageDrawable( iconPlay )
-            ivPlayPauseSlidePlayer.setImageDrawable( iconPlayRound )
+
+            setSlidingPanelData( albumArt, title, artist, duration )
+
+            if( smpService.isPlaylistShuffled() ){
+
+                ivShuffleSlidePlayer.setColorFilter( ContextCompat.getColor( applicationContext, R.color.mainPurple ) )
+            }
+
+            if( smpService.isLooping() ){
+
+                ivLoopSongSlidePlayer.setColorFilter( ContextCompat.getColor( applicationContext, R.color.mainPurple ) )
+            }
+
+            if( slidingPanel.panelState == PanelState.EXPANDED ){
+
+                clMiniPlayer.visibility = View.GONE
+            }
+
+            if( smpService.isMusicPlaying() ){
+
+                val iconPause = ContextCompat.getDrawable( applicationContext, R.drawable.icon_pause )
+                val iconPauseRound = ContextCompat.getDrawable( applicationContext, R.drawable.icon_pause_round )
+
+                ivPlayPauseMiniPlayer.setImageDrawable( iconPause )
+                ivPlayPauseSlidePlayer.setImageDrawable( iconPauseRound )
+            }
+            else{
+
+                val iconPlay = ContextCompat.getDrawable( applicationContext, R.drawable.icon_play )
+                val iconPlayRound = ContextCompat.getDrawable( applicationContext, R.drawable.icon_play_round )
+
+                ivPlayPauseMiniPlayer.setImageDrawable( iconPlay )
+                ivPlayPauseSlidePlayer.setImageDrawable( iconPlayRound )
+            }
         }
+    }
+
+
+    private fun handleArtistOpened(){
+
+        fragmentArtists.setOnArtistOpenedListener(object : FragmentArtists.OnArtistOpenedListener{
+            override fun onArtistOpened(artistID: Long, artistName: String) {
+
+                val bundle = Bundle()
+                bundle.putString("artistName", artistName)
+                bundle.putLong("artistID", artistID)
+
+                fragmentArtist = FragmentArtist()
+                fragmentArtist.arguments = bundle
+                artistIsOpen = true
+
+                fragmentManager.beginTransaction().hide(fragmentArtists).commit()
+                fragmentManager.beginTransaction().add( frameLayout, fragmentArtist, "artist" ).commit()
+
+                handleArtistBackPressed()
+                handleArtistAlbumOpened()
+                handleArtistAlbumBackPressed()
+            }
+        })
+    }
+
+
+    private fun handleArtistBackPressed(){
+
+        fragmentArtist.setOnBackPressedListener(object : FragmentArtist.OnBackPressedListener{
+            override fun onBackPressed() {
+
+                fragmentManager.beginTransaction().remove( fragmentArtist ).commit()
+                fragmentManager.beginTransaction().show( fragmentArtists ).commit()
+
+                artistIsOpen = false
+            }
+        })
+    }
+
+
+    private fun handleArtistAlbumOpened(){
+
+        fragmentArtist.setOnAlbumOpenedListener(object : FragmentArtist.OnAlbumOpenedListener{
+            override fun onAlbumOpened(albumID: Long) {
+
+                val bundle = Bundle()
+                bundle.putLong( "albumID", albumID )
+                fragmentArtistAlbum = FragmentAlbum()
+                fragmentArtistAlbum.arguments = bundle
+                artistAlbumIsOpen = true
+
+
+                fragmentManager.beginTransaction().hide( fragmentArtist ).commit()
+                fragmentManager.beginTransaction().add( frameLayout, fragmentArtistAlbum, "artistAlbum" ).commit()
+
+                handleArtistAlbumBackPressed()
+            }
+        })
+    }
+
+
+    private fun handleArtistAlbumBackPressed(){
+
+        fragmentArtistAlbum.setOnBackPressed(object : FragmentAlbum.OnBackPressed{
+            override fun onBackPressed() {
+
+                fragmentManager.beginTransaction().remove( fragmentArtistAlbum ).commit()
+                fragmentManager.beginTransaction().show( fragmentArtist ).commit()
+
+                artistAlbumIsOpen = false
+            }
+        })
     }
 
 
@@ -651,18 +779,6 @@ class ActivityMain : AppCompatActivity(){
     }
 
 
-    private fun handleMusicStopped(){
-
-        smpService.setOnMediaPlayerStoppedListener( object : SimpleMPService.OnMediaPlayerStoppedListener{
-            override fun onMediaPlayerStopped() {
-
-                serviceBounded = false
-                slidingPanel.panelHeight = 0
-            }
-        })
-    }
-
-
     override fun onDestroy() {
         super.onDestroy()
 
@@ -678,6 +794,8 @@ class ActivityMain : AppCompatActivity(){
         outState.putInt( "selectedFragment", selectedFragment )
         outState.putBoolean( "homeWasOpened", homeWasOpened )
         outState.putBoolean( "artistsWasOpened", artistsWasOpened )
+        outState.putBoolean("artistIsOpen", artistIsOpen)
+        outState.putBoolean("artistAlbumIsOpen", artistAlbumIsOpen)
         outState.putBoolean( "albumsWasOpened", albumsWasOpened )
         outState.putBoolean( "musicWasSelected", musicWasSelected )
         outState.putBoolean( "albumIsOpen", albumIsOpen )
@@ -685,7 +803,6 @@ class ActivityMain : AppCompatActivity(){
 
 
     override fun onBackPressed() {
-
 
         if( slidingPanel.panelState == PanelState.EXPANDED )
             slidingPanel.panelState = PanelState.COLLAPSED
@@ -719,12 +836,14 @@ class ActivityMain : AppCompatActivity(){
             handleMusicResumed()
             handlePauseResumeMusic()
             handleMusicStopped()
-            handleSliding()
+
+            handlePanelSliding()
             handleShuffleMusic()
             handleLoopMusic()
 
 
-            if( smpService.isMusicPlayingOrPaused()) restorePlayer()
+            if( smpService.isMusicPlayingOrPaused() ) restorePlayer()
+
             else slidingPanel.panelHeight = 0
         }
 

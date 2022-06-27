@@ -10,6 +10,7 @@ import android.media.AudioManager
 import android.media.AudioManager.OnAudioFocusChangeListener
 import android.media.MediaPlayer
 import android.media.session.MediaSession
+import android.net.Uri
 import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
@@ -99,6 +100,9 @@ class SimpleMPService: Service() {
 
         currentSongPosition = pCurrentSongPosition
     }
+
+
+
 
 
     fun isPlaylistShuffled(): Boolean{ return musicShuffled }
@@ -221,22 +225,28 @@ class SimpleMPService: Service() {
         val songPath: String
         val songTitle: String
         val songArtist: String
-        val songAlbumArt: Bitmap?
+        val songUri: Uri
+        val songAlbumID: Long
+        val songAlbumArt: Bitmap
 
 
         if( !musicShuffled ) {
 
             songPath = playList[currentSongPosition].path
             songTitle = playList[currentSongPosition].title
-            songArtist = playList[currentSongPosition].artist
-            songAlbumArt = playList[currentSongPosition].albumArt
+            songArtist = playList[currentSongPosition].artistName
+            songUri = playList[currentSongPosition].uri
+            songAlbumID = playList[currentSongPosition].albumID
+            songAlbumArt = GetSongs.getSongAlbumArt(context, songUri, songAlbumID)
         }
         else{
 
             songPath = shuffledPlaylist[currentSongPosition].path
             songTitle = shuffledPlaylist[currentSongPosition].title
-            songArtist = shuffledPlaylist[currentSongPosition].artist
-            songAlbumArt = shuffledPlaylist[currentSongPosition].albumArt
+            songArtist = shuffledPlaylist[currentSongPosition].artistName
+            songUri = shuffledPlaylist[currentSongPosition].uri
+            songAlbumID = shuffledPlaylist[currentSongPosition].albumID
+            songAlbumArt = GetSongs.getSongAlbumArt(context, songUri, songAlbumID)
         }
 
         currentSongPath = songPath
@@ -396,7 +406,7 @@ class SimpleMPService: Service() {
             //Is it's the last song
             else if( (currentSongPosition + 1) == playList.size ){
 
-                mediaPlayer.stop()
+                stopMediaPlayer()
             }
             else{
 
@@ -417,11 +427,12 @@ class SimpleMPService: Service() {
     fun isLooping(): Boolean{ return loop }
 
 
-    fun stopMediaPlayer( context: Context ){
+    fun stopMediaPlayer(){
 
         onMediaPlayerStoppedListener?.onMediaPlayerStopped()
         mediaPlayer.stop()
         currentSongPosition = -1
+        currentSongPath = ""
         stopForeground(true)
         stopSelf()
     }

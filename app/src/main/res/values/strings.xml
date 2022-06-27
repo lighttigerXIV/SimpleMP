@@ -21,10 +21,15 @@
 
     <string name="Sort">Sort</string>
     <string name="SearchSongOrArtist">Search song or artist</string>
+    <string name="SearchArtist">Search artist</string>
+    <string name="SearchAlbumOrArtist">Search album or artist</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="previousSong">Previous Song</string>
     <string name="pauseSong">Pause Song</string>
+
+    <string name="Songs">Songs</string>
+    <string name="Albums">Albums</string>
 
     <string name="Settings">Settings</string>
     <string name="SortAZ">Sort A..Z</string>

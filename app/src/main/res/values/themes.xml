@@ -28,6 +28,16 @@
         <item name="itemIconTint">@color/white</item>
     </style>
 
+    <style name="Custom_TabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/CustomLayoutTextAppearance</item>
+    </style>
+
+    <style name="CustomLayoutTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+
+    </style>
+
     <style name="Custom_RoundImage" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">4dp</item>

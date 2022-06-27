@@ -22,12 +22,18 @@
         <entry key="app/src/main/res/layout/activity_album2.xml" value="0.23856348867037194" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.23386062419837536" />
         <entry key="app/src/main/res/layout/activity_playback_notification_intent.xml" value="0.23386062419837536" />
+        <entry key="app/src/main/res/layout/content_activity_album.xml" value="0.1188542112013681" />
+        <entry key="app/src/main/res/layout/content_fragment_album.xml" value="0.2526720820863617" />
         <entry key="app/src/main/res/layout/fragment_album.xml" value="0.4" />
+        <entry key="app/src/main/res/layout/fragment_album_new.xml" value="0.2526720820863617" />
         <entry key="app/src/main/res/layout/fragment_albums.xml" value="0.28489583333333335" />
-        <entry key="app/src/main/res/layout/fragment_artists.xml" value="0.23596014492753623" />
+        <entry key="app/src/main/res/layout/fragment_artist.xml" value="0.4" />
+        <entry key="app/src/main/res/layout/fragment_artists.xml" value="0.4831168831168831" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.536" />
         <entry key="app/src/main/res/layout/fragment_playlists.xml" value="0.28489583333333335" />
-        <entry key="app/src/main/res/layout/rv_albums.xml" value="0.8800000000000001" />
+        <entry key="app/src/main/res/layout/fragment_recycler_view.xml" value="0.23685335613510047" />
+        <entry key="app/src/main/res/layout/rv_albums.xml" value="0.6308510638297873" />
+        <entry key="app/src/main/res/layout/rv_artists.xml" value="0.536" />
         <entry key="app/src/main/res/layout/rv_songs.xml" value="0.536" />
         <entry key="app/src/main/res/layout/sliding_panel.xml" value="0.3484076433121019" />
         <entry key="app/src/main/res/layout/toolbar.xml" value="0.536" />

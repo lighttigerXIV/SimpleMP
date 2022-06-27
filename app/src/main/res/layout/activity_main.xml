@@ -13,6 +13,8 @@
         android:layout_height="0dp"
         android:gravity="bottom"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView_ActivityMain"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:umanoPanelHeight="60dp"
         app:umanoShadowHeight="0dp">
