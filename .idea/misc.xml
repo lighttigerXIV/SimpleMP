@@ -16,6 +16,7 @@
         <entry key="app/src/main/res/drawable/selector_menu_artists.xml" value="0.292" />
         <entry key="app/src/main/res/drawable/selector_menu_home.xml" value="0.292" />
         <entry key="app/src/main/res/drawable/selector_menu_playlists.xml" value="0.292" />
+        <entry key="app/src/main/res/layout-land/fragment_album.xml" value="0.4" />
         <entry key="app/src/main/res/layout-land/sliding_panel.xml" value="0.4" />
         <entry key="app/src/main/res/layout/activity_album.xml" value="0.264" />
         <entry key="app/src/main/res/layout/activity_album2.xml" value="0.23856348867037194" />

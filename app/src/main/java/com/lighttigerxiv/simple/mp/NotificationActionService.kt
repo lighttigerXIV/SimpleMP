@@ -38,7 +38,7 @@ class NotificationActionService: Service() {
 
             when( action ){
 
-                "stop"->smpService.killApp()
+                "stop"->smpService.stopMediaPlayer( applicationContext )
                 "previous"->smpService.previousSong( applicationContext )
                 "playPause"->smpService.pauseResumeMusic( applicationContext )
                 "skip"->smpService.skipSong( applicationContext )

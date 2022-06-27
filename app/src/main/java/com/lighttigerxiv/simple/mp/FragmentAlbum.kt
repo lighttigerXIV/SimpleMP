@@ -29,7 +29,7 @@ class FragmentAlbum : Fragment() {
     private lateinit var tvAlbumArtist: TextView
     private lateinit var rvSongs: RecyclerView
     private var albumID: Long = 0
-    private lateinit var onBackListener: OnBackPressed
+    private var onBackListener: OnBackPressed? = null
     private var songsList = ArrayList<Song>()
 
 
@@ -59,7 +59,7 @@ class FragmentAlbum : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         assignVariables(view)
-        btBack.setOnClickListener { onBackListener.onBackPressed() }
+        btBack.setOnClickListener { onBackListener?.onBackPressed() }
 
         handleBackPressed()
 
@@ -153,7 +153,7 @@ class FragmentAlbum : Fragment() {
 
                     if (isEnabled) {
                         isEnabled = false
-                        onBackListener.onBackPressed()
+                        onBackListener?.onBackPressed()
                     }
                 }
             }

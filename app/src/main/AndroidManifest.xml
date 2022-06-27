@@ -34,34 +34,11 @@
         <service android:name=".NotificationActionService" />
 
         <receiver android:name=".ReceiverOpenApp" />
-        <receiver
-            android:name=".ReceiverStop"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON    " />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name=".ReceiverPreviousSong"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON    " />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name=".ReceiverPlayPause"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name=".ReceiverSkipSong"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-            </intent-filter>
-        </receiver>
+
+        <receiver android:name=".ReceiverStop"> </receiver>
+        <receiver android:name=".ReceiverPreviousSong"> </receiver>
+        <receiver android:name=".ReceiverPlayPause"> </receiver>
+        <receiver android:name=".ReceiverSkipSong"> </receiver>
     </application>
 
 </manifest>

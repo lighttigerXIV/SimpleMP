@@ -83,7 +83,6 @@ class ActivityMain : AppCompatActivity(){
 
     private lateinit var smpService: SimpleMPService
     var serviceBounded = false
-    private var restorePlayer = false
     private var musicWasSelected = false
 
 
@@ -98,7 +97,13 @@ class ActivityMain : AppCompatActivity(){
             assignVariables()
             createNotificationChannel()
             checkPermissions()
-            handleFragmentChanges()
+
+
+
+            //Service Bounding
+            val serviceIntent = Intent( applicationContext, SimpleMPService::class.java )
+            applicationContext.bindService( serviceIntent, connection, Context.BIND_AUTO_CREATE )
+
 
             if( savedInstanceState == null ){
 
@@ -107,18 +112,40 @@ class ActivityMain : AppCompatActivity(){
             }
             else{
 
+                selectedFragment = savedInstanceState.getInt( "selectedFragment")
                 homeWasOpened = savedInstanceState.getBoolean( "homeWasOpened" )
+                artistsWasOpened = savedInstanceState.getBoolean( "artistWasOpened" )
+                albumsWasOpened = savedInstanceState.getBoolean( "albumsWasOpened" )
+                albumIsOpen = savedInstanceState.getBoolean( "albumIsOpen" )
+                playListsWasOpened = savedInstanceState.getBoolean( "playlistsWasOpened")
                 musicWasSelected = savedInstanceState.getBoolean( "musicWasSelected" )
 
 
                 fragmentHome = if( homeWasOpened )
-                    fragmentManager.findFragmentByTag("home") as FragmentHome else
-                    FragmentHome()
+                    fragmentManager.findFragmentByTag("home") as FragmentHome else FragmentHome()
 
-                if( musicWasSelected )
-                    restorePlayer = true
+
+                fragmentArtists = if( artistsWasOpened )
+                    fragmentManager.findFragmentByTag("artists") as FragmentArtists else FragmentArtists()
+
+
+                fragmentAlbums = if( albumsWasOpened )
+                    fragmentManager.findFragmentByTag( "albums" ) as FragmentAlbums else FragmentAlbums()
+
+
+                fragmentAlbum = if( albumIsOpen )
+                    fragmentManager.findFragmentByTag("album") as FragmentAlbum else FragmentAlbum()
+
+
+                fragmentPlaylists = if( playListsWasOpened )
+                    fragmentManager.findFragmentByTag("playlists") as FragmentPlaylists else FragmentPlaylists()
 
             }
+
+            handleFragmentChanges()
+            handleSlidePlayerListeners()
+            handleAlbumOpened()
+            handleAlbumBackPressed()
         }
         catch (exc: Exception) { println("Exception-> $exc") }
     }
@@ -162,18 +189,11 @@ class ActivityMain : AppCompatActivity(){
 
         slidingPanel.panelHeight = 0
 
-
-        val serviceIntent = Intent( applicationContext, SimpleMPService::class.java )
-        applicationContext.bindService( serviceIntent, connection, Context.BIND_AUTO_CREATE )
-
         selectedFragment = 0
         fragmentManager.beginTransaction().add( frameLayout, fragmentHome, "home" ).commit()
         homeWasOpened = true
 
-        ivClosePlayerSlidePlayer.setOnClickListener{
 
-            slidingPanel.panelState = PanelState.COLLAPSED
-        }
     }
 
 
@@ -209,7 +229,6 @@ class ActivityMain : AppCompatActivity(){
 
 
     private fun handleSongSelected(){
-
 
         smpService.setOnMusicSelectedListener( object: SimpleMPService.OnMusicSelectedListener{
             override fun onMusicSelected(playList: ArrayList<Song>, position: Int) {
@@ -334,8 +353,6 @@ class ActivityMain : AppCompatActivity(){
             }
         } )
     }
-
-
 
 
     //Pauses/Plays the music when button is clicked
@@ -508,6 +525,8 @@ class ActivityMain : AppCompatActivity(){
 
     private fun handleSlidePlayerListeners(){
 
+        ivClosePlayerSlidePlayer.setOnClickListener{ slidingPanel.panelState = PanelState.COLLAPSED }
+
         ivPreviousSongSlidePlayer.setOnClickListener{ smpService.previousSong( applicationContext ) }
 
         ivPlayPauseSlidePlayer.setOnClickListener{ smpService.pauseResumeMusic( applicationContext ) }
@@ -546,38 +565,6 @@ class ActivityMain : AppCompatActivity(){
     }
 
 
-    private val connection = object : ServiceConnection {
-
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-
-            val binder = service as SimpleMPService.LocalBinder
-            smpService = binder.getService()
-            serviceBounded = true
-
-
-            handleSongSelected()
-            handleSeekBar()
-            handleMusicPaused()
-            handleMusicResumed()
-            handlePauseResumeMusic()
-            handleSliding()
-            handleSlidePlayerListeners()
-            handleShuffleMusic()
-            handleLoopMusic()
-
-
-            if( restorePlayer or smpService.isMusicPlayingOrPaused())
-                restorePlayer()
-
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-
-            serviceBounded = false
-        }
-    }
-
-
     private fun restorePlayer(){
 
         val playList = smpService.getCurrentPlaylist()
@@ -590,9 +577,6 @@ class ActivityMain : AppCompatActivity(){
 
 
         slidingPanel.panelHeight = 165
-
-        if( homeWasOpened ) fragmentHome.updateCurrentSong()
-        if( albumIsOpen ) fragmentAlbum.updateCurrentSong()
 
 
         setSlidingPanelData( albumArt, title, artist, duration )
@@ -647,15 +631,33 @@ class ActivityMain : AppCompatActivity(){
                 fragmentManager.beginTransaction().hide( fragmentAlbums ).commit()
                 fragmentManager.beginTransaction().add( frameLayout, fragmentAlbum, "album" ).commit()
 
-                fragmentAlbum.setOnBackPressed(object : FragmentAlbum.OnBackPressed{
-                    override fun onBackPressed() {
+                handleAlbumBackPressed()
+            }
+        })
+    }
 
-                        fragmentManager.beginTransaction().remove( fragmentAlbum ).commit()
-                        fragmentManager.beginTransaction().show( fragmentAlbums ).commit()
 
-                        albumIsOpen = false
-                    }
-                })
+    private fun handleAlbumBackPressed(){
+
+        fragmentAlbum.setOnBackPressed(object : FragmentAlbum.OnBackPressed{
+            override fun onBackPressed() {
+
+                fragmentManager.beginTransaction().remove( fragmentAlbum ).commit()
+                fragmentManager.beginTransaction().show( fragmentAlbums ).commit()
+
+                albumIsOpen = false
+            }
+        })
+    }
+
+
+    private fun handleMusicStopped(){
+
+        smpService.setOnMediaPlayerStoppedListener( object : SimpleMPService.OnMediaPlayerStoppedListener{
+            override fun onMediaPlayerStopped() {
+
+                serviceBounded = false
+                slidingPanel.panelHeight = 0
             }
         })
     }
@@ -673,8 +675,12 @@ class ActivityMain : AppCompatActivity(){
         super.onSaveInstanceState(outState)
 
 
+        outState.putInt( "selectedFragment", selectedFragment )
         outState.putBoolean( "homeWasOpened", homeWasOpened )
+        outState.putBoolean( "artistsWasOpened", artistsWasOpened )
+        outState.putBoolean( "albumsWasOpened", albumsWasOpened )
         outState.putBoolean( "musicWasSelected", musicWasSelected )
+        outState.putBoolean( "albumIsOpen", albumIsOpen )
     }
 
 
@@ -689,11 +695,42 @@ class ActivityMain : AppCompatActivity(){
     }
 
 
-    override fun onRequestPermissionsResult( requestCode: Int, permissions: Array<out String>, grantResults: IntArray, ) {
+    override fun onRequestPermissionsResult( requestCode: Int, permissions: Array<out String>, grantResults: IntArray ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if( grantResults[0] == PackageManager.PERMISSION_GRANTED )
             permissionsGranted = true; loadFragmentHome()
 
+    }
+
+
+    private val connection = object : ServiceConnection {
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+
+            val binder = service as SimpleMPService.LocalBinder
+            smpService = binder.getService()
+            serviceBounded = true
+
+
+            handleSongSelected()
+            handleSeekBar()
+            handleMusicPaused()
+            handleMusicResumed()
+            handlePauseResumeMusic()
+            handleMusicStopped()
+            handleSliding()
+            handleShuffleMusic()
+            handleLoopMusic()
+
+
+            if( smpService.isMusicPlayingOrPaused()) restorePlayer()
+            else slidingPanel.panelHeight = 0
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+
+            serviceBounded = false
+        }
     }
 }

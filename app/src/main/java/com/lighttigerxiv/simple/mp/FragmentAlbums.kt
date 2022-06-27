@@ -1,6 +1,7 @@
 package com.lighttigerxiv.simple.mp
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -43,7 +44,17 @@ class FragmentAlbums : Fragment() {
         songsList.sortBy { it.albumName }
 
 
-        rvAlbums.layoutManager = GridLayoutManager( fragmentContext, 2 )
+        val deviceOrientation = fragmentContext.resources.configuration.orientation
+
+        if( deviceOrientation == Configuration.ORIENTATION_PORTRAIT )
+            rvAlbums.layoutManager = GridLayoutManager( fragmentContext, 2 )
+
+        else
+            rvAlbums.layoutManager = GridLayoutManager( fragmentContext, 4 )
+
+
+
+
         rvAlbums.addItemDecoration( RVSpacerHorizontal( 10 ) )
         val adapterSongsRV = AdapterRVAlbums( songsList )
         rvAlbums.adapter = adapterSongsRV

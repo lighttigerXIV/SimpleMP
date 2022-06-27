@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.PopupMenu
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,7 @@ class FragmentHome : Fragment() {
     private lateinit var etSearch: EditText
     private lateinit var ivMenu: ImageView
     private lateinit var rvSongs: RecyclerView
+    private lateinit var progressBar: ProgressBar
     private lateinit var songsList: ArrayList<Song>
 
 
@@ -40,12 +42,10 @@ class FragmentHome : Fragment() {
 
     fun updateCurrentSong(){
 
-        if( serviceBounded ){
-
-            adapterSongsRV.setCurrentSongPath( smpService.getCurrentSongPath() )
-            adapterSongsRV.notifyItemRangeChanged( 0, adapterSongsRV.getPlayListSize() )
-        }
+        adapterSongsRV.setCurrentSongPath( smpService.getCurrentSongPath() )
+        adapterSongsRV.notifyItemRangeChanged( 0, adapterSongsRV.getPlayListSize() )
     }
+
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View? {
 
@@ -57,79 +57,41 @@ class FragmentHome : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         try{
+            assignVariables( view )
 
-            fragmentView = view
-
-
-            assignVariables()
 
             val serviceIntent = Intent( fragmentContext, SimpleMPService::class.java )
             fragmentContext.bindService( serviceIntent, connection, Context.BIND_AUTO_CREATE )
 
 
+
             songsList = GetSongs.getSongsList( fragmentContext )
 
 
-            if(savedInstanceState != null){
-
-                serviceBounded = savedInstanceState.getBoolean( "serviceBounded" )
-            }
-
-
             adapterSongsRV = AdapterSongsRV(songsList)
-
             rvSongs.adapter = adapterSongsRV
 
 
-            adapterSongsRV.setOnItemClickListener( object : AdapterSongsRV.OnItemClickListener{
-                override fun onItemClick(position: Int) {
-
-                    if( serviceBounded ){
-
-                        SimpleMPService.startService(fragmentContext)
-
-
-                        if( smpService.isPlaylistShuffled() )
-                            smpService.toggleShuffle()
-
-
-                        smpService.setPlaylist( adapterSongsRV.getPlaylist() )
-                        smpService.setInitialSongPosition( position )
-                        smpService.playSong( fragmentContext )
-                    }
-                }
-            })
-
-
             handleSearch()
-
-
-            val popupView = fragmentView.findViewById<View>( R.id.ivMenu_FragmentHome )
-            val popupMenu = PopupMenu( fragmentContext, popupView )
-            popupMenu.menuInflater.inflate( R.menu.menu_more_fragment_home, popupMenu.menu )
-
-            ivMenu.setOnClickListener {
-
-                popupMenu.setOnMenuItemClickListener {
-                    when (it.itemId) {
-
-                        R.id.menuDefault-> setSortMode( "Default" )
-
-                        R.id.menuSortByDate-> setSortMode( "Date" )
-
-                        R.id.menuSortAZ-> setSortMode( "AZ" )
-
-                        R.id.menuSortZA-> setSortMode( "ZA" )
-
-                        R.id.menuSortByArtist-> setSortMode( "Artist" )
-                    }
-                    true
-                }
-
-                popupMenu.show()
-            }
+            handleMenu()
+            handleMusicClicked()
         }
         catch ( exc: Exception ){}
+    }
+
+
+    private fun assignVariables( view: View ){
+
+        fragmentView = view
+        fragmentContext = fragmentView.context
+        etSearch = fragmentView.findViewById(R.id.etSearch_FragmentHome)
+        ivMenu = fragmentView.findViewById(R.id.ivMenu_FragmentHome)
+        rvSongs = fragmentView.findViewById(R.id.rvSongs_FragmentHome)
+        progressBar = fragmentView.findViewById(R.id.progressBar_FragmentHome)
+
+
+        rvSongs.layoutManager = LinearLayoutManager(fragmentContext)
+        rvSongs.itemAnimator?.changeDuration = 0
     }
 
 
@@ -159,27 +121,65 @@ class FragmentHome : Fragment() {
     }
 
 
+    private fun handleMenu(){
+
+        val popupView = fragmentView.findViewById<View>( R.id.ivMenu_FragmentHome )
+        val popupMenu = PopupMenu( fragmentContext, popupView )
+        popupMenu.menuInflater.inflate( R.menu.menu_more_fragment_home, popupMenu.menu )
+
+        ivMenu.setOnClickListener {
+
+            popupMenu.setOnMenuItemClickListener {
+
+                when (it.itemId) {
+
+                    R.id.menuDefault-> setSortMode( "Default" )
+
+                    R.id.menuSortByDate-> setSortMode( "Date" )
+
+                    R.id.menuSortAZ-> setSortMode( "AZ" )
+
+                    R.id.menuSortZA-> setSortMode( "ZA" )
+
+                    R.id.menuSortByArtist-> setSortMode( "Artist" )
+                }
+                true
+            }
+
+            popupMenu.show()
+        }
+    }
+
+
     private fun setSortMode( sortMode: String ){
 
         fragmentContext.getSharedPreferences( "Settings", MODE_PRIVATE ).edit().putString( "sort", sortMode ).apply()
         songsList = GetSongs.getSongsList(fragmentContext)
         adapterSongsRV.setPlaylist( songsList )
-        rvSongs.adapter = adapterSongsRV
+        adapterSongsRV.notifyDataSetChanged()
     }
 
 
-    private fun assignVariables(){
+    private fun handleMusicClicked(){
 
-        fragmentContext = fragmentView.context
-        etSearch = fragmentView.findViewById(R.id.etSearch_FragmentHome)
-        ivMenu = fragmentView.findViewById(R.id.ivMenu_FragmentHome)
-        rvSongs = fragmentView.findViewById(R.id.rvSongs_FragmentHome)
+        adapterSongsRV.setOnItemClickListener( object : AdapterSongsRV.OnItemClickListener{
+            override fun onItemClick(position: Int) {
+
+                if( serviceBounded ){
+
+                    SimpleMPService.startService(fragmentContext)
+
+                    if( smpService.isPlaylistShuffled() )
+                        smpService.toggleShuffle()
 
 
-        rvSongs.layoutManager = LinearLayoutManager(fragmentContext)
-        rvSongs.itemAnimator?.changeDuration = 0
+                    smpService.setPlaylist( adapterSongsRV.getPlaylist() )
+                    smpService.setInitialSongPosition( position )
+                    smpService.playSong( fragmentContext )
+                }
+            }
+        })
     }
-
 
     private val connection = object : ServiceConnection{
 
