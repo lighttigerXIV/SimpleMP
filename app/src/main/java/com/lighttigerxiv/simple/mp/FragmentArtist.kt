@@ -12,11 +12,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TableLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
+import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -34,6 +36,7 @@ class FragmentArtist : Fragment() {
     //User interface
     private lateinit var fragmentView: View
     private lateinit var fragmentContext: Context
+    private lateinit var btBack: Button
     private lateinit var ivArtistImage: ShapeableImageView
     private lateinit var tvArtistName: TextView
     private lateinit var tabLayoutContent: TabLayout
@@ -62,53 +65,87 @@ class FragmentArtist : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         handleBackPressed()
         assignVariables(view)
+        btBack.setOnClickListener { onBackPressedListener.onBackPressed() }
 
-        tvArtistName.text = artistName
+        try{
 
-        adapterViewPager = AdapterViewPager( childFragmentManager, lifecycle, artistID)
-        vpContent.adapter = adapterViewPager
+            tvArtistName.text = artistName
 
-        loadArtistImage()
+            adapterViewPager = AdapterViewPager( childFragmentManager, lifecycle, artistID)
+            vpContent.adapter = adapterViewPager
 
-
-        if (savedInstanceState != null){
-
-            songsOpened = savedInstanceState.getBoolean("songsOpened")
-            albumsOpened = savedInstanceState.getBoolean( "albumsOpened" )
-
-            if( songsOpened ){
-
-                handleSongsFragmentListener()
-            }
-
-            if( albumsOpened ){
-
-                val fragment = childFragmentManager.findFragmentByTag("f1") as FragmentRecyclerView
-
-                fragment.setOnAlbumOpenedListener(object : FragmentRecyclerView.OnAlbumOpenedListener{
-                    override fun onAlbumOpened(albumID: Long) {
-
-                        onAlbumOpenedListener.onAlbumOpened(albumID)
-                    }
-                })
-            }
-        }
+            loadArtistImage()
 
 
-        if( !songsOpened ) handleSongsFragmentListener()
-        if( !albumsOpened ) handleAlbumsFragmentListener()
+            if (savedInstanceState != null){
 
+                songsOpened = savedInstanceState.getBoolean("songsOpened")
+                albumsOpened = savedInstanceState.getBoolean( "albumsOpened" )
 
-        TabLayoutMediator(tabLayoutContent, vpContent ) { tab, position ->
-            run {
+                if( songsOpened ){
 
-                when (position) {
+                    handleSongsFragmentListener()
+                }
 
-                    0-> tab.text = getString(R.string.Songs)
-                    1-> tab.text = getString(R.string.Albums)
+                if( albumsOpened ){
+
+                    val fragment = childFragmentManager.findFragmentByTag("f1") as FragmentRecyclerView
+
+                    fragment.setOnAlbumOpenedListener(object : FragmentRecyclerView.OnAlbumOpenedListener{
+                        override fun onAlbumOpened(albumID: Long) {
+
+                            onAlbumOpenedListener.onAlbumOpened(albumID)
+                        }
+                    })
                 }
             }
-        }.attach()
+
+
+            if( !songsOpened ) handleSongsFragmentListener()
+            if( !albumsOpened ) handleAlbumsFragmentListener()
+
+
+            TabLayoutMediator(tabLayoutContent, vpContent ) { tab, position ->
+                run {
+
+                    when (position) {
+
+                        0-> tab.text = getString(R.string.Songs)
+                        1-> tab.text = getString(R.string.Albums)
+                    }
+                }
+            }.attach()
+
+            /*
+            tabLayoutContent.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+
+                    val tabPosition = tab!!.position
+
+                    if( tabPosition == 0 && songsOpened){
+
+                        val fragment = childFragmentManager.findFragmentByTag("f0") as FragmentRecyclerView
+
+
+                        fragment.updateRVHeight()
+                    }
+                    if( tabPosition == 1 && albumsOpened ){
+
+                        val fragment = childFragmentManager.findFragmentByTag("f1") as FragmentRecyclerView
+
+
+                        fragment.updateRVHeight()
+                    }
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+                override fun onTabReselected(tab: TabLayout.Tab?) {}
+            })
+
+             */
+        }
+        catch (exc: Exception){}
     }
 
 
@@ -142,6 +179,7 @@ class FragmentArtist : Fragment() {
 
         fragmentView = view
         fragmentContext = view.context
+        btBack = view.findViewById(R.id.btBack_Toolbar)
         ivArtistImage = view.findViewById(R.id.ivArtistImage_FragmentArtist)
         tvArtistName = view.findViewById(R.id.artistName_FragmentArtist)
         tabLayoutContent = view.findViewById(R.id.tabLayout_FragmentArtist)
@@ -188,7 +226,7 @@ class FragmentArtist : Fragment() {
                                     .asBitmap()
                                     .load(artistImageURL)
                                     .into(object : CustomTarget<Bitmap>(){
-                                        override fun onResourceReady( resource: Bitmap, transition: Transition<in Bitmap>?, ) {
+                                        override fun onResourceReady( resource: Bitmap, transition: Transition<in Bitmap>? ) {
 
                                             ivArtistImage.setImageBitmap( resource )
 
@@ -240,17 +278,28 @@ class FragmentArtist : Fragment() {
 
     fun updateCurrentSong(){
 
-        val fragment = childFragmentManager.findFragmentByTag("f0") as FragmentRecyclerView
-        fragment.updateCurrentSong()
+        try{
+
+            if( songsOpened ) {
+                val fragment = childFragmentManager.findFragmentByTag("f0") as FragmentRecyclerView
+                fragment.updateCurrentSong()
+            }
+        }
+        catch (exc: Exception){}
+
     }
 
     fun resetRecyclerView(){
 
-        if( songsOpened ){
+        try{
 
-            val fragment = childFragmentManager.findFragmentByTag("f0") as FragmentRecyclerView
-            fragment.resetRecyclerView()
+            if( songsOpened ){
+
+                val fragment = childFragmentManager.findFragmentByTag("f0") as FragmentRecyclerView
+                fragment.resetRecyclerView()
+            }
         }
+        catch (exc: Exception){}
     }
 
 
@@ -282,26 +331,31 @@ class FragmentArtist : Fragment() {
 
         override fun createFragment(position: Int): Fragment {
 
+
             val fragment = FragmentRecyclerView()
             val bundle = Bundle()
             bundle.putLong( "artistID", artistID )
 
+            try{
 
-            when(position){
+                when(position){
 
-                0-> {
-                    bundle.putString("page", "songs")
-                    onSongsFragmentOpened.onSongsOpened(fragment)
+                    0-> {
+                        bundle.putString("page", "songs")
+                        onSongsFragmentOpened.onSongsOpened(fragment)
+                    }
+                    1-> {
+                        bundle.putString("page", "albums")
+                        onAlbumsFragmentOpened.onAlbumsOpened(fragment)
+                    }
                 }
-                1-> {
-                    bundle.putString("page", "albums")
-                    onAlbumsFragmentOpened.onAlbumsOpened(fragment)
-                }
+
+                fragment.arguments = bundle
+
+                return fragment
             }
+            catch (exc: Exception){return fragment }
 
-            fragment.arguments = bundle
-
-            return fragment
         }
     }
 }

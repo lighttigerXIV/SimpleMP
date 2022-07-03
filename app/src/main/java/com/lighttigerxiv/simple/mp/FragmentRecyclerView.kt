@@ -7,11 +7,10 @@ import android.content.ServiceConnection
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.IBinder
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -47,7 +46,7 @@ class FragmentRecyclerView : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         assignVariables(view)
-
+        view.requestLayout()
 
 
         if( page == "songs" ){
@@ -97,6 +96,8 @@ class FragmentRecyclerView : Fragment() {
         val artistSongList = ArrayList(songsList)
         artistSongList.removeIf { it.artistID != artistID }
 
+        println("Tamanho-> ${artistSongList.size} songs")
+
         adapterRVSongs = AdapterRVSongs(artistSongList)
         rvContent.adapter = adapterRVSongs
     }
@@ -104,9 +105,9 @@ class FragmentRecyclerView : Fragment() {
 
     private fun loadArtistAlbums(){
 
-        val artistAlbumsList = ArrayList(songsList)
+        var artistAlbumsList = ArrayList(songsList)
         artistAlbumsList.removeIf { it.artistID != artistID }
-        artistAlbumsList.distinctBy { it.albumID }
+        artistAlbumsList = artistAlbumsList.distinctBy { it.albumID } as ArrayList<Song>
         artistAlbumsList.sortBy { it.albumName }
 
         adapterRVAlbums = AdapterRVAlbums(artistAlbumsList)
@@ -155,8 +156,6 @@ class FragmentRecyclerView : Fragment() {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Listeners
 
-
-
     interface OnAlbumOpenedListener { fun onAlbumOpened( albumID: Long ) }
     fun setOnAlbumOpenedListener( listener: OnAlbumOpenedListener){onAlbumOpenedListener = listener }
 
@@ -200,10 +199,10 @@ class FragmentRecyclerView : Fragment() {
         })
     }
 
-
     override fun onResume() {
         super.onResume()
 
         fragmentView.requestLayout()
+        println("Entrou no resume")
     }
 }
