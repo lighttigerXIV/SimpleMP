@@ -1,23 +1,26 @@
 package com.lighttigerxiv.simple.mp
 
 import android.app.*
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Bitmap
-import android.media.AudioAttributes
-import android.media.AudioFocusRequest
-import android.media.AudioManager
+import android.media.*
+import android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY
 import android.media.AudioManager.OnAudioFocusChangeListener
-import android.media.MediaPlayer
-import android.media.session.MediaSession
+import android.media.session.PlaybackState
 import android.net.Uri
 import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.provider.MediaStore
+import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
+import java.io.ByteArrayOutputStream
 
 
 class SimpleMPService: Service() {
@@ -32,14 +35,17 @@ class SimpleMPService: Service() {
     private var currentSongPath: String = ""
     private var loop = false
     private lateinit var audioManager: AudioManager
+    private val musicIntentReceiver = MusicIntentReceiver()
+    private val intentFilter = IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
 
 
     //Listeners
-    private var onMusicSelectedListener: OnMusicSelectedListener ?= null
-    private var onMusicPausedListener: OnMusicPausedListener? = null
-    private var onMusicResumedListener: OnMusicResumedListener? = null
-    private var onMusicSecondPassedListener: OnSecondPassedListener? = null
-    private var onMediaPlayerStoppedListener: OnMediaPlayerStoppedListener? = null
+    var onMusicSelectedListener: OnMusicSelectedListener ?= null
+    var onMusicPausedListener: OnMusicPausedListener? = null
+    var onMusicResumedListener: OnMusicResumedListener? = null
+    var onMusicSecondPassedListener: OnSecondPassedListener? = null
+    var onMusicShuffleToggledListener: OnMusicShuffleToggledListener ?= null
+    var onMediaPlayerStoppedListener: OnMediaPlayerStoppedListener? = null
 
 
     //Player States
@@ -49,7 +55,8 @@ class SimpleMPService: Service() {
 
 
     //Others
-    private lateinit var mediaSession: MediaSession
+    private lateinit var mediaButtonReceiver: ComponentName
+    private lateinit var mediaSession: MediaSessionCompat
 
 
     inner class LocalBinder : Binder() {
@@ -71,7 +78,37 @@ class SimpleMPService: Service() {
 
     override fun onBind(intent: Intent?): IBinder {
 
-        mediaSession = MediaSession(this, "SessionTag")
+        val context = this
+        mediaButtonReceiver = ComponentName(context, ReceiverPlayPause::class.java)
+        mediaSession = MediaSessionCompat(context, "SessionTag")
+        mediaSession.setCallback(object : MediaSessionCompat.Callback(){
+
+            override fun onMediaButtonEvent(mediaButtonIntent: Intent): Boolean {
+
+                val ke = mediaButtonIntent.getParcelableExtra<KeyEvent>(Intent.EXTRA_KEY_EVENT)
+
+                if( ke?.action == KeyEvent.ACTION_DOWN ){
+
+                    if( ke.keyCode == KeyEvent.KEYCODE_MEDIA_PREVIOUS )
+                        previousSong( context )
+
+                    if( ke.keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE )
+                        pauseResumeMusic( context )
+
+                    if( ke.keyCode == KeyEvent.KEYCODE_MEDIA_PLAY )
+                        pauseResumeMusic( context )
+
+                    if( ke.keyCode == KeyEvent.KEYCODE_MEDIA_NEXT )
+                        skipSong( context )
+
+
+                    println( "Ratata-> $ke" )
+                }
+
+                return super.onMediaButtonEvent(mediaButtonIntent)
+            }
+        })
+
 
         return mBinder
     }
@@ -90,6 +127,10 @@ class SimpleMPService: Service() {
     }
 
 
+
+
+
+
     fun setPlaylist( pPlaylist: ArrayList<Song> ){
 
         playList = pPlaylist
@@ -105,7 +146,7 @@ class SimpleMPService: Service() {
 
 
 
-    fun isPlaylistShuffled(): Boolean{ return musicShuffled }
+    fun isMusicShuffled(): Boolean{ return musicShuffled }
 
 
     fun isMusicPlayingOrPaused(): Boolean{ return musicStarted }
@@ -154,6 +195,8 @@ class SimpleMPService: Service() {
                 }
             }
         }
+
+        onMusicShuffleToggledListener?.onMusicShuffleToggled(musicShuffled)
     }
 
 
@@ -228,6 +271,8 @@ class SimpleMPService: Service() {
         val songUri: Uri
         val songAlbumID: Long
         val songAlbumArt: Bitmap
+        val songAlbumArtUri: Uri
+        val songDuration: Int
 
 
         if( !musicShuffled ) {
@@ -238,6 +283,7 @@ class SimpleMPService: Service() {
             songUri = playList[currentSongPosition].uri
             songAlbumID = playList[currentSongPosition].albumID
             songAlbumArt = GetSongs.getSongAlbumArt(context, songUri, songAlbumID)
+            songDuration = playList[currentSongPosition].duration
         }
         else{
 
@@ -247,6 +293,7 @@ class SimpleMPService: Service() {
             songUri = shuffledPlaylist[currentSongPosition].uri
             songAlbumID = shuffledPlaylist[currentSongPosition].albumID
             songAlbumArt = GetSongs.getSongAlbumArt(context, songUri, songAlbumID)
+            songDuration = shuffledPlaylist[currentSongPosition].duration
         }
 
         currentSongPath = songPath
@@ -261,6 +308,8 @@ class SimpleMPService: Service() {
 
 
             requestPlayWithFocus()
+            mediaSession.isActive = true
+
 
 
             //Open App
@@ -291,36 +340,35 @@ class SimpleMPService: Service() {
             val pendingSkipSongIntent = PendingIntent.getBroadcast( context, 1, skipSongIntent, PendingIntent.FLAG_IMMUTABLE )
 
 
-            val mediaSession = MediaSessionCompat(context, "mediaSession")
 
-            val notificationBuilder = NotificationCompat.Builder(context, "Playback")
-
-            notification = notificationBuilder
-                .setSmallIcon(R.drawable.icon)
-                .setContentTitle(songTitle)
+            notification = NotificationCompat.Builder(context, "Playback")
                 .setContentIntent( pendingOpenAppIntent )
-                .setContentText(songArtist)
-                .setLargeIcon( songAlbumArt )
-                .addAction( R.drawable.icon_stop_notification, "Stop Player", pendingStopIntent )
-                .addAction( R.drawable.icon_previous_notification, "Previous Music", pendingPreviousSongIntent )
-                .addAction( R.drawable.icon_pause_notification, "Play Pause Music", pendingPlayPauseIntent )
-                .addAction( R.drawable.icon_next_notification, "Next Music", pendingSkipSongIntent )
                 .setStyle( androidx.media.app.NotificationCompat.MediaStyle()
                     .setMediaSession(mediaSession.sessionToken)
                     .setShowActionsInCompactView(1, 2, 3)
                 )
-                .setPriority( NotificationCompat.PRIORITY_LOW )
+                .setSmallIcon(R.drawable.icon)
+                .addAction( R.drawable.icon_stop_notification, "Stop Player", pendingStopIntent )
+                .addAction( R.drawable.icon_previous_notification, "Previous Music", pendingPreviousSongIntent )
+                .addAction( R.drawable.icon_pause_notification, "Play Pause Music", pendingPlayPauseIntent )
+                .addAction( R.drawable.icon_next_notification, "Next Music", pendingSkipSongIntent )
                 .build()
+
+
+            mediaSession.setMetadata(
+                MediaMetadataCompat.Builder()
+
+                    .putString(MediaMetadata.METADATA_KEY_TITLE, songTitle)
+                    .putString(MediaMetadata.METADATA_KEY_ARTIST, songArtist)
+                    .putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, songAlbumArt)
+                    .putLong(MediaMetadata.METADATA_KEY_DURATION, songDuration.toLong())
+                    .build()
+            )
 
 
             startForeground( 2, notification )
             notificationManager.notify( 2, notification )
-
         }
-
-
-
-        handleMediaButtonsClick( context )
 
 
         handleSongFinished( context )
@@ -345,41 +393,6 @@ class SimpleMPService: Service() {
                     mainHandler.postDelayed( this,1000)
             }
         })
-    }
-
-
-    private fun handleMediaButtonsClick( context: Context ){
-
-        mediaSession.setCallback( object : MediaSession.Callback() {
-
-            override fun onMediaButtonEvent(mediaButtonIntent: Intent): Boolean {
-
-                val ke = mediaButtonIntent.getParcelableExtra<KeyEvent>(Intent.EXTRA_KEY_EVENT)
-
-                if( ke?.action == KeyEvent.ACTION_DOWN ){
-
-                    if( ke.keyCode == KeyEvent.KEYCODE_MEDIA_PREVIOUS )
-                        previousSong( context )
-
-                    if( ke.keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE )
-                        pauseResumeMusic( context )
-
-                    if( ke.keyCode == KeyEvent.KEYCODE_MEDIA_PLAY )
-                        pauseResumeMusic( context )
-
-                    if( ke.keyCode == KeyEvent.KEYCODE_MEDIA_NEXT )
-                        skipSong( context )
-
-
-                    println( "Media Button Action-> $ke" )
-                }
-
-
-                return super.onMediaButtonEvent(mediaButtonIntent)
-            }
-        })
-
-        mediaSession.isActive = true
     }
 
 
@@ -465,6 +478,7 @@ class SimpleMPService: Service() {
 
         val playPauseIcon = R.drawable.icon_play_notification
         mediaPlayer.pause()
+        mediaSession.isActive = false
 
 
         if( onMusicPausedListener != null)
@@ -496,19 +510,18 @@ class SimpleMPService: Service() {
         if( mediaPlayer.isPlaying ) {
 
             playPauseIcon = R.drawable.icon_play_notification
+
+
             mediaPlayer.pause()
 
-            if( onMusicPausedListener != null)
-                onMusicPausedListener?.onMusicPaused()
-
+            if( onMusicPausedListener != null) onMusicPausedListener?.onMusicPaused()
         }
         else {
 
             playPauseIcon = R.drawable.icon_pause_notification
 
 
-            if( onMusicResumedListener != null )
-                onMusicResumedListener?.onMusicResumed()
+            if( onMusicResumedListener != null ) onMusicResumedListener?.onMusicResumed()
 
             requestPlayWithFocus()
         }
@@ -563,21 +576,8 @@ class SimpleMPService: Service() {
     interface OnSecondPassedListener{ fun onSecondPassed(position: Int ) }
 
 
+    interface OnMusicShuffleToggledListener{ fun onMusicShuffleToggled(state: Boolean) }
+
+
     interface OnMediaPlayerStoppedListener{ fun onMediaPlayerStopped() }
-
-
-
-    fun setOnMusicSelectedListener( listener: OnMusicSelectedListener ){ onMusicSelectedListener = listener }
-
-
-    fun setOnMusicPausedListener( listener: OnMusicPausedListener ){ onMusicPausedListener = listener }
-
-
-    fun setOnMusicResumedListener( listener: OnMusicResumedListener ){ onMusicResumedListener = listener }
-
-
-    fun setMusicSecondPassedListener( listener: OnSecondPassedListener ){ onMusicSecondPassedListener = listener }
-
-
-    fun setOnMediaPlayerStoppedListener( listener: OnMediaPlayerStoppedListener ){ onMediaPlayerStoppedListener = listener }
 }

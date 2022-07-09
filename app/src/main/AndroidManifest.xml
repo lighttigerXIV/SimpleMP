@@ -33,10 +33,19 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".SimpleMPService" />
+        <service android:name=".SimpleMPService"> </service>
         <service android:name=".NotificationActionService" />
 
+        <receiver android:name=".MusicIntentReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+                <action android:name="android.intent.action.MEDIA_BUTTON"/>
+            </intent-filter>
+        </receiver>
+
         <receiver android:name=".ReceiverOpenApp" />
+
 
         <receiver android:name=".ReceiverStop"> </receiver>
         <receiver android:name=".ReceiverPreviousSong"> </receiver>

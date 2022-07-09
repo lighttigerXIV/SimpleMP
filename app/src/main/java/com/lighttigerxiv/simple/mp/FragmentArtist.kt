@@ -5,7 +5,6 @@ import android.content.Context.MODE_PRIVATE
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Base64
 import androidx.fragment.app.Fragment
@@ -13,12 +12,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TableLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -52,8 +49,12 @@ class FragmentArtist : Fragment() {
 
 
     //Listeners
-    private lateinit var onBackPressedListener: OnBackPressedListener
-    private lateinit var onAlbumOpenedListener: OnAlbumOpenedListener
+
+    var onBackPressedListener: OnBackPressedListener ?= null
+    interface OnBackPressedListener{ fun onBackPressed() }
+
+    var onAlbumOpenedListener: OnAlbumOpenedListener ?= null
+    interface OnAlbumOpenedListener { fun onAlbumOpened( albumID: Long ) }
 
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View? {
@@ -65,7 +66,7 @@ class FragmentArtist : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         handleBackPressed()
         assignVariables(view)
-        btBack.setOnClickListener { onBackPressedListener.onBackPressed() }
+        btBack.setOnClickListener { onBackPressedListener?.onBackPressed() }
 
         try{
 
@@ -91,12 +92,12 @@ class FragmentArtist : Fragment() {
 
                     val fragment = childFragmentManager.findFragmentByTag("f1") as FragmentRecyclerView
 
-                    fragment.setOnAlbumOpenedListener(object : FragmentRecyclerView.OnAlbumOpenedListener{
+                    fragment.onAlbumOpenedListener = object : FragmentRecyclerView.OnAlbumOpenedListener{
                         override fun onAlbumOpened(albumID: Long) {
 
-                            onAlbumOpenedListener.onAlbumOpened(albumID)
+                            onAlbumOpenedListener?.onAlbumOpened(albumID)
                         }
-                    })
+                    }
                 }
             }
 
@@ -164,12 +165,12 @@ class FragmentArtist : Fragment() {
 
                 albumsOpened = true
 
-                fragment.setOnAlbumOpenedListener(object : FragmentRecyclerView.OnAlbumOpenedListener{
+                fragment.onAlbumOpenedListener = object : FragmentRecyclerView.OnAlbumOpenedListener{
                     override fun onAlbumOpened(albumID: Long) {
 
-                        onAlbumOpenedListener.onAlbumOpened(albumID)
+                        onAlbumOpenedListener?.onAlbumOpened(albumID)
                     }
-                })
+                }
             }
         })
     }
@@ -259,7 +260,7 @@ class FragmentArtist : Fragment() {
 
                     if (isEnabled) {
                         isEnabled = false
-                        onBackPressedListener.onBackPressed()
+                        onBackPressedListener?.onBackPressed()
                     }
                 }
             })
@@ -303,11 +304,7 @@ class FragmentArtist : Fragment() {
     }
 
 
-    interface OnBackPressedListener{ fun onBackPressed() }
-    fun setOnBackPressedListener( listener: OnBackPressedListener ){ onBackPressedListener = listener }
 
-    interface OnAlbumOpenedListener { fun onAlbumOpened( albumID: Long ) }
-    fun setOnAlbumOpenedListener( listener: OnAlbumOpenedListener){onAlbumOpenedListener = listener }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

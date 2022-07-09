@@ -73,7 +73,7 @@ class FragmentAlbum : Fragment() {
         fragmentContext.bindService( serviceIntent, connection, Context.BIND_AUTO_CREATE )
 
 
-        songsList = GetSongs.getSongsList( fragmentContext )
+        songsList = GetSongs.getSongsList( fragmentContext, false )
         songsList.removeIf { it.albumID != albumID }
 
 
@@ -101,7 +101,7 @@ class FragmentAlbum : Fragment() {
                     SimpleMPService.startService(fragmentContext)
 
 
-                    if( smpService.isPlaylistShuffled() )
+                    if( smpService.isMusicShuffled() )
                         smpService.toggleShuffle()
 
 

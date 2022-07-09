@@ -12,6 +12,7 @@ data class Song(
     val albumName: String,
     val albumID: Long,
     val albumArt: Bitmap? = null,
+    val albumArtUri: String?= "",
     val duration: Int,
     val artistName: String,
     val artistID: Long,

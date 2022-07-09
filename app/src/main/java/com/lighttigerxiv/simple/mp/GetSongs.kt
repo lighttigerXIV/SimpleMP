@@ -16,7 +16,7 @@ class GetSongs {
 
 
         @SuppressLint("Range")
-        fun getSongsList(context: Context ): ArrayList<Song>{
+        fun getSongsList(context: Context, sort : Boolean ): ArrayList<Song>{
 
             val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
             val cursor = context.contentResolver.query(uri, null, null, null, null)
@@ -40,7 +40,7 @@ class GetSongs {
 
 
 
-                        val song = Song( id, songPath, songUri, title, albumName , albumID , null, duration, artistName, artistID, year )
+                        val song = Song( id, songPath, songUri, title, albumName , albumID , null, "", duration, artistName, artistID, year )
 
                         if( duration > 60000 )
                             songsList.add( song )
@@ -50,15 +50,16 @@ class GetSongs {
                 cursor.close()
             }
 
+            if( sort ){
 
-            when ( context.getSharedPreferences( "Settings", Context.MODE_PRIVATE).getString( "sort", "Default" ) ) {
+                when ( context.getSharedPreferences( "Settings", Context.MODE_PRIVATE).getString( "sort", "Recent" ) ) {
 
-                "Default"-> songsList.reverse()
-                "Date" -> songsList.sortByDescending { it.year }
-                "AZ" -> songsList.sortBy { it.title }
-                "ZA" -> songsList.sortByDescending { it.title }
-                "Artist"-> songsList.sortBy { it.artistName }
+                    "Recent"-> songsList.reverse()
+                    "Ascendent" -> songsList.sortBy { it.title }
+                    "Descendent" -> songsList.sortByDescending { it.title }
+                }
             }
+
 
             return songsList
         }

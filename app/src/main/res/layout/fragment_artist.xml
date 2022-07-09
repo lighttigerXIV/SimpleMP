@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:paddingStart="20dp"
-    android:paddingEnd="20dp"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
     android:paddingBottom="20dp"
     tools:context=".FragmentArtist">
 
@@ -69,7 +69,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:nestedScrollingEnabled="true"
+
+                android:background="@color/accent"
+                android:nestedScrollingEnabled="false"
                 android:scrollbars="none"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"

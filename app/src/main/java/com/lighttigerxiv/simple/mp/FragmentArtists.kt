@@ -68,7 +68,7 @@ class FragmentArtists : Fragment() {
     //Loads the artists RecyclerView
     private fun loadRVArtists(){
 
-        artistList = GetSongs.getSongsList( fragmentContext )
+        artistList = GetSongs.getSongsList( fragmentContext, false )
         artistList = artistList.distinctBy { it.artistID } as ArrayList<Song>
         artistList.sortBy { it.artistName }
 

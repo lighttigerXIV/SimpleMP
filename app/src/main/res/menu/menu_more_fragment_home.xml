@@ -2,20 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menuDefault"
-        android:title="@string/SortDefault" />
+        android:id="@+id/menuSortByRecent"
+        android:title="@string/SortByRecent" />
+
     <item
-        android:id="@+id/menuSortByDate"
-        android:title="@string/SortByDate" />
+        android:id="@+id/menuSortByOldest"
+        android:title="@string/SortByOldest" />
+
     <item
-        android:id="@+id/menuSortAZ"
-        android:title="@string/SortAZ" />
+        android:id="@+id/menuSortByAscendent"
+        android:title="@string/SortByAscendent" />
     <item
-        android:id="@+id/menuSortZA"
-        android:title="@string/SortZA" />
-    <item
-        android:id="@+id/menuSortByArtist"
-        android:title="@string/SortByArtist" />
+        android:id="@+id/menuSortByDescendent"
+        android:title="@string/SortByDescendent" />
     <item
         android:id="@+id/menuSettings"
         android:title="@string/Settings" />

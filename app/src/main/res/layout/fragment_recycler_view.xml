@@ -12,7 +12,6 @@
         android:id="@+id/rvContent_FragmentRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/card_background"
         android:nestedScrollingEnabled="true"
         android:scrollbars="none"
         android:minHeight="280dp"
