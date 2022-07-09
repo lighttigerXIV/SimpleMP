@@ -36,7 +36,7 @@ class FragmentAlbums : Fragment() {
         fragmentView = view
         fragmentContext = view.context
         rvAlbums = fragmentView.findViewById(R.id.rvAlbums_FragmentAlbums)
-        songsList = GetSongs.getSongsList( fragmentContext )
+        songsList = GetSongs.getSongsList( fragmentContext, false )
         songsList = songsList.distinctBy { it.albumID } as ArrayList<Song>
         songsList.sortBy { it.albumName }
 

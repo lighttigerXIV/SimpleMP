@@ -30,7 +30,7 @@ class FragmentRecyclerView : Fragment() {
     private lateinit var songsList: ArrayList<Song>
     private lateinit var adapterRVSongs: AdapterRVSongs
     private lateinit var adapterRVAlbums: AdapterRVAlbums
-    private var onAlbumOpenedListener: OnAlbumOpenedListener? = null
+
 
 
     //Service
@@ -72,6 +72,8 @@ class FragmentRecyclerView : Fragment() {
 
             loadArtistAlbums()
         }
+
+        fragmentView.requestLayout()
     }
 
 
@@ -84,7 +86,7 @@ class FragmentRecyclerView : Fragment() {
 
         page = arguments?.getString("page").toString()
         artistID = arguments?.getLong("artistID")
-        songsList = GetSongs.getSongsList( fragmentContext )
+        songsList = GetSongs.getSongsList( fragmentContext, false )
 
 
         rvContent.itemAnimator?.changeDuration = 0
@@ -156,16 +158,13 @@ class FragmentRecyclerView : Fragment() {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Listeners
 
+    var onAlbumOpenedListener: OnAlbumOpenedListener? = null
     interface OnAlbumOpenedListener { fun onAlbumOpened( albumID: Long ) }
-    fun setOnAlbumOpenedListener( listener: OnAlbumOpenedListener){onAlbumOpenedListener = listener }
 
     fun updateCurrentSong(){
 
-        if( serviceBounded ){
-
-            adapterRVSongs.setCurrentSongPath( smpService.getCurrentSongPath() )
-            adapterRVSongs.notifyItemRangeChanged( 0, adapterRVSongs.getPlayListSize() )
-        }
+        adapterRVSongs.setCurrentSongPath( smpService.getCurrentSongPath() )
+        adapterRVSongs.notifyItemRangeChanged( 0, adapterRVSongs.getPlayListSize() )
     }
 
     fun resetRecyclerView(){
@@ -203,6 +202,5 @@ class FragmentRecyclerView : Fragment() {
         super.onResume()
 
         fragmentView.requestLayout()
-        println("Entrou no resume")
     }
 }

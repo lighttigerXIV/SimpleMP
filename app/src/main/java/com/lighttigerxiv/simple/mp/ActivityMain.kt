@@ -241,7 +241,7 @@ class ActivityMain : AppCompatActivity(){
 
     private fun handleSongSelected(){
 
-        smpService.setOnMusicSelectedListener( object: SimpleMPService.OnMusicSelectedListener{
+        smpService.onMusicSelectedListener = object: SimpleMPService.OnMusicSelectedListener{
             override fun onMusicSelected(playList: ArrayList<Song>, position: Int) {
 
                 if( homeWasOpened ) fragmentHome.updateCurrentSong()
@@ -269,7 +269,7 @@ class ActivityMain : AppCompatActivity(){
                 ivPlayPauseMiniPlayer.setImageDrawable( iconPause )
                 ivPlayPauseSlidePlayer.setImageDrawable( iconPauseRound )
             }
-        } )
+        }
     }
 
 
@@ -311,7 +311,7 @@ class ActivityMain : AppCompatActivity(){
 
     private fun handleSeekBar(){
 
-        smpService.setMusicSecondPassedListener(object : SimpleMPService.OnSecondPassedListener{
+        smpService.onMusicSecondPassedListener = object : SimpleMPService.OnSecondPassedListener{
             override fun onSecondPassed(position: Int) {
 
                 val seekBarNewPosition = position.div(1000)
@@ -333,7 +333,7 @@ class ActivityMain : AppCompatActivity(){
                 seekbarSongSlidePlayer.progress = seekBarNewPosition
 
             }
-        })
+        }
 
 
         seekbarSongSlidePlayer.setOnSeekBarChangeListener( object: SeekBar.OnSeekBarChangeListener{
@@ -505,7 +505,7 @@ class ActivityMain : AppCompatActivity(){
 
     private fun handleMusicPaused(){
 
-        smpService.setOnMusicPausedListener( object: SimpleMPService.OnMusicPausedListener{
+        smpService.onMusicPausedListener = object: SimpleMPService.OnMusicPausedListener{
 
             override fun onMusicPaused() {
 
@@ -515,13 +515,13 @@ class ActivityMain : AppCompatActivity(){
                 ivPlayPauseMiniPlayer.setImageDrawable( iconPlay )
                 ivPlayPauseSlidePlayer.setImageDrawable( iconPlayRound )
             }
-        } )
+        }
     }
 
 
     private fun handleMusicResumed(){
 
-        smpService.setOnMusicResumedListener( object: SimpleMPService.OnMusicResumedListener{
+        smpService.onMusicResumedListener = object: SimpleMPService.OnMusicResumedListener{
 
             override fun onMusicResumed() {
 
@@ -531,13 +531,13 @@ class ActivityMain : AppCompatActivity(){
                 ivPlayPauseMiniPlayer.setImageDrawable( iconPause )
                 ivPlayPauseSlidePlayer.setImageDrawable( iconPauseRound )
             }
-        } )
+        }
     }
 
 
     private fun handleMusicStopped(){
 
-        smpService.setOnMediaPlayerStoppedListener( object : SimpleMPService.OnMediaPlayerStoppedListener{
+        smpService.onMediaPlayerStoppedListener = object : SimpleMPService.OnMediaPlayerStoppedListener{
             override fun onMediaPlayerStopped() {
 
                 slidingPanel.panelState = PanelState.HIDDEN
@@ -549,25 +549,28 @@ class ActivityMain : AppCompatActivity(){
                 if( artistIsOpen ) fragmentArtist.resetRecyclerView()
                 if( artistAlbumIsOpen ) fragmentArtistAlbum.resetRecyclerView()
             }
-        })
+        }
+    }
+
+
+    private fun handleMusicShuffled(){
+
+        smpService.onMusicShuffleToggledListener = object : SimpleMPService.OnMusicShuffleToggledListener{
+            override fun onMusicShuffleToggled(state: Boolean) {
+
+                when ( state ){
+
+                    true-> ivShuffleSlidePlayer.setColorFilter( ContextCompat.getColor( applicationContext, R.color.mainPurple ) )
+                    false-> ivShuffleSlidePlayer.setColorFilter( ContextCompat.getColor( applicationContext, R.color.icon ) )
+                }
+            }
+        }
     }
 
 
     private fun handleShuffleMusic(){
 
-        ivShuffleSlidePlayer.setOnClickListener {
-
-            if( !smpService.isPlaylistShuffled() ){
-
-                ivShuffleSlidePlayer.setColorFilter( ContextCompat.getColor( applicationContext, R.color.mainPurple ) )
-            }
-            else{
-
-                ivShuffleSlidePlayer.setColorFilter( ContextCompat.getColor( applicationContext, R.color.icon ) )
-            }
-
-            smpService.toggleShuffle()
-        }
+        ivShuffleSlidePlayer.setOnClickListener { smpService.toggleShuffle() }
     }
 
 
@@ -635,7 +638,7 @@ class ActivityMain : AppCompatActivity(){
 
             setSlidingPanelData( albumArt, title, artist, duration )
 
-            if( smpService.isPlaylistShuffled() ){
+            if( smpService.isMusicShuffled() ){
 
                 ivShuffleSlidePlayer.setColorFilter( ContextCompat.getColor( applicationContext, R.color.mainPurple ) )
             }
@@ -696,7 +699,7 @@ class ActivityMain : AppCompatActivity(){
 
     private fun handleArtistBackPressed(){
 
-        fragmentArtist.setOnBackPressedListener(object : FragmentArtist.OnBackPressedListener{
+        fragmentArtist.onBackPressedListener = object : FragmentArtist.OnBackPressedListener{
             override fun onBackPressed() {
 
                 fragmentManager.beginTransaction().remove( fragmentArtist ).commit()
@@ -704,13 +707,13 @@ class ActivityMain : AppCompatActivity(){
 
                 artistIsOpen = false
             }
-        })
+        }
     }
 
 
     private fun handleArtistAlbumOpened(){
 
-        fragmentArtist.setOnAlbumOpenedListener(object : FragmentArtist.OnAlbumOpenedListener{
+        fragmentArtist.onAlbumOpenedListener = object : FragmentArtist.OnAlbumOpenedListener{
             override fun onAlbumOpened(albumID: Long) {
 
                 val bundle = Bundle()
@@ -725,7 +728,7 @@ class ActivityMain : AppCompatActivity(){
 
                 handleArtistAlbumBackPressed()
             }
-        })
+        }
     }
 
 
@@ -835,8 +838,8 @@ class ActivityMain : AppCompatActivity(){
             handleMusicPaused()
             handleMusicResumed()
             handlePauseResumeMusic()
+            handleMusicShuffled()
             handleMusicStopped()
-
             handlePanelSliding()
             handleShuffleMusic()
             handleLoopMusic()

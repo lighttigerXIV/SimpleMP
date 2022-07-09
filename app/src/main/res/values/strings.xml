@@ -32,12 +32,14 @@
     <string name="Albums">Albums</string>
 
     <string name="Settings">Settings</string>
-    <string name="SortAZ">Sort A..Z</string>
-    <string name="SortZA">Sort Z..A</string>
+    <string name="SortByAscendent">Sort By Ascendent</string>
+    <string name="SortByDescendent">Sort By Descendent</string>
     <string name="SortByArtist">Sort By Artist</string>
     <string name="SortByDate">Sort By Date</string>
-    <string name="SortDefault">Default Sort</string>
+    <string name="SortByRecent">Sort By Recent</string>
+    <string name="SortByOldest">Sort By Oldest</string>
     <string name="title_activity_album">ActivityAlbum</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

@@ -17,17 +17,20 @@ import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class FragmentHome : Fragment() {
 
-    //UI
+    //Main
     private lateinit var fragmentContext: Context
     private lateinit var fragmentView: View
     private lateinit var etSearch: EditText
     private lateinit var ivMenu: ImageView
     private lateinit var rvSongs: RecyclerView
     private lateinit var progressBar: ProgressBar
+    private lateinit var fabShuffle: FloatingActionButton
+
     private lateinit var songsList: ArrayList<Song>
 
 
@@ -72,7 +75,7 @@ class FragmentHome : Fragment() {
 
 
 
-            songsList = GetSongs.getSongsList( fragmentContext )
+            songsList = GetSongs.getSongsList( fragmentContext, true )
 
 
             adapterRVSongs = AdapterRVSongs(songsList)
@@ -81,6 +84,7 @@ class FragmentHome : Fragment() {
 
             handleSearch()
             handleMenu()
+            handleFabShuffle()
             handleMusicClicked()
         }
         catch ( exc: Exception ){}
@@ -95,6 +99,7 @@ class FragmentHome : Fragment() {
         ivMenu = fragmentView.findViewById(R.id.ivMenu_FragmentHome)
         rvSongs = fragmentView.findViewById(R.id.rvSongs_FragmentHome)
         progressBar = fragmentView.findViewById(R.id.progressBar_FragmentHome)
+        fabShuffle = view.findViewById(R.id.fabShuffle_FragmentHome)
 
 
         rvSongs.layoutManager = LinearLayoutManager(fragmentContext)
@@ -137,15 +142,13 @@ class FragmentHome : Fragment() {
 
                 when (it.itemId) {
 
-                    R.id.menuDefault-> setSortMode( "Default" )
+                    R.id.menuSortByRecent-> setSortMode( "Recent" )
 
-                    R.id.menuSortByDate-> setSortMode( "Date" )
+                    R.id.menuSortByOldest-> setSortMode( "Oldest" )
 
-                    R.id.menuSortAZ-> setSortMode( "AZ" )
+                    R.id.menuSortByAscendent-> setSortMode( "Ascendent" )
 
-                    R.id.menuSortZA-> setSortMode( "ZA" )
-
-                    R.id.menuSortByArtist-> setSortMode( "Artist" )
+                    R.id.menuSortByDescendent-> setSortMode( "Descendent" )
                 }
                 true
             }
@@ -158,9 +161,30 @@ class FragmentHome : Fragment() {
     private fun setSortMode( sortMode: String ){
 
         fragmentContext.getSharedPreferences( "Settings", MODE_PRIVATE ).edit().putString( "sort", sortMode ).apply()
-        songsList = GetSongs.getSongsList(fragmentContext)
+        songsList = GetSongs.getSongsList(fragmentContext, true)
         adapterRVSongs.setPlaylist( songsList )
         adapterRVSongs.notifyDataSetChanged()
+    }
+
+
+    private fun handleFabShuffle(){
+
+        fabShuffle.setOnClickListener {
+
+            if( songsList.size > 0 && serviceBounded ){
+
+                SimpleMPService.startService(fragmentContext)
+
+
+
+                smpService.setPlaylist( adapterRVSongs.getPlaylist() )
+                if( !smpService.isMusicShuffled() ) smpService.toggleShuffle()
+
+                val randomPosition = (1..songsList.size).random()
+                smpService.setInitialSongPosition( randomPosition - 1)
+                smpService.playSong( fragmentContext )
+            }
+        }
     }
 
 
@@ -173,12 +197,21 @@ class FragmentHome : Fragment() {
 
                     SimpleMPService.startService(fragmentContext)
 
-                    if( smpService.isPlaylistShuffled() )
-                        smpService.toggleShuffle()
 
+                    val newPlaylist = ArrayList(songsList)
 
-                    smpService.setPlaylist( adapterRVSongs.getPlaylist() )
-                    smpService.setInitialSongPosition( position )
+                    if( smpService.isMusicShuffled() ){
+
+                        newPlaylist.shuffle()
+                        smpService.setInitialSongPosition( 0 )
+                    }
+                    else{
+
+                        smpService.setInitialSongPosition( position )
+                    }
+
+                    smpService.setPlaylist( newPlaylist )
+
                     smpService.playSong( fragmentContext )
                 }
             }
