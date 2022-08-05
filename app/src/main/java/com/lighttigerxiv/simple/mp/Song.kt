@@ -7,15 +7,16 @@ data class Song(
 
     val id: Long,
     val path: String,
-    val uri: Uri,
     val title: String,
     val albumName: String,
     val albumID: Long,
-    val albumArt: Bitmap? = null,
+    val albumArt: String = "",
     val albumArtUri: String?= "",
     val duration: Int,
     val artistName: String,
     val artistID: Long,
     val year: Int,
+    val genreID: Long,
+    val genre: String,
     var selected: Boolean = false
 )

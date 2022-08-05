@@ -5,14 +5,16 @@
     android:id="@+id/clMain_RVPlaylists"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp"
+    android:padding="10dp"
     app:layout_constraintDimensionRatio="1:1">
 
     <TextView
         android:id="@+id/playlistName_RVPlaylists"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,11 +24,12 @@
         android:id="@+id/playlistArt_RVPlaylists"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/icon_music_record"
-        android:backgroundTint="@color/icon"
+        android:padding="10dp"
+        android:tint="@color/icon"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/Custom_RoundImage" />
+        app:shapeAppearanceOverlay="@style/Custom_RoundImage"
+        app:srcCompat="@drawable/icon_playlist_solid" />
 </androidx.constraintlayout.widget.ConstraintLayout>

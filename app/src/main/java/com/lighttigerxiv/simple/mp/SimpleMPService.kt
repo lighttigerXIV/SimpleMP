@@ -4,23 +4,18 @@ import android.app.*
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.media.*
-import android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY
 import android.media.AudioManager.OnAudioFocusChangeListener
-import android.media.session.PlaybackState
 import android.net.Uri
 import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.provider.MediaStore
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
-import java.io.ByteArrayOutputStream
 
 
 class SimpleMPService: Service() {
@@ -29,14 +24,12 @@ class SimpleMPService: Service() {
     private val mBinder = LocalBinder()
     private lateinit var notification: Notification
     private lateinit var notificationManager: NotificationManager
-    private var playList = ArrayList<Song>()
+    var playList = ArrayList<Song>()
     private var shuffledPlaylist = ArrayList<Song>()
-    private var currentSongPosition: Int = 0
+    var currentSongPosition: Int = 0
     private var currentSongPath: String = ""
-    private var loop = false
+    var onRepeatMode = false
     private lateinit var audioManager: AudioManager
-    private val musicIntentReceiver = MusicIntentReceiver()
-    private val intentFilter = IntentFilter(ACTION_AUDIO_BECOMING_NOISY)
 
 
     //Listeners
@@ -50,7 +43,7 @@ class SimpleMPService: Service() {
 
     //Player States
     private var serviceStarted = false
-    private var musicShuffled = false
+    var musicShuffled = false
     private var musicStarted = false
 
 
@@ -109,7 +102,6 @@ class SimpleMPService: Service() {
             }
         })
 
-
         return mBinder
     }
 
@@ -127,26 +119,11 @@ class SimpleMPService: Service() {
     }
 
 
+    fun getCurrentPlaylist(): ArrayList<Song>{
 
-
-
-
-    fun setPlaylist( pPlaylist: ArrayList<Song> ){
-
-        playList = pPlaylist
+        return if(!musicShuffled) playList else shuffledPlaylist
     }
 
-
-    fun setInitialSongPosition( pCurrentSongPosition: Int){
-
-        currentSongPosition = pCurrentSongPosition
-    }
-
-
-
-
-
-    fun isMusicShuffled(): Boolean{ return musicShuffled }
 
 
     fun isMusicPlayingOrPaused(): Boolean{ return musicStarted }
@@ -200,10 +177,40 @@ class SimpleMPService: Service() {
     }
 
 
-    fun getCurrentPlaylist(): ArrayList<Song>{
+    fun enableShuffle(){
 
-        return if( !musicShuffled ) playList
-        else shuffledPlaylist
+        musicShuffled = true
+
+        shuffledPlaylist = ArrayList(playList)
+        shuffledPlaylist.shuffle()
+
+        onMusicShuffleToggledListener?.onMusicShuffleToggled(true)
+
+
+        currentSongPosition = 0
+    }
+
+
+    fun setPlaylist( newPlaylist: ArrayList<Song> ){ playList = newPlaylist }
+
+
+    fun playSongAndEnableShuffle(context: Context, position: Int){
+
+
+        println("Playlist selecionada $playList")
+        val selectedSong = playList[position]
+        shuffledPlaylist = ArrayList(playList)
+
+
+        shuffledPlaylist.shuffle()
+        shuffledPlaylist.removeIf{ it.path == selectedSong.path }
+        shuffledPlaylist.add(0, selectedSong )
+
+        currentSongPosition = 0
+        playSong(context)
+
+
+        musicShuffled = true
     }
 
 
@@ -214,9 +221,6 @@ class SimpleMPService: Service() {
 
 
     fun getCurrentSongPath(): String{ return currentSongPath }
-
-
-   ///////////////////////////////////////////    Focus    /////////////////////////////////////////////
 
 
     private val audioFocusChangeListener = OnAudioFocusChangeListener { focusChange ->
@@ -244,7 +248,6 @@ class SimpleMPService: Service() {
     }
 
 
-
     private val focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).run {
         setAudioAttributes(AudioAttributes.Builder().run {
             setUsage(AudioAttributes.USAGE_MEDIA)
@@ -257,9 +260,6 @@ class SimpleMPService: Service() {
     }
 
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
     fun playSong(context: Context){
 
         serviceStarted = true
@@ -268,7 +268,7 @@ class SimpleMPService: Service() {
         val songPath: String
         val songTitle: String
         val songArtist: String
-        val songUri: Uri
+        val songID: Long
         val songAlbumID: Long
         val songAlbumArt: Bitmap
         val songAlbumArtUri: Uri
@@ -280,9 +280,9 @@ class SimpleMPService: Service() {
             songPath = playList[currentSongPosition].path
             songTitle = playList[currentSongPosition].title
             songArtist = playList[currentSongPosition].artistName
-            songUri = playList[currentSongPosition].uri
+            songID = playList[currentSongPosition].id
             songAlbumID = playList[currentSongPosition].albumID
-            songAlbumArt = GetSongs.getSongAlbumArt(context, songUri, songAlbumID)
+            songAlbumArt = GetSongs.getSongAlbumArt(context, songID, songAlbumID)
             songDuration = playList[currentSongPosition].duration
         }
         else{
@@ -290,9 +290,9 @@ class SimpleMPService: Service() {
             songPath = shuffledPlaylist[currentSongPosition].path
             songTitle = shuffledPlaylist[currentSongPosition].title
             songArtist = shuffledPlaylist[currentSongPosition].artistName
-            songUri = shuffledPlaylist[currentSongPosition].uri
+            songID = shuffledPlaylist[currentSongPosition].id
             songAlbumID = shuffledPlaylist[currentSongPosition].albumID
-            songAlbumArt = GetSongs.getSongAlbumArt(context, songUri, songAlbumID)
+            songAlbumArt = GetSongs.getSongAlbumArt(context, songID, songAlbumID)
             songDuration = shuffledPlaylist[currentSongPosition].duration
         }
 
@@ -309,8 +309,6 @@ class SimpleMPService: Service() {
 
             requestPlayWithFocus()
             mediaSession.isActive = true
-
-
 
             //Open App
             val openAppIntent = Intent( context, ActivityMain::class.java )
@@ -411,7 +409,7 @@ class SimpleMPService: Service() {
         mediaPlayer.setOnCompletionListener{
 
             //If loop mode is activated
-            if( loop ){
+            if( onRepeatMode ){
 
                 playSong( context )
             }
@@ -433,11 +431,9 @@ class SimpleMPService: Service() {
 
     fun toggleLoop(){
 
-        loop = !loop
+        onRepeatMode = !onRepeatMode
     }
 
-
-    fun isLooping(): Boolean{ return loop }
 
 
     fun stopMediaPlayer(){
@@ -499,8 +495,6 @@ class SimpleMPService: Service() {
         notificationManager.notify( 2, notification )
     }
 
-
-    fun getCurrentPosition(): Int {return currentSongPosition}
 
     @Suppress("DEPRECATION")
     fun pauseResumeMusic(context: Context ){

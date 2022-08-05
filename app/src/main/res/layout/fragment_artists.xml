@@ -12,24 +12,24 @@
         android:id="@+id/etSearch_FragmentArtists"
         style="@style/Custom_EditText"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:ems="10"
         android:hint="@string/SearchArtist"
         android:inputType="textPersonName"
         android:paddingStart="40dp"
         android:paddingEnd="0dp"
         android:textColorHint="@color/text"
-        android:textSize="14sp"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvArtists_FragmentArtists"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/card_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

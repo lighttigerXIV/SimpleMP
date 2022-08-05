@@ -7,7 +7,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 
-class NotificationActionService: Service() {
+class NotificationActionsService: Service() {
 
     var serviceBounded = false
     private lateinit var action: String

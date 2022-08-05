@@ -6,6 +6,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Base64
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -26,6 +29,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.Gson
 import java.io.ByteArrayOutputStream
+import java.util.concurrent.Executors
 
 
 class FragmentArtist : Fragment() {
@@ -46,6 +50,10 @@ class FragmentArtist : Fragment() {
     private var songsOpened = false
     private var albumsOpened = false
     private lateinit var adapterViewPager: AdapterViewPager
+
+
+    //Lifecycle
+    private var artistImageLoaded = false
 
 
     //Listeners
@@ -75,8 +83,6 @@ class FragmentArtist : Fragment() {
             adapterViewPager = AdapterViewPager( childFragmentManager, lifecycle, artistID)
             vpContent.adapter = adapterViewPager
 
-            loadArtistImage()
-
 
             if (savedInstanceState != null){
 
@@ -90,9 +96,9 @@ class FragmentArtist : Fragment() {
 
                 if( albumsOpened ){
 
-                    val fragment = childFragmentManager.findFragmentByTag("f1") as FragmentRecyclerView
+                    val fragment = childFragmentManager.findFragmentByTag("f1") as FragmentArtistRecyclerView
 
-                    fragment.onAlbumOpenedListener = object : FragmentRecyclerView.OnAlbumOpenedListener{
+                    fragment.onAlbumOpenedListener = object : FragmentArtistRecyclerView.OnAlbumOpenedListener{
                         override fun onAlbumOpened(albumID: Long) {
 
                             onAlbumOpenedListener?.onAlbumOpened(albumID)
@@ -117,43 +123,26 @@ class FragmentArtist : Fragment() {
                 }
             }.attach()
 
-            /*
-            tabLayoutContent.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
-                override fun onTabSelected(tab: TabLayout.Tab?) {
+            //Loads artist image asyncronously
+            val executor = Executors.newSingleThreadExecutor()
+            val handler = Handler(Looper.getMainLooper())
 
-                    val tabPosition = tab!!.position
+            executor.execute {
+                handler.post{
 
-                    if( tabPosition == 0 && songsOpened){
-
-                        val fragment = childFragmentManager.findFragmentByTag("f0") as FragmentRecyclerView
-
-
-                        fragment.updateRVHeight()
-                    }
-                    if( tabPosition == 1 && albumsOpened ){
-
-                        val fragment = childFragmentManager.findFragmentByTag("f1") as FragmentRecyclerView
-
-
-                        fragment.updateRVHeight()
-                    }
+                    if( !artistImageLoaded ) loadArtistImage()
                 }
-
-                override fun onTabUnselected(tab: TabLayout.Tab?) {}
-
-                override fun onTabReselected(tab: TabLayout.Tab?) {}
-            })
-
-             */
+            }
         }
         catch (exc: Exception){}
     }
 
 
+
     private fun handleSongsFragmentListener(){
 
         adapterViewPager.setOnSongsFragmentOpened(object : AdapterViewPager.OnSongsFragmentOpened{
-            override fun onSongsOpened(fragment: FragmentRecyclerView) { songsOpened = true }
+            override fun onSongsOpened(fragment: FragmentArtistRecyclerView) { songsOpened = true }
         })
     }
 
@@ -161,11 +150,11 @@ class FragmentArtist : Fragment() {
     private fun handleAlbumsFragmentListener(){
 
         adapterViewPager.setOnAlbumsFragmentOpened(object : AdapterViewPager.OnAlbumsFragmentOpened{
-            override fun onAlbumsOpened(fragment: FragmentRecyclerView) {
+            override fun onAlbumsOpened(fragment: FragmentArtistRecyclerView) {
 
                 albumsOpened = true
 
-                fragment.onAlbumOpenedListener = object : FragmentRecyclerView.OnAlbumOpenedListener{
+                fragment.onAlbumOpenedListener = object : FragmentArtistRecyclerView.OnAlbumOpenedListener{
                     override fun onAlbumOpened(albumID: Long) {
 
                         onAlbumOpenedListener?.onAlbumOpened(albumID)
@@ -195,7 +184,7 @@ class FragmentArtist : Fragment() {
     private fun loadArtistImage(){
 
         val spArtists = fragmentContext.getSharedPreferences( "artists", MODE_PRIVATE )
-        val imageSaved = spArtists.getString(artistName, null)
+        val imageSaved = spArtists.getString(artistID.toString(), null)
 
         if( imageSaved != null ){
 
@@ -205,6 +194,8 @@ class FragmentArtist : Fragment() {
                 val artistImageBitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size)
 
                 ivArtistImage.setImageBitmap( artistImageBitmap )
+
+                artistImageLoaded = true
             }
             catch (exc: Exception){}
         }
@@ -236,7 +227,9 @@ class FragmentArtist : Fragment() {
                                             val b = baos.toByteArray()
                                             val encodedImage = Base64.encodeToString(b, Base64.DEFAULT)
 
-                                            spArtists.edit().putString(artistName, encodedImage).apply()
+                                            spArtists.edit().putString(artistID.toString(), encodedImage).apply()
+
+                                            artistImageLoaded = true
                                         }
 
                                         override fun onLoadCleared(placeholder: Drawable?) {}
@@ -246,6 +239,14 @@ class FragmentArtist : Fragment() {
                         }
                     }
                 }).get()
+            }
+            else{
+
+                val defaultArtistDrawable = ContextCompat.getDrawable(fragmentContext, R.drawable.icon_person_regular)
+                ivArtistImage.setColorFilter(ContextCompat.getColor(fragmentContext, R.color.icon))
+                ivArtistImage.setImageDrawable(defaultArtistDrawable)
+
+                artistImageLoaded = true
             }
         }
     }
@@ -282,7 +283,7 @@ class FragmentArtist : Fragment() {
         try{
 
             if( songsOpened ) {
-                val fragment = childFragmentManager.findFragmentByTag("f0") as FragmentRecyclerView
+                val fragment = childFragmentManager.findFragmentByTag("f0") as FragmentArtistRecyclerView
                 fragment.updateCurrentSong()
             }
         }
@@ -296,7 +297,7 @@ class FragmentArtist : Fragment() {
 
             if( songsOpened ){
 
-                val fragment = childFragmentManager.findFragmentByTag("f0") as FragmentRecyclerView
+                val fragment = childFragmentManager.findFragmentByTag("f0") as FragmentArtistRecyclerView
                 fragment.resetRecyclerView()
             }
         }
@@ -317,10 +318,10 @@ class FragmentArtist : Fragment() {
         private lateinit var onAlbumsFragmentOpened: OnAlbumsFragmentOpened
 
 
-        interface OnSongsFragmentOpened{ fun onSongsOpened( fragment: FragmentRecyclerView ) }
+        interface OnSongsFragmentOpened{ fun onSongsOpened( fragment: FragmentArtistRecyclerView ) }
         fun setOnSongsFragmentOpened(listener: OnSongsFragmentOpened){onSongsFragmentOpened = listener}
 
-        interface OnAlbumsFragmentOpened{ fun onAlbumsOpened( fragment: FragmentRecyclerView ) }
+        interface OnAlbumsFragmentOpened{ fun onAlbumsOpened( fragment: FragmentArtistRecyclerView ) }
         fun setOnAlbumsFragmentOpened(listener: OnAlbumsFragmentOpened){onAlbumsFragmentOpened = listener}
 
 
@@ -329,7 +330,7 @@ class FragmentArtist : Fragment() {
         override fun createFragment(position: Int): Fragment {
 
 
-            val fragment = FragmentRecyclerView()
+            val fragment = FragmentArtistRecyclerView()
             val bundle = Bundle()
             bundle.putLong( "artistID", artistID )
 

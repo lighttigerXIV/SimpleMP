@@ -41,14 +41,14 @@ class FragmentAlbum : Fragment() {
 
         if( serviceBounded ){
 
-            adapterRVSongs.setCurrentSongPath( smpService.getCurrentSongPath() )
+            adapterRVSongs.currentSongPath = smpService.getCurrentSongPath()
             adapterRVSongs.notifyItemRangeChanged( 0, adapterRVSongs.getPlayListSize() )
         }
     }
 
     fun resetRecyclerView(){
 
-        adapterRVSongs.setCurrentSongPath( "" )
+        adapterRVSongs.currentSongPath = ""
         adapterRVSongs.notifyItemRangeChanged( 0, adapterRVSongs.getPlayListSize() )
     }
 
@@ -82,8 +82,8 @@ class FragmentAlbum : Fragment() {
 
 
 
-        val songUri = songsList[0].uri
-        val albumArt = GetSongs.getSongAlbumArt( fragmentContext, songUri, albumID )
+        val songID = songsList[0].id
+        val albumArt = GetSongs.getSongAlbumArt( fragmentContext, songID, albumID )
         val albumName = songsList[0].albumName
         val albumArtist = songsList[0].artistName
 
@@ -93,25 +93,26 @@ class FragmentAlbum : Fragment() {
         tvAlbumArtist.text = albumArtist
 
 
-        adapterRVSongs.setOnItemClickListener( object : AdapterRVSongs.OnItemClickListener{
+        adapterRVSongs.onItemClickListener = object : AdapterRVSongs.OnItemClickListener{
             override fun onItemClick(position: Int) {
 
                 if( serviceBounded ){
 
                     SimpleMPService.startService(fragmentContext)
 
+                    smpService.playList = songsList
 
-                    if( smpService.isMusicShuffled() )
-                        smpService.toggleShuffle()
+                    if( smpService.musicShuffled )
+                        smpService.playSongAndEnableShuffle(fragmentContext, position)
 
+                    else{
 
-                    smpService.setPlaylist( adapterRVSongs.getPlaylist() )
-                    smpService.setInitialSongPosition( position )
-                    smpService.playSong( fragmentContext )
-                    updateCurrentSong()
+                        smpService.currentSongPosition = position
+                        smpService.playSong(fragmentContext)
+                    }
                 }
             }
-        })
+        }
     }
 
 
@@ -129,6 +130,7 @@ class FragmentAlbum : Fragment() {
 
 
         rvSongs.layoutManager = LinearLayoutManager(fragmentContext)
+        rvSongs.addItemDecoration(RecyclerViewSpacer(10))
         rvSongs.itemAnimator?.changeDuration = 0
     }
 

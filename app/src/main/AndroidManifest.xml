@@ -4,9 +4,8 @@
     package="com.lighttigerxiv.simple.mp">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 
@@ -24,6 +23,9 @@
         android:theme="@style/Theme.SimpleMP"
         tools:targetApi="31">
         <activity
+            android:name=".ActivityAddToPlaylist"
+            android:exported="false" />
+        <activity
             android:name=".ActivityMain"
             android:exported="true">
             <intent-filter>
@@ -33,24 +35,21 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".SimpleMPService"> </service>
-        <service android:name=".NotificationActionService" />
+        <service android:name=".SimpleMPService"></service>
+        <service android:name=".NotificationActionsService" />
 
-        <receiver android:name=".MusicIntentReceiver"
+        <receiver
+            android:name=".MusicIntentReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
-                <action android:name="android.intent.action.MEDIA_BUTTON"/>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-
         <receiver android:name=".ReceiverOpenApp" />
-
-
-        <receiver android:name=".ReceiverStop"> </receiver>
-        <receiver android:name=".ReceiverPreviousSong"> </receiver>
-        <receiver android:name=".ReceiverPlayPause"> </receiver>
-        <receiver android:name=".ReceiverSkipSong"> </receiver>
+        <receiver android:name=".ReceiverStop"></receiver>
+        <receiver android:name=".ReceiverPreviousSong"></receiver>
+        <receiver android:name=".ReceiverPlayPause"></receiver>
+        <receiver android:name=".ReceiverSkipSong"></receiver>
     </application>
 
 </manifest>

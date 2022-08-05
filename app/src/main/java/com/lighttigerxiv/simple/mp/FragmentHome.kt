@@ -45,14 +45,14 @@ class FragmentHome : Fragment() {
 
     fun updateCurrentSong(){
 
-        adapterRVSongs.setCurrentSongPath( smpService.getCurrentSongPath() )
+        adapterRVSongs.currentSongPath = smpService.getCurrentSongPath()
         adapterRVSongs.notifyItemRangeChanged( 0, adapterRVSongs.getPlayListSize() )
     }
 
 
     fun resetRecyclerView(){
 
-        adapterRVSongs.setCurrentSongPath( "" )
+        adapterRVSongs.currentSongPath = ""
         adapterRVSongs.notifyItemRangeChanged( 0, adapterRVSongs.getPlayListSize() )
     }
 
@@ -74,9 +74,7 @@ class FragmentHome : Fragment() {
             fragmentContext.bindService( serviceIntent, connection, Context.BIND_AUTO_CREATE )
 
 
-
             songsList = GetSongs.getSongsList( fragmentContext, true )
-
 
             adapterRVSongs = AdapterRVSongs(songsList)
             rvSongs.adapter = adapterRVSongs
@@ -103,6 +101,7 @@ class FragmentHome : Fragment() {
 
 
         rvSongs.layoutManager = LinearLayoutManager(fragmentContext)
+        rvSongs.addItemDecoration(RecyclerViewSpacer(10))
         rvSongs.itemAnimator?.changeDuration = 0
     }
 
@@ -121,7 +120,7 @@ class FragmentHome : Fragment() {
                 filteredSongsList.removeIf { !it.title.trim().lowercase().contains(searchText) and !it.artistName.trim().lowercase().contains( searchText ) }
 
 
-                adapterRVSongs.setPlaylist( filteredSongsList )
+                adapterRVSongs.songsList = filteredSongsList
                 adapterRVSongs.notifyDataSetChanged()
             }
 
@@ -162,7 +161,7 @@ class FragmentHome : Fragment() {
 
         fragmentContext.getSharedPreferences( "Settings", MODE_PRIVATE ).edit().putString( "sort", sortMode ).apply()
         songsList = GetSongs.getSongsList(fragmentContext, true)
-        adapterRVSongs.setPlaylist( songsList )
+        adapterRVSongs.songsList = songsList
         adapterRVSongs.notifyDataSetChanged()
     }
 
@@ -176,13 +175,9 @@ class FragmentHome : Fragment() {
                 SimpleMPService.startService(fragmentContext)
 
 
-
-                smpService.setPlaylist( adapterRVSongs.getPlaylist() )
-                if( !smpService.isMusicShuffled() ) smpService.toggleShuffle()
-
-                val randomPosition = (1..songsList.size).random()
-                smpService.setInitialSongPosition( randomPosition - 1)
-                smpService.playSong( fragmentContext )
+                smpService.playList = songsList
+                smpService.enableShuffle()
+                smpService.playSong(fragmentContext)
             }
         }
     }
@@ -190,33 +185,29 @@ class FragmentHome : Fragment() {
 
     private fun handleMusicClicked(){
 
-        adapterRVSongs.setOnItemClickListener( object : AdapterRVSongs.OnItemClickListener{
+        adapterRVSongs.onItemClickListener = object : AdapterRVSongs.OnItemClickListener{
             override fun onItemClick(position: Int) {
 
                 if( serviceBounded ){
 
                     SimpleMPService.startService(fragmentContext)
 
+                    smpService.playList = adapterRVSongs.songsList
 
-                    val newPlaylist = ArrayList(songsList)
+                    if( smpService.musicShuffled ){
 
-                    if( smpService.isMusicShuffled() ){
-
-                        newPlaylist.shuffle()
-                        smpService.setInitialSongPosition( 0 )
+                        smpService.playSongAndEnableShuffle(fragmentContext, position)
                     }
                     else{
 
-                        smpService.setInitialSongPosition( position )
+                        smpService.currentSongPosition = position
+                        smpService.playSong(fragmentContext)
                     }
-
-                    smpService.setPlaylist( newPlaylist )
-
-                    smpService.playSong( fragmentContext )
                 }
             }
-        })
+        }
     }
+
 
     private val connection = object : ServiceConnection{
 

@@ -23,12 +23,11 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/svContent_FragmentArtist"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        android:nestedScrollingEnabled="false"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -83,8 +82,6 @@
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/icon_person_regular"
-                android:backgroundTint="@color/icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -102,5 +99,5 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ivArtistImage_FragmentArtist" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

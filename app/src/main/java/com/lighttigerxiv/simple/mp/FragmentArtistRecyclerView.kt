@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
-class FragmentRecyclerView : Fragment() {
+class FragmentArtistRecyclerView : Fragment() {
 
     //User Interface
     private lateinit var fragmentView: View
@@ -28,6 +28,7 @@ class FragmentRecyclerView : Fragment() {
     private var page = ""
     private var artistID: Long? = 0
     private lateinit var songsList: ArrayList<Song>
+    private lateinit var artistSongList: ArrayList<Song>
     private lateinit var adapterRVSongs: AdapterRVSongs
     private lateinit var adapterRVAlbums: AdapterRVAlbums
 
@@ -46,13 +47,13 @@ class FragmentRecyclerView : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         assignVariables(view)
-        view.requestLayout()
 
 
         if( page == "songs" ){
 
 
             rvContent.layoutManager = LinearLayoutManager(fragmentContext)
+            rvContent.addItemDecoration(RecyclerViewSpacer(10))
 
             loadArtistSongs()
 
@@ -72,8 +73,6 @@ class FragmentRecyclerView : Fragment() {
 
             loadArtistAlbums()
         }
-
-        fragmentView.requestLayout()
     }
 
 
@@ -90,15 +89,14 @@ class FragmentRecyclerView : Fragment() {
 
 
         rvContent.itemAnimator?.changeDuration = 0
+
     }
 
 
     private fun loadArtistSongs(){
 
-        val artistSongList = ArrayList(songsList)
+        artistSongList = ArrayList(songsList)
         artistSongList.removeIf { it.artistID != artistID }
-
-        println("Tamanho-> ${artistSongList.size} songs")
 
         adapterRVSongs = AdapterRVSongs(artistSongList)
         rvContent.adapter = adapterRVSongs
@@ -163,31 +161,39 @@ class FragmentRecyclerView : Fragment() {
 
     fun updateCurrentSong(){
 
-        adapterRVSongs.setCurrentSongPath( smpService.getCurrentSongPath() )
+        adapterRVSongs.currentSongPath = smpService.getCurrentSongPath()
         adapterRVSongs.notifyItemRangeChanged( 0, adapterRVSongs.getPlayListSize() )
     }
 
     fun resetRecyclerView(){
 
-        adapterRVSongs.setCurrentSongPath( "" )
+        adapterRVSongs.currentSongPath = ""
         adapterRVSongs.notifyItemRangeChanged( 0, adapterRVSongs.getPlayListSize() )
     }
 
 
     private fun handleSongSelected(){
 
-        adapterRVSongs.setOnItemClickListener(object : AdapterRVSongs.OnItemClickListener{
+        adapterRVSongs.onItemClickListener = object : AdapterRVSongs.OnItemClickListener{
             override fun onItemClick(position: Int) {
 
-                SimpleMPService.startService(fragmentContext)
+                if( serviceBounded ){
 
+                    SimpleMPService.startService(fragmentContext)
 
-                smpService.setPlaylist( adapterRVSongs.getPlaylist() )
-                smpService.setInitialSongPosition( position )
-                smpService.playSong( fragmentContext )
-                updateCurrentSong()
+                    smpService.setPlaylist(artistSongList)
+
+                    if( smpService.musicShuffled )
+                        smpService.playSongAndEnableShuffle(fragmentContext, position)
+
+                    else{
+
+                        smpService.currentSongPosition = position
+                        smpService.playSong(fragmentContext)
+                    }
+                }
             }
-        })
+        }
     }
 
 
@@ -196,11 +202,5 @@ class FragmentRecyclerView : Fragment() {
         adapterRVAlbums.setOnAlbumClickedListener( object : AdapterRVAlbums.OnAlbumClickedListener{
             override fun onAlbumOpened(albumID: Long) { onAlbumOpenedListener?.onAlbumOpened( albumID ) }
         })
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        fragmentView.requestLayout()
     }
 }

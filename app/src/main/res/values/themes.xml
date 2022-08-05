@@ -20,6 +20,13 @@
         <item name="android:background">@drawable/card_background</item>
         <item name="android:paddingStart">10dp</item>
         <item name="android:paddingEnd">0dp</item>
+        <item name="android:minHeight">50dp</item>
+    </style>
+
+    <style name="Custom_Dialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorPrimary">@color/mainPurple</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:windowBackground">@drawable/card_background</item>
     </style>
 
     <style name="Custom_BottomNav">
@@ -35,7 +42,6 @@
     <style name="CustomLayoutTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
         <item name="android:textAllCaps">false</item>
-
     </style>
 
     <style name="Custom_RoundImage" parent="">

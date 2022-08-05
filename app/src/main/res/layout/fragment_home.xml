@@ -7,22 +7,11 @@
     android:padding="10dp"
     tools:context=".FragmentHome">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSongs_FragmentHome"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.8"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etSearch_FragmentHome" />
-
     <EditText
         android:id="@+id/etSearch_FragmentHome"
         style="@style/Custom_EditText"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_marginEnd="10dp"
         android:ems="10"
         android:hint="@string/SearchSongOrArtist"
@@ -31,7 +20,7 @@
         android:paddingStart="40dp"
         android:paddingEnd="0dp"
         android:textColorHint="@color/text"
-        android:textSize="16sp"
+        android:textSize="15sp"
         app:layout_constraintEnd_toStartOf="@+id/ivMenu_FragmentHome"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -50,9 +39,13 @@
 
     <ImageView
         android:id="@+id/ivMenu_FragmentHome"
-        android:layout_width="20dp"
-        android:layout_height="0dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:adjustViewBounds="false"
+        android:background="@drawable/card_background"
         android:contentDescription="@string/emptyDescription"
+        android:padding="10dp"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="@+id/etSearch_FragmentHome"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/etSearch_FragmentHome"
@@ -72,12 +65,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etSearch_FragmentHome">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSongs_FragmentHome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
+    </androidx.core.widget.NestedScrollView>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabShuffle_FragmentHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="40dp"
         android:clickable="true"
         android:contentDescription="@string/emptyDescription"
         android:src="@drawable/icon_shuffle_regular"

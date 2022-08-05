@@ -73,6 +73,8 @@ class ActivityMain : AppCompatActivity(){
     private var fragmentAlbums = FragmentAlbums()
     private var fragmentAlbum = FragmentAlbum()
     private var fragmentPlaylists = FragmentPlaylists()
+    private var fragmentGenrePlaylist = FragmentGenrePlaylist()
+    private var fragmentUserPlaylist = FragmentUserPlaylist()
 
 
     private var selectedFragment = 0
@@ -82,7 +84,10 @@ class ActivityMain : AppCompatActivity(){
     private var artistAlbumIsOpen = false
     private var albumsWasOpened = false
     private var albumIsOpen = false
-    private var playListsWasOpened = false
+    private var playlistsWasOpened = false
+    private var genrePlaylistIsOpen = false
+    private var userPlaylistIsOpen = false
+
 
     private lateinit var smpService: SimpleMPService
     var serviceBounded = false
@@ -123,6 +128,11 @@ class ActivityMain : AppCompatActivity(){
         handleArtistAlbumBackPressed()
         handleAlbumOpened()
         handleAlbumBackPressed()
+        handleGenrePlaylistOpened()
+        handleGenrePlaylistBackPressed()
+        handleUserPlaylistOpened()
+        handleUserPlaylistBackPressed()
+        handleUserPlaylistDeleted()
     }
 
 
@@ -169,7 +179,9 @@ class ActivityMain : AppCompatActivity(){
         artistAlbumIsOpen = sis.getBoolean("artistAlbumIsOpen")
         albumsWasOpened = sis.getBoolean( "albumsWasOpened" )
         albumIsOpen = sis.getBoolean( "albumIsOpen" )
-        playListsWasOpened = sis.getBoolean( "playlistsWasOpened")
+        playlistsWasOpened = sis.getBoolean( "playlistsWasOpened")
+        genrePlaylistIsOpen = sis.getBoolean("genrePlaylistIsOpen")
+        userPlaylistIsOpen = sis.getBoolean( "userPlaylistIsOpen" )
         musicWasSelected = sis.getBoolean( "musicWasSelected" )
 
 
@@ -197,8 +209,16 @@ class ActivityMain : AppCompatActivity(){
             fragmentManager.findFragmentByTag("album") as FragmentAlbum else FragmentAlbum()
 
 
-        fragmentPlaylists = if( playListsWasOpened )
+        fragmentPlaylists = if( playlistsWasOpened )
             fragmentManager.findFragmentByTag("playlists") as FragmentPlaylists else FragmentPlaylists()
+
+
+        fragmentGenrePlaylist = if( genrePlaylistIsOpen )
+            fragmentManager.findFragmentByTag("genrePlaylist") as FragmentGenrePlaylist else FragmentGenrePlaylist()
+
+
+        fragmentUserPlaylist = if( userPlaylistIsOpen )
+            fragmentManager.findFragmentByTag("userPlaylist") as FragmentUserPlaylist else FragmentUserPlaylist()
     }
 
 
@@ -248,14 +268,16 @@ class ActivityMain : AppCompatActivity(){
                 if( albumIsOpen ) fragmentAlbum.updateCurrentSong()
                 if( artistIsOpen ) fragmentArtist.updateCurrentSong()
                 if( artistAlbumIsOpen ) fragmentArtistAlbum.updateCurrentSong()
+                if( genrePlaylistIsOpen ) fragmentGenrePlaylist.updateCurrentSong()
+                if( userPlaylistIsOpen ) fragmentUserPlaylist.updateCurrentSong()
 
 
                 musicWasSelected = true
                 slidingPanel.panelHeight = 165
 
-                val songUri = playList[position].uri
+                val songID = playList[position].id
                 val songAlbumID = playList[position].albumID
-                val songAlbumArt = GetSongs.getSongAlbumArt( applicationContext, songUri, songAlbumID )
+                val songAlbumArt = GetSongs.getSongAlbumArt( applicationContext, songID, songAlbumID )
                 val songTitle = playList[position].title
                 val songArtist = playList[position].artistName
                 val songDuration = playList[position].duration
@@ -378,32 +400,7 @@ class ActivityMain : AppCompatActivity(){
 
         bottomNav.setOnItemSelectedListener { item ->
 
-            if( selectedFragment == 0 )
-                fragmentManager.beginTransaction().hide( fragmentHome ).commit()
-
-            if( selectedFragment == 1 ){
-
-                if( artistIsOpen )
-                    fragmentManager.beginTransaction().hide( fragmentArtist ).commit()
-
-                if( artistAlbumIsOpen )
-                    fragmentManager.beginTransaction().hide( fragmentArtistAlbum ).commit()
-
-                if( !artistIsOpen and !artistAlbumIsOpen )
-                    fragmentManager.beginTransaction().hide( fragmentArtists ).commit()
-            }
-
-            if( selectedFragment == 2 ) {
-
-                if( albumIsOpen )
-                    fragmentManager.beginTransaction().hide( fragmentAlbum ).commit()
-                else
-                    fragmentManager.beginTransaction().hide(fragmentAlbums).commit()
-            }
-
-            if( selectedFragment == 3 )
-                fragmentManager.beginTransaction().hide( fragmentPlaylists ).commit()
-
+            hideAllFragments()
 
             when( item.itemId ){
 
@@ -471,18 +468,42 @@ class ActivityMain : AppCompatActivity(){
 
                     selectedFragment = 3
 
-                    if( !playListsWasOpened ){
+                    if( !playlistsWasOpened ){
 
                         fragmentManager.beginTransaction().add( frameLayout, fragmentPlaylists, "playlists" ).commit()
-                        playListsWasOpened = true
+                        playlistsWasOpened = true
                     }
 
-                    else
-                        fragmentManager.beginTransaction().show( fragmentPlaylists ).commit()
+                    else{
+
+                        if( genrePlaylistIsOpen )
+                            fragmentManager.beginTransaction().show(fragmentGenrePlaylist).commit()
+
+                        else if( userPlaylistIsOpen )
+                            fragmentManager.beginTransaction().show(fragmentUserPlaylist).commit()
+
+                        else
+                            fragmentManager.beginTransaction().show( fragmentPlaylists ).commit()
+                    }
+
                 }
             }
             true
         }
+    }
+
+
+    private fun hideAllFragments(){
+
+        if( homeWasOpened ) fragmentManager.beginTransaction().hide( fragmentHome ).commit()
+        if( artistsWasOpened ) fragmentManager.beginTransaction().hide( fragmentArtists ).commit()
+        if( artistIsOpen ) fragmentManager.beginTransaction().hide( fragmentArtist ).commit()
+        if( artistAlbumIsOpen ) fragmentManager.beginTransaction().hide( fragmentArtistAlbum ).commit()
+        if( albumsWasOpened ) fragmentManager.beginTransaction().hide(fragmentAlbums).commit()
+        if( albumIsOpen ) fragmentManager.beginTransaction().hide( fragmentAlbum ).commit()
+        if( playlistsWasOpened ) fragmentManager.beginTransaction().hide( fragmentPlaylists ).commit()
+        if( genrePlaylistIsOpen ) fragmentManager.beginTransaction().hide( fragmentGenrePlaylist ).commit()
+        if( userPlaylistIsOpen ) fragmentManager.beginTransaction().hide( fragmentUserPlaylist ).commit()
     }
 
 
@@ -592,7 +613,7 @@ class ActivityMain : AppCompatActivity(){
 
             smpService.toggleLoop()
 
-            if( smpService.isLooping() )
+            if( smpService.onRepeatMode )
                 ivLoopSongSlidePlayer.setColorFilter( ContextCompat.getColor( applicationContext, R.color.mainPurple ) )
 
             else
@@ -619,7 +640,7 @@ class ActivityMain : AppCompatActivity(){
     private fun restorePlayer(){
 
         val playList = smpService.getCurrentPlaylist()
-        val position: Int = smpService.getCurrentPosition()
+        val position: Int = smpService.currentSongPosition
 
 
         if( position == -1 ){
@@ -628,9 +649,9 @@ class ActivityMain : AppCompatActivity(){
         }
         else{
 
-            val songUri = playList[position].uri
+            val songID = playList[position].id
             val albumID = playList[position].albumID
-            val albumArt = GetSongs.getSongAlbumArt( applicationContext, songUri, albumID )
+            val albumArt = GetSongs.getSongAlbumArt( applicationContext, songID, albumID )
             val title = playList[position].title
             val artist = playList[position].artistName
             val duration = playList[position].duration
@@ -638,12 +659,12 @@ class ActivityMain : AppCompatActivity(){
 
             setSlidingPanelData( albumArt, title, artist, duration )
 
-            if( smpService.isMusicShuffled() ){
+            if( smpService.musicShuffled ){
 
                 ivShuffleSlidePlayer.setColorFilter( ContextCompat.getColor( applicationContext, R.color.mainPurple ) )
             }
 
-            if( smpService.isLooping() ){
+            if( smpService.onRepeatMode ){
 
                 ivLoopSongSlidePlayer.setColorFilter( ContextCompat.getColor( applicationContext, R.color.mainPurple ) )
             }
@@ -782,6 +803,94 @@ class ActivityMain : AppCompatActivity(){
     }
 
 
+    private fun handleGenrePlaylistOpened() {
+
+        fragmentPlaylists.onGenrePlaylistClickListener = object : FragmentPlaylists.OnGenrePlaylistClickListener{
+            override fun onPlaylistClicked(genreID: Long) {
+
+                val bundle = Bundle()
+                bundle.putBoolean("isGenrePlaylist", true)
+                bundle.putLong( "genreID", genreID )
+                fragmentGenrePlaylist = FragmentGenrePlaylist()
+                fragmentGenrePlaylist.arguments = bundle
+                genrePlaylistIsOpen = true
+
+
+                fragmentManager.beginTransaction().hide( fragmentPlaylists ).commit()
+                fragmentManager.beginTransaction().add( frameLayout, fragmentGenrePlaylist, "genrePlaylist" ).commit()
+
+                handleGenrePlaylistBackPressed()
+            }
+        }
+    }
+
+
+    private fun handleGenrePlaylistBackPressed(){
+
+        fragmentGenrePlaylist.onBackPressedListener = object : FragmentGenrePlaylist.OnBackPressedListener{
+            override fun onBackPressed() {
+
+                fragmentManager.beginTransaction().remove( fragmentGenrePlaylist ).commit()
+                fragmentManager.beginTransaction().show( fragmentPlaylists ).commit()
+
+                genrePlaylistIsOpen = false
+            }
+        }
+    }
+
+
+    private fun handleUserPlaylistOpened() {
+
+        fragmentPlaylists.onUserPlaylistClickListener = object : FragmentPlaylists.OnUserPlaylistClickListener{
+            override fun onPlaylistClicked(id: Int) {
+
+                val bundle = Bundle()
+                bundle.putInt( "playlistID", id )
+                fragmentUserPlaylist = FragmentUserPlaylist()
+                fragmentUserPlaylist.arguments = bundle
+                userPlaylistIsOpen = true
+
+
+                fragmentManager.beginTransaction().hide( fragmentPlaylists ).commit()
+                fragmentManager.beginTransaction().add( frameLayout, fragmentUserPlaylist, "userPlaylist" ).commit()
+
+                handleUserPlaylistBackPressed()
+                handleUserPlaylistDeleted()
+            }
+        }
+    }
+
+
+    private fun handleUserPlaylistBackPressed(){
+
+        fragmentUserPlaylist.onBackPressedListener = object : FragmentUserPlaylist.OnBackPressedListener{
+            override fun onBackPressed() {
+
+                fragmentManager.beginTransaction().remove( fragmentUserPlaylist ).commit()
+                fragmentManager.beginTransaction().show( fragmentPlaylists ).commit()
+
+                userPlaylistIsOpen = false
+            }
+        }
+    }
+
+
+    private fun handleUserPlaylistDeleted(){
+
+        fragmentUserPlaylist.onPlaylistDeletedListener = object : FragmentUserPlaylist.OnPlaylistDeletedListener{
+            override fun onPlaylistDeleted() {
+
+                fragmentManager.beginTransaction().remove( fragmentUserPlaylist ).commit()
+                fragmentManager.beginTransaction().show( fragmentPlaylists ).commit()
+
+                userPlaylistIsOpen = false
+
+                fragmentPlaylists.resetUserPlaylists()
+            }
+        }
+    }
+
+
     override fun onDestroy() {
         super.onDestroy()
 
@@ -802,6 +911,9 @@ class ActivityMain : AppCompatActivity(){
         outState.putBoolean( "albumsWasOpened", albumsWasOpened )
         outState.putBoolean( "musicWasSelected", musicWasSelected )
         outState.putBoolean( "albumIsOpen", albumIsOpen )
+        outState.putBoolean("playlistsWasOpened", playlistsWasOpened)
+        outState.putBoolean("genrePlaylistIsOpen", genrePlaylistIsOpen)
+        outState.putBoolean("userPlaylistIsOpen", userPlaylistIsOpen)
     }
 
 

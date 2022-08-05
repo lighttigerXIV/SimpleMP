@@ -26,9 +26,9 @@ class AdapterRVAlbums( private var songsList: ArrayList<Song> ): RecyclerView.Ad
 
         val context = holder.itemView.context
         val song = songsList[position]
-        val songUri = song.uri
+        val songID = song.id
         val songAlbumID = song.albumID
-        val songAlbumArt = GetSongs.getSongAlbumArt( context, songUri, songAlbumID )
+        val songAlbumArt = GetSongs.getSongAlbumArt( context, songID, songAlbumID )
         val songAlbumName = song.albumName
 
 

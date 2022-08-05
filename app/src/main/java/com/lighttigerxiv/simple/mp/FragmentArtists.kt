@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
@@ -137,9 +136,9 @@ class FragmentArtists : Fragment() {
 
             val context = holder.itemView.context
             val artist = artistsList[position]
-            val artistUri = artist.uri
+            val artistSongID = artist.id
             val artistAlbumID = artist.albumID
-            val artistAlbum = GetSongs.getSongAlbumArt( context, artistUri, artistAlbumID )
+            val artistAlbum = GetSongs.getSongAlbumArt( context, artistSongID, artistAlbumID )
             val artistName = artist.artistName
             val artistID = artist.artistID
 
@@ -159,9 +158,9 @@ class FragmentArtists : Fragment() {
 
             init {
 
-                clMain = itemView.findViewById(R.id.clMain_RVArtists)
-                ivArtistAlbum = itemView.findViewById(R.id.artistAlbum_RVArtists)
-                tvArtistName = itemView.findViewById(R.id.artistName_RVArtists)
+                clMain = itemView.findViewById(R.id.clMain_RVPlaylists)
+                ivArtistAlbum = itemView.findViewById(R.id.playlistArt_RVPlaylists)
+                tvArtistName = itemView.findViewById(R.id.playlistName_RVPlaylists)
             }
         }
     }

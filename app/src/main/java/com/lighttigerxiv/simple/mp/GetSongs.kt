@@ -14,62 +14,73 @@ class GetSongs {
 
     companion object{
 
-
         @SuppressLint("Range")
         fun getSongsList(context: Context, sort : Boolean ): ArrayList<Song>{
 
-            val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-            val cursor = context.contentResolver.query(uri, null, null, null, null)
-            val songsList = ArrayList<Song>()
+            try{
+
+                val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                val cursor = context.contentResolver.query(uri, null, null, null, null)
+                val songsList = ArrayList<Song>()
 
 
-            if( cursor != null ){
-                if( cursor.moveToNext() ){
-                    do{
+                if( cursor != null ){
+                    if( cursor.moveToNext() ){
+                        do{
 
-                        val id = cursor.getLong(cursor.getColumnIndex( MediaStore.Audio.Media._ID) )
-                        val songPath = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.DATA) )
-                        val songUri = ContentUris.withAppendedId( uri, id )
-                        val title = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.TITLE ) )
-                        val albumName = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM))
-                        val albumID = cursor.getLong( cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID) )
-                        val duration = cursor.getInt( cursor.getColumnIndex(MediaStore.Audio.Media.DURATION) )
-                        val artistName = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST) )
-                        val artistID = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID) )
-                        val year = cursor.getInt( cursor.getColumnIndex(MediaStore.Audio.Media.YEAR) )
+                            val id = cursor.getLong(cursor.getColumnIndex( MediaStore.Audio.Media._ID) )
+                            val songPath = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.DATA) )
+                            val songUri = ContentUris.withAppendedId( uri, id )
+                            val title = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.TITLE ) )
+                            val albumName = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM))
+                            val albumID = cursor.getLong( cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID) )
+                            val duration = cursor.getInt( cursor.getColumnIndex(MediaStore.Audio.Media.DURATION) )
+                            val artistName = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST) )
+                            val artistID = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID) )
+                            val genreID = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.GENRE_ID))
+                            var genre = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.GENRE))
+                            if( genre == null ) genre = context.getString(R.string.Undefined)
+                            val year = cursor.getInt( cursor.getColumnIndex(MediaStore.Audio.Media.YEAR) )
 
 
 
-                        val song = Song( id, songPath, songUri, title, albumName , albumID , null, "", duration, artistName, artistID, year )
+                            val song = Song( id, songPath, title, albumName , albumID , "", "", duration, artistName, artistID, year,  genreID, genre )
 
-                        if( duration > 60000 )
-                            songsList.add( song )
+                            if( duration > 60000 )
+                                songsList.add( song )
+                        }
+                        while (cursor.moveToNext())
                     }
-                    while (cursor.moveToNext())
+                    cursor.close()
                 }
-                cursor.close()
-            }
 
-            if( sort ){
+                if( sort ){
 
-                when ( context.getSharedPreferences( "Settings", Context.MODE_PRIVATE).getString( "sort", "Recent" ) ) {
+                    when ( context.getSharedPreferences( "Settings", Context.MODE_PRIVATE).getString( "sort", "Recent" ) ) {
 
-                    "Recent"-> songsList.reverse()
-                    "Ascendent" -> songsList.sortBy { it.title }
-                    "Descendent" -> songsList.sortByDescending { it.title }
+                        "Recent"-> songsList.reverse()
+                        "Ascendent" -> songsList.sortBy { it.title }
+                        "Descendent" -> songsList.sortByDescending { it.title }
+                    }
                 }
+
+
+                return songsList
             }
+            catch (exc: Exception){}
 
-
-            return songsList
+            return ArrayList()
         }
 
         @Suppress("DEPRECATION")
-        fun getSongAlbumArt( context: Context, songUri: Uri, albumID: Long ): Bitmap{
+        fun getSongAlbumArt( context: Context, songID: Long, albumID: Long ): Bitmap{
 
             val albumArt: Bitmap = try{
 
                 if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+
+                    val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    val songUri = ContentUris.withAppendedId(uri, songID)
 
                     context.contentResolver.loadThumbnail( songUri, Size(500,500), null )
                 } else{
