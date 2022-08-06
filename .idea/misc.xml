@@ -12,6 +12,9 @@
         <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.2995" />
         <entry key="app/src/main/res/drawable/icon_next_notification.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/icon_pause_notification.xml" value="0.2985" />
+        <entry key="app/src/main/res/drawable/icon_play_notification.xml" value="0.294" />
+        <entry key="app/src/main/res/drawable/icon_previous_notification.xml" value="0.294" />
+        <entry key="app/src/main/res/drawable/icon_stop_notification.xml" value="0.294" />
         <entry key="app/src/main/res/drawable/navigation_bar_background.xml" value="0.292" />
         <entry key="app/src/main/res/drawable/rv_divider.xml" value="0.293" />
         <entry key="app/src/main/res/drawable/selector_menu_albums.xml" value="0.292" />
