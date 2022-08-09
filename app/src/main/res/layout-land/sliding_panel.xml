@@ -98,14 +98,29 @@
 
             <ImageView
                 android:id="@+id/ivClosePlayer_SlidePlayer"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="10dp"
                 android:contentDescription="@string/emptyDescription"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/icon_arrow_down"
                 app:tint="@color/icon" />
+
+            <ImageButton
+                android:id="@+id/ibQueue_SlidePlayer"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="10dp"
+                android:background="@android:color/transparent"
+                android:padding="8dp"
+                android:scaleType="fitXY"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/icon_queue_filled"
+                app:tint="@color/icon"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck"
+                android:contentDescription="@string/emptyDescription" />
 
             <TextView
                 android:id="@+id/title_SlidePlayer"

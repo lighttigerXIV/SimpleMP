@@ -7,6 +7,9 @@
     <string name="menuAlbums">Albums</string>
     <string name="menuPlaylists">Playlists</string>
 
+    <string name="CurrentlyPlaying">Currently Playing</string>
+    <string name="NextSongs">Next Songs</string>
+
 
     <string name="notificationChannelName">Playback</string>
     <string name="notificationChannelDescription">Simple MP Playback</string>

@@ -7,7 +7,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.media.*
 import android.media.AudioManager.OnAudioFocusChangeListener
-import android.net.Uri
 import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
@@ -33,11 +32,12 @@ class SimpleMPService: Service() {
 
 
     //Listeners
-    var onMusicSelectedListener: OnMusicSelectedListener ?= null
+    var onMusicSelectedListener: OnMusicSelectedListener? = null
+    var onMusicSelectedListenerToQueue: OnMusicSelectedListenerToQueue? = null //Since there is no way to have two listeners at same time it needs another listener to the queue list
     var onMusicPausedListener: OnMusicPausedListener? = null
     var onMusicResumedListener: OnMusicResumedListener? = null
     var onMusicSecondPassedListener: OnSecondPassedListener? = null
-    var onMusicShuffleToggledListener: OnMusicShuffleToggledListener ?= null
+    var onMusicShuffleToggledListener: OnMusicShuffleToggledListener? = null
     var onMediaPlayerStoppedListener: OnMediaPlayerStoppedListener? = null
 
 
@@ -93,9 +93,6 @@ class SimpleMPService: Service() {
 
                     if( ke.keyCode == KeyEvent.KEYCODE_MEDIA_NEXT )
                         skipSong( context )
-
-
-                    println( "Ratata-> $ke" )
                 }
 
                 return super.onMediaButtonEvent(mediaButtonIntent)
@@ -139,7 +136,8 @@ class SimpleMPService: Service() {
             val tempShuffledPlaylist = ArrayList<Song>()
 
 
-            for( song in playList ) {
+            //Adds the current song to first position
+            playList.forEach { song ->
 
                 if (song.path != currentSongPath)
                     tempShuffledPlaylist.add(song)
@@ -148,15 +146,14 @@ class SimpleMPService: Service() {
                     shuffledPlaylist.add( song )
             }
 
-
+            //Shuffles the temp playlist and adds it to the one with just the current song
             tempShuffledPlaylist.shuffle()
 
             for( song in tempShuffledPlaylist )
                 shuffledPlaylist.add( song )
 
 
-
-            currentSongPosition = 1
+            currentSongPosition = 0
         }
         else{
 
@@ -197,7 +194,6 @@ class SimpleMPService: Service() {
     fun playSongAndEnableShuffle(context: Context, position: Int){
 
 
-        println("Playlist selecionada $playList")
         val selectedSong = playList[position]
         shuffledPlaylist = ArrayList(playList)
 
@@ -225,20 +221,16 @@ class SimpleMPService: Service() {
 
     private val audioFocusChangeListener = OnAudioFocusChangeListener { focusChange ->
         when (focusChange) {
-            AudioManager.AUDIOFOCUS_GAIN -> {
+            AudioManager.AUDIOFOCUS_GAIN -> {}
 
+            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT->{}
 
-
-            }
-            AudioManager.AUDIOFOCUS_GAIN_TRANSIENT->{
-
-
-            }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
 
                 if( mediaPlayer.isPlaying )
                     pauseMusic(this )
             }
+
             AudioManager.AUDIOFOCUS_LOSS -> {
 
                 if( mediaPlayer.isPlaying )
@@ -271,8 +263,10 @@ class SimpleMPService: Service() {
         val songID: Long
         val songAlbumID: Long
         val songAlbumArt: Bitmap
-        val songAlbumArtUri: Uri
         val songDuration: Int
+
+
+        println("Playlist Aleatória -> $shuffledPlaylist")
 
 
         if( !musicShuffled ) {
@@ -371,18 +365,21 @@ class SimpleMPService: Service() {
 
         handleSongFinished( context )
 
-        if( onMusicSelectedListener != null ){
 
-            if( !musicShuffled )
-                onMusicSelectedListener?.onMusicSelected( playList, currentSongPosition )
+        if( !musicShuffled ) {
+            onMusicSelectedListener?.onMusicSelected(playList, currentSongPosition)
+            onMusicSelectedListenerToQueue?.onMusicSelected(playList, currentSongPosition)
+        }
 
-            else
-                onMusicSelectedListener?.onMusicSelected( shuffledPlaylist, currentSongPosition )
+        else {
+            onMusicSelectedListener?.onMusicSelected(shuffledPlaylist, currentSongPosition)
+            onMusicSelectedListenerToQueue?.onMusicSelected(shuffledPlaylist, currentSongPosition)
         }
 
 
-        val mainHandler = Handler(Looper.getMainLooper())
 
+
+        val mainHandler = Handler(Looper.getMainLooper())
         mainHandler.post( object : Runnable{
             override fun run() {
 
@@ -559,6 +556,9 @@ class SimpleMPService: Service() {
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     interface OnMusicSelectedListener{ fun onMusicSelected( playList: ArrayList<Song>, position: Int ) }
+
+
+    interface OnMusicSelectedListenerToQueue{ fun onMusicSelected( playList: ArrayList<Song>, position: Int ) }
 
 
     interface OnMusicPausedListener{ fun onMusicPaused() }

@@ -8,4 +8,6 @@
     <color name="text">@color/white</color>
     <color name="subText">#C3C3C3</color>
     <color name="divider">#242424</color>
+
+    <color name="mainPurple">#CBA9FF</color>
 </resources>

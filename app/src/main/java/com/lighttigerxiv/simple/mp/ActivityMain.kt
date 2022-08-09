@@ -12,6 +12,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
@@ -46,6 +47,7 @@ class ActivityMain : AppCompatActivity(){
     //Slide Player
     private lateinit var ivAlbumArtSlidePlayer: ShapeableImageView
     private lateinit var ivClosePlayerSlidePlayer: ImageView
+    private lateinit var ibQueueSlidePlayer: ImageButton
     private lateinit var tvSongTitleSlidePlayer: TextView
     private lateinit var tvSongArtistSlidePlayer: TextView
     private lateinit var seekbarSongSlidePlayer: SeekBar
@@ -151,6 +153,7 @@ class ActivityMain : AppCompatActivity(){
         clSlideContent = findViewById(R.id.clSlideContent_ActivityMain)
 
         ivClosePlayerSlidePlayer = findViewById(R.id.ivClosePlayer_SlidePlayer)
+        ibQueueSlidePlayer = findViewById(R.id.ibQueue_SlidePlayer)
         ivAlbumArtSlidePlayer = findViewById(R.id.ivAlbumArt_SlidePlayer)
         tvSongTitleSlidePlayer = findViewById(R.id.title_SlidePlayer)
         tvSongArtistSlidePlayer = findViewById(R.id.artist_SlidePlayer)
@@ -598,6 +601,8 @@ class ActivityMain : AppCompatActivity(){
     private fun handleSlidePlayerListeners(){
 
         ivClosePlayerSlidePlayer.setOnClickListener{ slidingPanel.panelState = PanelState.COLLAPSED }
+
+        ibQueueSlidePlayer.setOnClickListener{ startActivity( Intent(applicationContext, ActivityQueue::class.java) ) }
 
         ivPreviousSongSlidePlayer.setOnClickListener{ smpService.previousSong( applicationContext ) }
 
