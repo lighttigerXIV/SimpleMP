@@ -8,11 +8,19 @@
         <entry key="app/src/main/res/drawable/background_accent_round.xml" value="0.292" />
         <entry key="app/src/main/res/drawable/bottom_sheet_background.xml" value="0.2395" />
         <entry key="app/src/main/res/drawable/card_background.xml" value="0.293" />
+        <entry key="app/src/main/res/drawable/card_background_round.xml" value="0.284" />
+        <entry key="app/src/main/res/drawable/card_green_background.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/card_mono_background.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/card_orange_background.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/card_purple_background.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/card_red_background.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/card_yellow_background.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.293" />
         <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.2995" />
         <entry key="app/src/main/res/drawable/icon_next_notification.xml" value="0.2" />
         <entry key="app/src/main/res/drawable/icon_pause_notification.xml" value="0.2985" />
         <entry key="app/src/main/res/drawable/icon_play_notification.xml" value="0.294" />
+        <entry key="app/src/main/res/drawable/icon_playlists.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/icon_previous_notification.xml" value="0.294" />
         <entry key="app/src/main/res/drawable/icon_stop_notification.xml" value="0.294" />
         <entry key="app/src/main/res/drawable/navigation_bar_background.xml" value="0.292" />
@@ -30,6 +38,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.23386062419837536" />
         <entry key="app/src/main/res/layout/activity_playback_notification_intent.xml" value="0.23386062419837536" />
         <entry key="app/src/main/res/layout/activity_queue.xml" value="0.25555555555555554" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.24957264957264957" />
         <entry key="app/src/main/res/layout/bottom_sheet_add_playlist.xml" value="0.4" />
         <entry key="app/src/main/res/layout/content_activity_album.xml" value="0.1188542112013681" />
         <entry key="app/src/main/res/layout/content_fragment_album.xml" value="0.2526720820863617" />
@@ -37,16 +46,17 @@
         <entry key="app/src/main/res/layout/fragment_album_new.xml" value="0.2526720820863617" />
         <entry key="app/src/main/res/layout/fragment_albums.xml" value="0.28489583333333335" />
         <entry key="app/src/main/res/layout/fragment_artist.xml" value="0.26036767849508335" />
-        <entry key="app/src/main/res/layout/fragment_artists.xml" value="0.4831168831168831" />
+        <entry key="app/src/main/res/layout/fragment_artists.xml" value="0.25085470085470085" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.2556648140230868" />
         <entry key="app/src/main/res/layout/fragment_genre_playlist.xml" value="0.25609234715690465" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.5186147186147186" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25085470085470085" />
         <entry key="app/src/main/res/layout/fragment_playlist.xml" value="0.4" />
         <entry key="app/src/main/res/layout/fragment_playlists.xml" value="0.28489583333333335" />
         <entry key="app/src/main/res/layout/fragment_playlists_recyclerview.xml" value="0.4" />
         <entry key="app/src/main/res/layout/fragment_queue.xml" value="0.4" />
         <entry key="app/src/main/res/layout/fragment_queue_list.xml" value="0.4" />
         <entry key="app/src/main/res/layout/fragment_recycler_view.xml" value="0.23685335613510047" />
+        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.23333333333333334" />
         <entry key="app/src/main/res/layout/fragment_user_playlist.xml" value="0.46687451286048326" />
         <entry key="app/src/main/res/layout/queu.xml" value="0.2151268115942029" />
         <entry key="app/src/main/res/layout/rv_add_to_playlist.xml" value="0.4" />
@@ -60,10 +70,12 @@
         <entry key="app/src/main/res/menu/menu.xml" value="0.2838541666666667" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.28489583333333335" />
         <entry key="app/src/main/res/menu/menu_more_fragment_home.xml" value="0.21462163317657118" />
-        <entry key="app/src/main/res/menu/menu_more_playlist.xml" value="0.2552372808892689" />
+        <entry key="app/src/main/res/menu/menu_more_playlist.xml" value="0.536" />
+        <entry key="app/src/main/res/menu/menu_more_rv_playlist_songs.xml" value="0.25085470085470085" />
         <entry key="app/src/main/res/menu/menu_more_rv_songs.xml" value="0.2552372808892689" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.136" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.136" />
+        <entry key="app/src/main/res/xml/preferences.xml" value="0.4" />
       </map>
     </option>
   </component>

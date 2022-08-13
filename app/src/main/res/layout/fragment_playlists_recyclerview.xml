@@ -2,11 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clMain_FragmentPlaylistsRecyclerview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     android:padding="10dp"
-    tools:context=".FragmentPlaylistsRecyclerview">
+    tools:context=".fragments.FragmentPlaylistsRecyclerview">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clAddPlaylist_FragmentPlaylistsRecyclerview"
@@ -20,14 +21,15 @@
             android:id="@+id/btCreatePlaylist_FragmentPlaylistsRecyclerview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/accent"
+            android:backgroundTint="@color/blue5"
             android:text="@string/CreatePlaylist"
             android:textAllCaps="false"
-            android:textColor="@color/text"
+            android:textColor="@color/blue2"
             android:textSize="12sp"
+            app:cornerRadius="999dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -35,6 +37,7 @@
         android:id="@+id/rvPlaylists_FragmentPlaylistsRecyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

@@ -10,6 +10,7 @@
         android:id="@+id/albumArt_RVSongs"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/Custom_RoundImage" />
@@ -19,10 +20,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="60dp"
         android:singleLine="true"
         android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/ibMore_RVSongs"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/albumArt_RVSongs"
         app:layout_constraintTop_toTopOf="@+id/albumArt_RVSongs" />
 
@@ -32,10 +33,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="2dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="60dp"
         android:textColor="@color/subText"
         android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/ibMore_RVSongs"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/albumArt_RVSongs"
         app:layout_constraintTop_toBottomOf="@+id/title_RVSongs" />
 
@@ -53,6 +54,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/title_RVSongs"
         app:srcCompat="@drawable/icon_three_dots_regular"
+        app:tint="@color/icon" />
+
+    <ImageButton
+        android:id="@+id/ibRemove_RVSongs"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/artist_RVSongs"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/title_RVSongs"
+        app:srcCompat="@drawable/icon_remove_regular"
         app:tint="@color/icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

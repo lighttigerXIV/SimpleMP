@@ -5,7 +5,7 @@
     android:id="@+id/navigationHost_ActivityMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ActivityMain">
+    tools:context=".activities.ActivityMain">
 
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
         android:id="@+id/slidingLayout_ActivityMain"
@@ -22,8 +22,7 @@
         <FrameLayout
             android:id="@+id/frameLayout_ActivityMain"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/background">
+            android:layout_height="match_parent">
 
         </FrameLayout>
 
@@ -34,6 +33,7 @@
             android:background="@drawable/card_background">
 
             <include
+                android:id="@+id/player_ActivityMain"
                 layout="@layout/sliding_panel"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -47,7 +47,6 @@
         style="@style/Custom_BottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background"
         app:itemIconTint="@color/icon"
         app:itemTextColor="@color/text"
         app:labelVisibilityMode="labeled"

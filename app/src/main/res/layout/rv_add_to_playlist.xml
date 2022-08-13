@@ -11,7 +11,7 @@
         android:id="@+id/playlistArt_RVAddToPlaylist"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:backgroundTint="@color/icon"
+        android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/Custom_RoundImage" />

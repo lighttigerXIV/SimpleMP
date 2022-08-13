@@ -10,6 +10,7 @@
         android:id="@+id/clMiniPlayer"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:background="@color/blue2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -19,8 +20,6 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="5dp"
-            android:background="@drawable/icon_music_record"
-            android:backgroundTint="@color/icon"
             android:contentDescription="@string/emptyDescription"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,6 +69,7 @@
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@color/background"
         android:fillViewport="true"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -80,6 +80,7 @@
         app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clSlidePlayer_SidingPanel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -89,8 +90,6 @@
                 android:layout_height="0dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/icon_music_record"
-                android:backgroundTint="@color/icon"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ivClosePlayer_SlidePlayer"
@@ -113,14 +112,14 @@
                 android:layout_height="40dp"
                 android:layout_marginEnd="10dp"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/emptyDescription"
                 android:padding="8dp"
                 android:scaleType="fitXY"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/icon_queue_filled"
                 app:tint="@color/icon"
-                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck"
-                android:contentDescription="@string/emptyDescription" />
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
             <TextView
                 android:id="@+id/title_SlidePlayer"

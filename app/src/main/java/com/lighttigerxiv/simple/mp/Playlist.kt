@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable
 data class Playlist(
 
     val id: Int,
-    val name: String,
-    val image: String,
-    val playlist: ArrayList<Song>
+    var name: String,
+    var imagePath: String?,
+    var playlist: ArrayList<Song>
 )

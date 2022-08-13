@@ -15,6 +15,12 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
+import com.lighttigerxiv.simple.mp.activities.ActivityMain
+import com.lighttigerxiv.simple.mp.others.GetSongs
+import com.lighttigerxiv.simple.mp.services.ReceiverPlayPause
+import com.lighttigerxiv.simple.mp.services.ReceiverPreviousSong
+import com.lighttigerxiv.simple.mp.services.ReceiverSkipSong
+import com.lighttigerxiv.simple.mp.services.ReceiverStop
 
 
 class SimpleMPService: Service() {
@@ -35,6 +41,7 @@ class SimpleMPService: Service() {
     var onMusicSelectedListener: OnMusicSelectedListener? = null
     var onMusicSelectedListenerToQueue: OnMusicSelectedListenerToQueue? = null //Since there is no way to have two listeners at same time it needs another listener to the queue list
     var onMusicPausedListener: OnMusicPausedListener? = null
+    var onPlaylistAdded: OnPlaylistsAdded? = null
     var onMusicResumedListener: OnMusicResumedListener? = null
     var onMusicSecondPassedListener: OnSecondPassedListener? = null
     var onMusicShuffleToggledListener: OnMusicShuffleToggledListener? = null
@@ -553,12 +560,18 @@ class SimpleMPService: Service() {
         }
     }
 
+
+    fun updatePlaylists(){ onPlaylistAdded?.OnPlaylistAdded() }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     interface OnMusicSelectedListener{ fun onMusicSelected( playList: ArrayList<Song>, position: Int ) }
 
 
     interface OnMusicSelectedListenerToQueue{ fun onMusicSelected( playList: ArrayList<Song>, position: Int ) }
+
+
+    interface OnPlaylistsAdded{ fun OnPlaylistAdded() }
 
 
     interface OnMusicPausedListener{ fun onMusicPaused() }

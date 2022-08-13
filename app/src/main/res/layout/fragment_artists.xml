@@ -2,24 +2,25 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clMain_FragmentArtists"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
     android:padding="10dp"
-    tools:context=".FragmentArtists">
+    tools:context=".fragments.FragmentArtists">
 
     <EditText
         android:id="@+id/etSearch_FragmentArtists"
         style="@style/Custom_EditText"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:ems="10"
-        android:hint="@string/SearchArtist"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/card_blue_background"
+        android:gravity="center"
+        android:hint="@string/SearchArtists"
         android:inputType="textPersonName"
         android:paddingStart="40dp"
-        android:paddingEnd="0dp"
-        android:textColorHint="@color/text"
-        android:textSize="15sp"
+        android:paddingEnd="40dp"
+        android:textColorHint="@color/subText"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -36,14 +37,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etSearch_FragmentArtists" />
 
-    <ImageView
-        android:id="@+id/ivIconEtSearch_FragmentArtist"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_marginStart="10dp"
-        android:src="@drawable/icon_search_regular"
-        app:layout_constraintBottom_toBottomOf="@+id/etSearch_FragmentArtists"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/etSearch_FragmentArtists"
-        app:tint="@color/icon" />
 </androidx.constraintlayout.widget.ConstraintLayout>

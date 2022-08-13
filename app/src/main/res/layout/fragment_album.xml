@@ -2,22 +2,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clMain_FragmentAlbum"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentAlbum">
+    tools:context=".fragments.FragmentAlbum">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clToolbar_FragmentAlbum"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
+    <include
+        android:id="@+id/toolbar_FragmentAlbum"
+        layout="@layout/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <include layout="@layout/toolbar" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/svContent_FragmentAlbum"
@@ -28,7 +23,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/clToolbar_FragmentAlbum">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_FragmentAlbum">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clContent_FragmentAlbum"
@@ -39,8 +34,6 @@
                 android:id="@+id/albumArt_FragmentAlbum"
                 android:layout_width="200dp"
                 android:layout_height="0dp"
-                android:background="@drawable/icon_music_record"
-                android:backgroundTint="@color/icon"
                 android:cropToPadding="true"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"

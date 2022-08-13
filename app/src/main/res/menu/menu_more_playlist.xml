@@ -2,11 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menuAddSongs"
-        android:title="@string/AddSongs" />
-    <item
-        android:id="@+id/menuSelectImage"
-        android:title="@string/SelectImage" />
+        android:id="@+id/menuEditPLaylist"
+        android:title="@string/EditPlaylist" />
     <item
         android:id="@+id/menuDeletePlaylist"
         android:title="@string/DeletePlaylist" />

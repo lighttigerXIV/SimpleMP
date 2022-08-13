@@ -2,55 +2,46 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clMain_FragmentHome"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
-    tools:context=".FragmentHome">
+    tools:context=".fragments.FragmentHome">
 
     <EditText
         android:id="@+id/etSearch_FragmentHome"
         style="@style/Custom_EditText"
         android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="10dp"
+        android:layout_height="50dp"
+        android:background="@drawable/card_blue_background"
         android:ems="10"
-        android:hint="@string/SearchSongOrArtist"
+        android:gravity="center"
+        android:hint="@string/SearchSongsOrArtists"
         android:importantForAutofill="no"
         android:inputType="textPersonName"
         android:paddingStart="40dp"
-        android:paddingEnd="0dp"
-        android:textColorHint="@color/text"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toStartOf="@+id/ivMenu_FragmentHome"
+        android:paddingEnd="40dp"
+        android:textColorHint="@color/subText"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/ivEtSearch_FragmentHome"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_marginStart="10dp"
-        android:contentDescription="@string/emptyDescription"
-        android:src="@drawable/icon_search_regular"
-        app:layout_constraintBottom_toBottomOf="@+id/etSearch_FragmentHome"
-        app:layout_constraintStart_toStartOf="@+id/etSearch_FragmentHome"
-        app:layout_constraintTop_toTopOf="@+id/etSearch_FragmentHome"
-        app:tint="@color/icon" />
 
     <ImageView
         android:id="@+id/ivMenu_FragmentHome"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginStart="4dp"
         android:adjustViewBounds="false"
-        android:background="@drawable/card_background"
         android:contentDescription="@string/emptyDescription"
         android:padding="10dp"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="@+id/etSearch_FragmentHome"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/etSearch_FragmentHome"
         app:layout_constraintTop_toTopOf="@+id/etSearch_FragmentHome"
+        app:layout_constraintVertical_bias="0.6"
         app:srcCompat="@drawable/icon_more_regular"
-        app:tint="@color/icon" />
+        app:tint="@color/subText" />
 
     <ProgressBar
         android:id="@+id/progressBar_FragmentHome"

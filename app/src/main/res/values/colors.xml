@@ -9,11 +9,80 @@
     <color name="white">#FFFFFFFF</color>
 
 
+
+    <!--
+    Website for the colors: https://pinetools.com/lighten-color
+
+    1-> 95% lighter
+    2-> 90% lighter
+    3-> 85% lighter
+    4-> 70% lighter
+    5-> original color
+
+    -->
+
+    <!--Blue Colors-->
+    <color name="blue1">#f2f9ff</color>
+    <color name="blue2">#e5f3ff</color>
+    <color name="blue3">#d8edff</color>
+    <color name="blue4">#4cabfe</color>
+    <color name="blue5">#0088ff</color>
+
+
+    <!--Red Colors-->
+    <color name="red1">#fff3f2</color>
+    <color name="red2">#ffe8e5</color>
+    <color name="red3">#ffdcd8</color>
+    <color name="red4">#fe5e4c</color>
+    <color name="red5">#ff1a00</color>
+
+
+    <!--Purple Colors-->
+    <color name="purple1">#fcf2ff</color>
+    <color name="purple2">#f9e5ff</color>
+    <color name="purple3">#f6d8ff</color>
+    <color name="purple4">#d74cfe</color>
+    <color name="purple5">#c600ff</color>
+
+
+    <!--Yellow Colors-->
+    <color name="yellow1">#fffdf1</color>
+    <color name="yellow2">#fffbe3</color>
+    <color name="yellow3">#fffad5</color>
+    <color name="yellow4">#ffe83b</color>
+    <color name="yellow5">#e6cc00</color>
+
+
+    <!--Orange Colors-->
+    <color name="orange1">#fff9f2</color>
+    <color name="orange2">#fff4e5</color>
+    <color name="orange3">#ffefd8</color>
+    <color name="orange4">#feb44c</color>
+    <color name="orange5">#ff9500</color>
+
+    <!--Mono Colors-->
+    <color name="mono1">#f5f5f5</color>
+    <color name="mono2">#ececec</color>
+    <color name="mono3">#e2e2e2</color>
+    <color name="mono4">#7a7a7a</color>
+    <color name="mono5">#8F8F8F</color>
+
+    <!--Green Colors-->
+    <color name="green1">#f3ffee</color>
+    <color name="green2">#e7fede</color>
+    <color name="green3">#dcffce</color>
+    <color name="green4">#3edd00</color>
+    <color name="green5">#35bd00</color>
+
+
+    <color name="miniSlidePlayer">@color/blue2</color>
+
+
     <color name="mainPurple">#9953FF</color>
     <color name="darkMainPurple">#55308C</color>
-    <color name="background">#F8F8F8</color>
-    <color name="accent">#FFFFFF</color>
-    <color name="accentBorder">#E7E7E7</color>
+    <color name="background">@color/blue1</color>
+    <color name="accent">@color/blue3</color>
+    <color name="accentBorder">@color/blue1</color>
     <color name="text">@color/black</color>
     <color name="subText">#5F5F5F</color>
     <color name="divider">#DBDBDB</color>
