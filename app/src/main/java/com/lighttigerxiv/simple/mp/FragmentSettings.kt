@@ -1,9 +1,7 @@
 package com.lighttigerxiv.simple.mp
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.graphics.*
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat

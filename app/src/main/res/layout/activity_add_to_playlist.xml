@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/CreatePlaylist"
                 android:textAllCaps="false"
-                android:textColor="@color/blue2"
+                android:textColor="@color/white"
                 app:cornerRadius="999dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

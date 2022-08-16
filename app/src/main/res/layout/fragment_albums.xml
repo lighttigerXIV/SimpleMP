@@ -13,7 +13,8 @@
         android:id="@+id/rvAlbums_FragmentAlbums"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -28,11 +29,31 @@
         android:ems="10"
         android:gravity="center"
         android:hint="@string/SearchAlbums"
+        android:importantForAutofill="no"
         android:inputType="textPersonName"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
         android:textColorHint="@color/subText"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/ibClearSearch_FragmentAlbums"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="4dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/emptyDescription"
+        android:padding="10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/icon_x"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/etSearch_FragmentAlbums"
+        app:layout_constraintEnd_toEndOf="@+id/etSearch_FragmentAlbums"
+        app:layout_constraintTop_toTopOf="@+id/etSearch_FragmentAlbums"
+        app:tint="@color/subText"
+        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

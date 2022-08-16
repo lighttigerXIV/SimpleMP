@@ -56,21 +56,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSongs_FragmentHome"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:fillViewport="true"
+        android:layout_marginTop="20dp"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etSearch_FragmentHome">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvSongs_FragmentHome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" />
-    </androidx.core.widget.NestedScrollView>
+        app:layout_constraintTop_toBottomOf="@+id/etSearch_FragmentHome" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabShuffle_FragmentHome"
@@ -85,5 +80,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="SpeakableTextPresentCheck,DuplicateSpeakableTextCheck" />
+
+    <ImageButton
+        android:id="@+id/ibClearSearch_FragmentHome"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="4dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/emptyDescription"
+        android:padding="10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/icon_x"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/etSearch_FragmentHome"
+        app:layout_constraintEnd_toEndOf="@+id/etSearch_FragmentHome"
+        app:layout_constraintTop_toTopOf="@+id/etSearch_FragmentHome"
+        app:tint="@color/subText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

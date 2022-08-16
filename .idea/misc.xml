@@ -44,12 +44,12 @@
         <entry key="app/src/main/res/layout/content_fragment_album.xml" value="0.2526720820863617" />
         <entry key="app/src/main/res/layout/fragment_album.xml" value="0.4" />
         <entry key="app/src/main/res/layout/fragment_album_new.xml" value="0.2526720820863617" />
-        <entry key="app/src/main/res/layout/fragment_albums.xml" value="0.28489583333333335" />
+        <entry key="app/src/main/res/layout/fragment_albums.xml" value="0.536" />
         <entry key="app/src/main/res/layout/fragment_artist.xml" value="0.26036767849508335" />
-        <entry key="app/src/main/res/layout/fragment_artists.xml" value="0.25085470085470085" />
+        <entry key="app/src/main/res/layout/fragment_artists.xml" value="0.4618410700236035" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.2556648140230868" />
         <entry key="app/src/main/res/layout/fragment_genre_playlist.xml" value="0.25609234715690465" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25085470085470085" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.4" />
         <entry key="app/src/main/res/layout/fragment_playlist.xml" value="0.4" />
         <entry key="app/src/main/res/layout/fragment_playlists.xml" value="0.28489583333333335" />
         <entry key="app/src/main/res/layout/fragment_playlists_recyclerview.xml" value="0.4" />

@@ -64,7 +64,7 @@ class ActivityAddToPlaylist : AppCompatActivity() {
         val serviceIntent = Intent( applicationContext, SimpleMPService::class.java )
         bindService( serviceIntent, connection, Context.BIND_AUTO_CREATE )
 
-        getSharedPreferences("playlists", MODE_PRIVATE).edit().clear()
+        getSharedPreferences("playlists", MODE_PRIVATE).edit().clear().apply()
 
 
         btBack.setOnClickListener { onBackPressed() }
@@ -101,7 +101,6 @@ class ActivityAddToPlaylist : AppCompatActivity() {
     private fun setupTheme(){
 
         clMain.setBackgroundColor(ColorFunctions.getThemeColor(applicationContext, 1))
-        btCreatePlaylist.setTextColor(ColorFunctions.getThemeColor(applicationContext, 2))
         ViewCompat.setBackgroundTintList(btCreatePlaylist, ColorStateList.valueOf(ColorFunctions.getThemeColor(applicationContext, 5)))
     }
 

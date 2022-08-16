@@ -24,13 +24,14 @@
             android:backgroundTint="@color/blue5"
             android:text="@string/CreatePlaylist"
             android:textAllCaps="false"
-            android:textColor="@color/blue2"
+            android:textColor="@color/white"
             android:textSize="12sp"
             app:cornerRadius="999dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TextContrastCheck" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -38,6 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="20dp"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -63,6 +65,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginBottom="5dp"
+        android:contentDescription="@string/emptyDescription"
         android:src="@drawable/icon_info_regular"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tvNoPlaylistFound_FragmentPlaylistsRecyclerview"

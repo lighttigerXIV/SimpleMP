@@ -11,15 +11,14 @@ import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.PopupMenu
-import android.widget.ProgressBar
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.lighttigerxiv.simple.mp.*
 import com.lighttigerxiv.simple.mp.activities.ActivitySettings
 import com.lighttigerxiv.simple.mp.adapters.AdapterRVSongs
@@ -34,6 +33,7 @@ class FragmentHome : Fragment() {
     private lateinit var fragmentView: View
     private lateinit var clMain: ConstraintLayout
     private lateinit var etSearch: EditText
+    private lateinit var ibClearSearch: ImageButton
     private lateinit var ivMenu: ImageView
     private lateinit var rvSongs: RecyclerView
     private lateinit var progressBar: ProgressBar
@@ -47,6 +47,11 @@ class FragmentHome : Fragment() {
     private lateinit var smpService: SimpleMPService
     private var serviceBounded = false
     private lateinit var adapterRVSongs: AdapterRVSongs
+
+
+    //Lifecycle
+    private var songsLoaded = false
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,18 +87,16 @@ class FragmentHome : Fragment() {
 
             setupColors()
 
+            if(savedInstanceState != null) restoreLifecycle(savedInstanceState)
+
 
             val serviceIntent = Intent( fragmentContext, SimpleMPService::class.java )
             fragmentContext.bindService( serviceIntent, connection, Context.BIND_AUTO_CREATE )
 
 
-            songsList = GetSongs.getSongsList(fragmentContext, true)
-
-            adapterRVSongs = AdapterRVSongs(songsList)
-            rvSongs.adapter = adapterRVSongs
+            if(!songsLoaded) loadSongs()
 
 
-            handleSearch()
             handleMenu()
             handleFabShuffle()
             handleMusicClicked()
@@ -102,12 +105,22 @@ class FragmentHome : Fragment() {
     }
 
 
-    private fun assignVariables( view: View ){
+    override fun onResume() {
+        super.onResume()
+
+        handleSearch()
+
+        if(etSearch.text.toString().trim().isNotEmpty())
+            ibClearSearch.visibility = View.VISIBLE
+    }
+
+    private fun assignVariables(view: View ){
 
         fragmentView = view
         fragmentContext = fragmentView.context
         clMain = view.findViewById(R.id.clMain_FragmentHome)
         etSearch = fragmentView.findViewById(R.id.etSearch_FragmentHome)
+        ibClearSearch = view.findViewById(R.id.ibClearSearch_FragmentHome)
         ivMenu = fragmentView.findViewById(R.id.ivMenu_FragmentHome)
         rvSongs = fragmentView.findViewById(R.id.rvSongs_FragmentHome)
         progressBar = fragmentView.findViewById(R.id.progressBar_FragmentHome)
@@ -120,6 +133,27 @@ class FragmentHome : Fragment() {
     }
 
 
+    private fun restoreLifecycle(sis: Bundle){
+
+        songsLoaded = sis.getBoolean("songsLoaded", false)
+
+        if(songsLoaded){
+
+            val adapterSongsListJson = sis.getString("adapterSongsList", "")
+            val songsListJson = sis.getString("songsList", "")
+            val jsonType = object : TypeToken<ArrayList<Song>>(){}.type
+            val adapterSongsList = Gson().fromJson<ArrayList<Song>>(adapterSongsListJson, jsonType)
+
+            songsList = Gson().fromJson(songsListJson, jsonType)
+
+            adapterRVSongs = AdapterRVSongs(adapterSongsList)
+            rvSongs.adapter = adapterRVSongs
+
+            handleMusicClicked()
+        }
+    }
+
+
     private fun setupColors(){
 
         clMain.setBackgroundColor(ColorFunctions.getThemeColor(fragmentContext, 1))
@@ -127,6 +161,19 @@ class FragmentHome : Fragment() {
     }
 
 
+    private fun loadSongs(){
+
+        songsList = GetSongs.getSongsList(fragmentContext, true)
+
+        adapterRVSongs = AdapterRVSongs(songsList)
+        rvSongs.adapter = adapterRVSongs
+
+        songsLoaded = true
+    }
+
+
+
+    @SuppressLint("NotifyDataSetChanged")
     private fun handleSearch(){
 
         etSearch.addTextChangedListener(object : TextWatcher{
@@ -138,6 +185,15 @@ class FragmentHome : Fragment() {
                 val filteredSongsList = ArrayList(songsList)
                 val searchText = s.toString().trim()
 
+
+                //Shows/hides the clear search button
+                if(searchText.isNotEmpty())
+                    ibClearSearch.visibility = View.VISIBLE
+
+                else
+                    ibClearSearch.visibility = View.GONE
+
+
                 filteredSongsList.removeIf { !it.title.trim().lowercase().contains(searchText) and !it.artistName.trim().lowercase().contains( searchText ) }
 
 
@@ -147,6 +203,16 @@ class FragmentHome : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {}
         })
+
+
+        ibClearSearch.setOnClickListener {
+
+            if( songsLoaded ){
+
+                etSearch.setText("")
+                ibClearSearch.visibility = View.GONE
+            }
+        }
     }
 
 
@@ -184,10 +250,13 @@ class FragmentHome : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun setSortMode(sortMode: String ){
 
-        fragmentContext.getSharedPreferences( "Settings", MODE_PRIVATE ).edit().putString( "sort", sortMode ).apply()
-        songsList = GetSongs.getSongsList(fragmentContext, true)
-        adapterRVSongs.songsList = songsList
-        adapterRVSongs.notifyDataSetChanged()
+        if(songsLoaded){
+
+            fragmentContext.getSharedPreferences( "Settings", MODE_PRIVATE ).edit().putString( "sort", sortMode ).apply()
+            songsList = GetSongs.getSongsList(fragmentContext, true)
+            adapterRVSongs.songsList = songsList
+            adapterRVSongs.notifyDataSetChanged()
+        }
     }
 
 
@@ -247,6 +316,19 @@ class FragmentHome : Fragment() {
         override fun onServiceDisconnected(name: ComponentName?) {
 
             serviceBounded = false
+        }
+    }
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putBoolean("songsLoaded", songsLoaded)
+
+        if(songsLoaded){
+
+            outState.putString("songsList", Gson().toJson(songsList))
+            outState.putString("adapterSongsList", Gson().toJson(adapterRVSongs.songsList))
         }
     }
 }

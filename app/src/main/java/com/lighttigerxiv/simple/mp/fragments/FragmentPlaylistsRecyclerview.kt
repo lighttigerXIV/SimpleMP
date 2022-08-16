@@ -169,7 +169,7 @@ class FragmentPlaylistsRecyclerview : Fragment() {
         ivInfo = view.findViewById(R.id.ivInfo_FragmentPlaylistsRecyclerview)
         tvNoPlaylists = view.findViewById(R.id.tvNoPlaylistFound_FragmentPlaylistsRecyclerview)
 
-        page = arguments!!.getString("page", "")
+        page = requireArguments().getString("page", "")
 
 
         val deviceOrientation = fragmentContext.resources.configuration.orientation
@@ -187,7 +187,6 @@ class FragmentPlaylistsRecyclerview : Fragment() {
     private fun setupTheme(){
 
         clMain.setBackgroundColor(ColorFunctions.getThemeColor(fragmentContext, 1))
-        btCreatePlaylist.setTextColor(ColorFunctions.getThemeColor(fragmentContext, 2))
         ViewCompat.setBackgroundTintList(btCreatePlaylist, ColorStateList.valueOf(ColorFunctions.getThemeColor(fragmentContext, 5)))
     }
 

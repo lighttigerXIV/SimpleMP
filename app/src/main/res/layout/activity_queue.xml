@@ -18,7 +18,7 @@
         android:contentDescription="@string/emptyDescription"
         android:padding="6dp"
         android:scaleType="fitXY"
-        android:src="@drawable/icon_stop_notification"
+        android:src="@drawable/icon_x"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/icon"

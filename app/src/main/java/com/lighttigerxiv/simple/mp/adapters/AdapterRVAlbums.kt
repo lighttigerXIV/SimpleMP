@@ -11,12 +11,10 @@ import com.lighttigerxiv.simple.mp.others.GetSongs
 import com.lighttigerxiv.simple.mp.R
 import com.lighttigerxiv.simple.mp.Song
 
-class AdapterRVAlbums( private var songsList: ArrayList<Song> ): RecyclerView.Adapter<AdapterRVAlbums.ViewHolder>(){
+class AdapterRVAlbums( var albumsList: ArrayList<Song> ): RecyclerView.Adapter<AdapterRVAlbums.ViewHolder>(){
 
-    private lateinit var onAlbumOpenedListener: OnAlbumClickedListener
-
+    var onAlbumOpenedListener: OnAlbumClickedListener? = null
     interface OnAlbumClickedListener{ fun onAlbumOpened(albumID: Long) }
-    fun setOnAlbumClickedListener(listener: OnAlbumClickedListener){ onAlbumOpenedListener = listener }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,7 +26,7 @@ class AdapterRVAlbums( private var songsList: ArrayList<Song> ): RecyclerView.Ad
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val context = holder.itemView.context
-        val song = songsList[position]
+        val song = albumsList[position]
         val songID = song.id
         val songAlbumID = song.albumID
         val songAlbumArt = GetSongs.getSongAlbumArt(context, songID, songAlbumID)
@@ -37,10 +35,10 @@ class AdapterRVAlbums( private var songsList: ArrayList<Song> ): RecyclerView.Ad
 
         holder.albumArt.setImageBitmap( songAlbumArt )
         holder.albumName.text = songAlbumName
-        holder.clMain.setOnClickListener{ onAlbumOpenedListener.onAlbumOpened( songAlbumID ) }
+        holder.clMain.setOnClickListener{ onAlbumOpenedListener?.onAlbumOpened( songAlbumID ) }
     }
 
-    override fun getItemCount(): Int { return songsList.size }
+    override fun getItemCount(): Int { return albumsList.size }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 

@@ -347,7 +347,7 @@ class SimpleMPService: Service() {
                     .setShowActionsInCompactView(1, 2, 3)
                 )
                 .setSmallIcon(R.drawable.icon)
-                .addAction( R.drawable.icon_stop_notification, "Stop Player", pendingStopIntent )
+                .addAction( R.drawable.icon_x, "Stop Player", pendingStopIntent )
                 .addAction( R.drawable.icon_previous_notification, "Previous Music", pendingPreviousSongIntent )
                 .addAction( R.drawable.icon_pause_notification, "Play Pause Music", pendingPlayPauseIntent )
                 .addAction( R.drawable.icon_next_notification, "Next Music", pendingSkipSongIntent )

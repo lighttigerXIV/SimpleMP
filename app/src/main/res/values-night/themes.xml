@@ -38,7 +38,6 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:itemBackground">@color/blue3</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="BlueNavigationBar" parent="Widget.Design.BottomNavigationView">
@@ -76,7 +75,6 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:itemBackground">@color/red3</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="RedNavigationBar" parent="Widget.Design.BottomNavigationView">
@@ -115,7 +113,6 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:itemBackground">@color/purple3</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="PurpleNavigationBar" parent="Widget.Design.BottomNavigationView">
@@ -152,7 +149,6 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:itemBackground">@color/yellow5</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="YellowNavigationBar" parent="Widget.Design.BottomNavigationView">

@@ -127,11 +127,11 @@ class FragmentArtistRecyclerView : Fragment() {
         rvContent.adapter = adapterRVAlbums
 
 
-        adapterRVAlbums.setOnAlbumClickedListener(object : AdapterRVAlbums.OnAlbumClickedListener{
+        adapterRVAlbums.onAlbumOpenedListener = object : AdapterRVAlbums.OnAlbumClickedListener{
             override fun onAlbumOpened(albumID: Long) {
                 onAlbumOpenedListener?.onAlbumOpened(albumID)
             }
-        })
+        }
     }
 
 
@@ -212,8 +212,8 @@ class FragmentArtistRecyclerView : Fragment() {
 
     private fun handleAlbumSelected(){
 
-        adapterRVAlbums.setOnAlbumClickedListener( object : AdapterRVAlbums.OnAlbumClickedListener{
+        adapterRVAlbums.onAlbumOpenedListener = object : AdapterRVAlbums.OnAlbumClickedListener{
             override fun onAlbumOpened(albumID: Long) { onAlbumOpenedListener?.onAlbumOpened( albumID ) }
-        })
+        }
     }
 }

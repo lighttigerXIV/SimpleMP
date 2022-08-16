@@ -25,7 +25,7 @@ class GetSongs {
                 val songsList = ArrayList<Song>()
 
 
-                if( cursor != null ){
+                if( cursor != null && cursor.count > 0){
                     if( cursor.moveToNext() ){
                         do{
 
@@ -37,8 +37,22 @@ class GetSongs {
                             val duration = cursor.getInt( cursor.getColumnIndex(MediaStore.Audio.Media.DURATION) )
                             val artistName = cursor.getString( cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST) )
                             val artistID = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID) )
-                            val genreID = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.GENRE_ID))
-                            var genre = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.GENRE))
+
+
+                            val genreID = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                                cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.GENRE_ID))
+
+                            else
+                                cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Genres._ID))
+
+
+                            var genre = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                                cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.GENRE))
+
+                            else
+                                null
+
+
                             if( genre == null ) genre = context.getString(R.string.Undefined)
                             val year = cursor.getInt( cursor.getColumnIndex(MediaStore.Audio.Media.YEAR) )
 
@@ -67,7 +81,7 @@ class GetSongs {
 
                 return songsList
             }
-            catch (exc: Exception){}
+            catch (exc: Exception){println("Exception-> $exc")}
 
             return ArrayList()
         }

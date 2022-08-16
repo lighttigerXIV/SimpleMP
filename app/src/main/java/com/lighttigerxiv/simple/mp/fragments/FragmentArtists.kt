@@ -1,5 +1,6 @@
 package com.lighttigerxiv.simple.mp.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
@@ -10,11 +11,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.lighttigerxiv.simple.mp.others.GetSongs
 import com.lighttigerxiv.simple.mp.R
 import com.lighttigerxiv.simple.mp.Song
@@ -27,12 +31,16 @@ class FragmentArtists : Fragment() {
     private lateinit var fragmentContext: Context
     private lateinit var clMain: ConstraintLayout
     private lateinit var etSearch: EditText
+    private lateinit var ibClearSearch: ImageButton
     private lateinit var rvArtists: RecyclerView
 
 
     //Others
     private var artistList = ArrayList<Song>()
     private lateinit var adapterRVArtists: AdapterRVArtists
+
+    //Lifecycle
+    private var artistsLoaded = false
 
     //Interfaces
     private lateinit var onArtistOpenedListener: OnArtistOpenedListener
@@ -49,17 +57,27 @@ class FragmentArtists : Fragment() {
         assignVariables(view)
         setupColors()
 
-        handleSearch()
-        loadRVArtists()
+        if(savedInstanceState != null) restoreLifecycle(savedInstanceState)
+
+        if(!artistsLoaded) loadRVArtists()
     }
 
+    override fun onResume() {
+        super.onResume()
 
-    private fun assignVariables( view: View ){
+        handleSearch()
+
+        if(etSearch.text.toString().trim().isNotEmpty())
+            ibClearSearch.visibility = View.VISIBLE
+    }
+
+    private fun assignVariables(view: View ){
 
         fragmentView = view
         fragmentContext = view.context
         clMain = view.findViewById(R.id.clMain_FragmentArtists)
         etSearch = view.findViewById(R.id.etSearch_FragmentArtists)
+        ibClearSearch = view.findViewById(R.id.ibClearSearch_FragmentArtists)
         rvArtists = view.findViewById(R.id.rvArtists_FragmentArtists)
 
 
@@ -69,6 +87,28 @@ class FragmentArtists : Fragment() {
 
         else
             rvArtists.layoutManager = GridLayoutManager( fragmentContext, 4 )
+    }
+
+
+    private fun restoreLifecycle(sis: Bundle){
+
+        artistsLoaded = sis.getBoolean("artistsLoaded", false)
+
+        if(artistsLoaded){
+
+            val adapterArtistListJson = sis.getString("adapterArtistList", "")
+            val artistListJson = sis.getString("artistList", "")
+            val jsonType = object : TypeToken<ArrayList<Song>>(){}.type
+
+            val adapterArtistList = Gson().fromJson<ArrayList<Song>>(adapterArtistListJson, jsonType)
+            artistList = Gson().fromJson(artistListJson, jsonType)
+
+
+            adapterRVArtists = AdapterRVArtists(adapterArtistList)
+            rvArtists.adapter = adapterRVArtists
+
+            handleArtistClicked()
+        }
     }
 
 
@@ -89,11 +129,19 @@ class FragmentArtists : Fragment() {
 
         adapterRVArtists = AdapterRVArtists(artistList)
         rvArtists.adapter = adapterRVArtists
+        handleArtistClicked()
+
+        artistsLoaded = true
+    }
 
 
-        adapterRVArtists.setOnArtistOpenedListener(object : AdapterRVArtists.OnArtistOpenedListener {
-            override fun onArtistOpened(artistID: Long, artistName: String) { onArtistOpenedListener.onArtistOpened( artistID, artistName ) }
-        })
+    private fun handleArtistClicked(){
+
+        adapterRVArtists.onArtistOpenedListener = object : AdapterRVArtists.OnArtistOpenedListener {
+            override fun onArtistOpened(artistID: Long, artistName: String) {
+                onArtistOpenedListener.onArtistOpened( artistID, artistName )
+            }
+        }
     }
 
 
@@ -103,17 +151,46 @@ class FragmentArtists : Fragment() {
         etSearch.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
+            @SuppressLint("NotifyDataSetChanged")
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
-                val filteredList = ArrayList(artistList)
-                filteredList.removeIf { !it.artistName.lowercase().contains(s.toString().lowercase().trim()) }
+                val searchText = s.toString().lowercase().trim()
 
-                adapterRVArtists.setArtistList( filteredList )
+                if(searchText.isNotEmpty())
+                    ibClearSearch.visibility = View.VISIBLE
+
+                else
+                    ibClearSearch.visibility = View.GONE
+
+
+                val filteredList = ArrayList(artistList)
+                filteredList.removeIf { !it.artistName.lowercase().contains(searchText) }
+
+                adapterRVArtists.artistsList = filteredList
                 adapterRVArtists.notifyDataSetChanged()
             }
 
             override fun afterTextChanged(s: Editable?) {}
         })
+
+        ibClearSearch.setOnClickListener {
+
+            etSearch.setText("")
+            ibClearSearch.visibility = View.GONE
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+
+        outState.putBoolean("artistsLoaded", artistsLoaded)
+
+        if( artistsLoaded ){
+
+            outState.putString("adapterArtistList", Gson().toJson(adapterRVArtists.artistsList))
+            outState.putString("artistList", Gson().toJson(artistList))
+        }
     }
 
 
@@ -126,17 +203,10 @@ class FragmentArtists : Fragment() {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Adapters
-    class AdapterRVArtists(private var artistsList: ArrayList<Song>): RecyclerView.Adapter<AdapterRVArtists.ViewHolder>(){
+    class AdapterRVArtists(var artistsList: ArrayList<Song>): RecyclerView.Adapter<AdapterRVArtists.ViewHolder>(){
 
-        private lateinit var onArtistOpenedListener: OnArtistOpenedListener
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        //Listeners
-
-        fun setArtistList(list: ArrayList<Song>){ artistsList = list }
-
+        var onArtistOpenedListener: OnArtistOpenedListener? = null
         interface OnArtistOpenedListener{ fun onArtistOpened(artistID: Long, artistName: String) }
-        fun setOnArtistOpenedListener(listener: OnArtistOpenedListener){ onArtistOpenedListener = listener }
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -158,7 +228,7 @@ class FragmentArtists : Fragment() {
             val artistID = artist.artistID
 
 
-            holder.clMain.setOnClickListener{ onArtistOpenedListener.onArtistOpened( artistID , artistName) }
+            holder.clMain.setOnClickListener{ onArtistOpenedListener?.onArtistOpened( artistID , artistName) }
             holder.ivArtistAlbum.setImageBitmap( artistAlbum )
             holder.tvArtistName.text = artistName
         }
