@@ -10,6 +10,9 @@
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" /> <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -42,15 +45,16 @@
         </activity>
 
         <service android:name=".SimpleMPService" />
-        <service android:name=".services.NotificationActionsService" />
+        <service android:name=".services.ActionsService" />
 
         <receiver
-            android:name=".services.MusicIntentReceiver"
+            android:name=".services.HeadphoneJackReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="android.intent.action.HEADSET_PLUG" />
             </intent-filter>
         </receiver>
+
         <receiver android:name=".services.ReceiverOpenApp" />
         <receiver android:name=".services.ReceiverStop" />
         <receiver android:name=".services.ReceiverPreviousSong" />

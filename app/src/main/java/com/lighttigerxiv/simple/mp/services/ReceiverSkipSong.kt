@@ -8,11 +8,11 @@ class ReceiverSkipSong: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
 
 
-        val notificationActionsServiceIntent = Intent( context, NotificationActionsService::class.java )
+        val actionsServiceIntent = Intent( context, ActionsService::class.java )
 
-        notificationActionsServiceIntent.putExtra( "action", "skip" )
+        actionsServiceIntent.putExtra( "action", "skip" )
 
-        context.startService( notificationActionsServiceIntent )
+        context.startService( actionsServiceIntent )
     }
 
 

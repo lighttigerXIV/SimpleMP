@@ -7,11 +7,11 @@ class ReceiverPlayPause: BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
 
-        val notificationActionsServiceIntent = Intent( context, NotificationActionsService::class.java )
+        val actionsServiceIntent = Intent( context, ActionsService::class.java )
 
-        notificationActionsServiceIntent.putExtra( "action", "playPause" )
+        actionsServiceIntent.putExtra( "action", "playPause" )
 
-        context.startService( notificationActionsServiceIntent )
+        context.startService( actionsServiceIntent )
     }
 
 

@@ -8,7 +8,7 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import com.lighttigerxiv.simple.mp.SimpleMPService
 
-class NotificationActionsService: Service() {
+class ActionsService: Service() {
 
     var serviceBounded = false
     private lateinit var action: String
@@ -40,6 +40,7 @@ class NotificationActionsService: Service() {
             when( action ){
 
                 "stop"->smpService.stopMediaPlayer()
+                "pause"->smpService.pauseMusic(applicationContext)
                 "previous"->smpService.previousSong( applicationContext )
                 "playPause"->smpService.pauseResumeMusic( applicationContext )
                 "skip"->smpService.skipSong( applicationContext )

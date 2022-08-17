@@ -912,7 +912,7 @@ class ActivityMain : AppCompatActivity(){
     private fun handlePlaylistAddedFromService(){
 
         smpService.onPlaylistAdded = object : SimpleMPService.OnPlaylistsAdded {
-            override fun OnPlaylistAdded() {
+            override fun onPlaylistAdded() {
 
                 fragmentPlaylists.resetUserPlaylists()
             }

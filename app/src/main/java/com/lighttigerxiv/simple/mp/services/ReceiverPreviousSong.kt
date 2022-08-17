@@ -8,10 +8,10 @@ class ReceiverPreviousSong: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
 
 
-        val notificationActionsServiceIntent = Intent( context, NotificationActionsService::class.java )
+        val actionsServiceIntent = Intent( context, ActionsService::class.java )
 
-        notificationActionsServiceIntent.putExtra( "action", "previous" )
+        actionsServiceIntent.putExtra( "action", "previous" )
 
-        context.startService( notificationActionsServiceIntent )
+        context.startService( actionsServiceIntent )
     }
 }

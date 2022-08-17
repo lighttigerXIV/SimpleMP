@@ -1,9 +1,7 @@
 package com.lighttigerxiv.simple.mp
 
 import android.app.*
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.graphics.Bitmap
 import android.media.*
 import android.media.AudioManager.OnAudioFocusChangeListener
@@ -17,10 +15,7 @@ import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
 import com.lighttigerxiv.simple.mp.activities.ActivityMain
 import com.lighttigerxiv.simple.mp.others.GetSongs
-import com.lighttigerxiv.simple.mp.services.ReceiverPlayPause
-import com.lighttigerxiv.simple.mp.services.ReceiverPreviousSong
-import com.lighttigerxiv.simple.mp.services.ReceiverSkipSong
-import com.lighttigerxiv.simple.mp.services.ReceiverStop
+import com.lighttigerxiv.simple.mp.services.*
 
 
 class SimpleMPService: Service() {
@@ -273,9 +268,6 @@ class SimpleMPService: Service() {
         val songDuration: Int
 
 
-        println("Playlist Aleatória -> $shuffledPlaylist")
-
-
         if( !musicShuffled ) {
 
             songPath = playList[currentSongPosition].path
@@ -384,6 +376,8 @@ class SimpleMPService: Service() {
         }
 
 
+        val bluetoothReceiver = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
+        context.registerReceiver(bluetoothBroadcastReceiver, bluetoothReceiver )
 
 
         val mainHandler = Handler(Looper.getMainLooper())
@@ -396,6 +390,16 @@ class SimpleMPService: Service() {
             }
         })
     }
+
+
+    private val bluetoothBroadcastReceiver = object : BroadcastReceiver(){
+
+        override fun onReceive(p0: Context?, p1: Intent?) {
+
+            pauseMusic(p0!!)
+        }
+    }
+
 
 
     fun seekTo( position: Int){
@@ -473,7 +477,7 @@ class SimpleMPService: Service() {
 
 
     @Suppress("DEPRECATION")
-    private fun pauseMusic(context: Context ){
+    fun pauseMusic(context: Context ){
 
 
         val playPauseIcon = R.drawable.icon_play_notification
@@ -561,7 +565,7 @@ class SimpleMPService: Service() {
     }
 
 
-    fun updatePlaylists(){ onPlaylistAdded?.OnPlaylistAdded() }
+    fun updatePlaylists(){ onPlaylistAdded?.onPlaylistAdded() }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -571,7 +575,7 @@ class SimpleMPService: Service() {
     interface OnMusicSelectedListenerToQueue{ fun onMusicSelected( playList: ArrayList<Song>, position: Int ) }
 
 
-    interface OnPlaylistsAdded{ fun OnPlaylistAdded() }
+    interface OnPlaylistsAdded{ fun onPlaylistAdded() }
 
 
     interface OnMusicPausedListener{ fun onMusicPaused() }
