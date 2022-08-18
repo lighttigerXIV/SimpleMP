@@ -3,9 +3,8 @@ package com.lighttigerxiv.simple.mp.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.lighttigerxiv.simple.mp.FragmentSettings
+import com.lighttigerxiv.simple.mp.fragments.FragmentSettings
 import com.lighttigerxiv.simple.mp.R
 import com.lighttigerxiv.simple.mp.others.ColorFunctions
 
@@ -23,7 +22,7 @@ class ActivitySettings : AppCompatActivity() {
         btBack = findViewById(R.id.btBack_Toolbar)
 
 
-        clMain.setBackgroundColor(ColorFunctions.getThemeColor(applicationContext, 1))
+        clMain.setBackgroundColor(ColorFunctions.getThemeColor(this, 1))
         btBack.setOnClickListener { onBackPressed() }
         supportFragmentManager.beginTransaction().replace(R.id.frameLayout_ActivitySettings, FragmentSettings()).commit()
     }

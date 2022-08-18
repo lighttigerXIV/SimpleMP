@@ -323,7 +323,20 @@ class FragmentPlaylistsRecyclerview : Fragment() {
             }
             else{
 
-                holder.ivArt.setImageURI(Uri.parse(playlistImagePath))
+                try{
+
+                    holder.ivArt.setImageURI(Uri.parse(playlistImagePath))
+                }
+                catch(exc: Exception){
+
+                    val playlistIcon = ContextCompat.getDrawable(context, R.drawable.icon_playlists)!!.toBitmap()
+                    holder.ivArt.setColorFilter(ColorFunctions.getThemeColor(context, 5))
+                    holder.ivArt.setPadding(80)
+                    holder.ivArt.setImageBitmap(playlistIcon)
+
+                    playlist.imagePath = null
+                    context.getSharedPreferences("playlists", MODE_PRIVATE).edit().putString("playlists", Gson().toJson(userPlaylists)).apply()
+                }
             }
 
 

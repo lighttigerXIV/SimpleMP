@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
@@ -13,66 +9,58 @@
     <!--
     Website for the colors: https://pinetools.com/lighten-color
 
-    1-> 95% lighter
-    2-> 90% lighter
-    3-> 85% lighter
-    4-> 70% lighter
-    5-> original color
+    #99 light
+    #39
+    #38
+    #26
 
     -->
 
     <!--Blue Colors-->
-    <color name="blue1">#f2f9ff</color>
-    <color name="blue2">#e5f3ff</color>
-    <color name="blue3">#d8edff</color>
-    <color name="blue4">#4cabfe</color>
-    <color name="blue5">#0088ff</color>
+    <color name="blue1">#fcfdfe</color>
+    <color name="blue2">#f1f4ff</color>
+    <color name="blue3">#e4eaff</color>
+    <color name="blue5">#476dff</color>
 
 
     <!--Red Colors-->
-    <color name="red1">#fff3f2</color>
-    <color name="red2">#ffe8e5</color>
-    <color name="red3">#ffdcd8</color>
-    <color name="red4">#fe5e4c</color>
-    <color name="red5">#ff1a00</color>
+    <color name="red1">#fffcfc</color>
+    <color name="red2">#fff3f1</color>
+    <color name="red3">#ffe7e4</color>
+    <color name="red5">#ff5a47</color>
 
 
     <!--Purple Colors-->
-    <color name="purple1">#fcf2ff</color>
-    <color name="purple2">#f9e5ff</color>
-    <color name="purple3">#f6d8ff</color>
-    <color name="purple4">#d74cfe</color>
-    <color name="purple5">#c600ff</color>
+    <color name="purple1">#fefcff</color>
+    <color name="purple2">#fcf1ff</color>
+    <color name="purple3">#f9e4ff</color>
+    <color name="purple5">#d647ff</color>
 
 
     <!--Yellow Colors-->
-    <color name="yellow1">#fffdf1</color>
-    <color name="yellow2">#fffbe3</color>
-    <color name="yellow3">#fffad5</color>
-    <color name="yellow4">#ffe83b</color>
-    <color name="yellow5">#e6cc00</color>
+    <color name="yellow1">#fffefc</color>
+    <color name="yellow2">#fffdf1</color>
+    <color name="yellow3">#fffce4</color>
+    <color name="yellow5">#dec500</color>
 
 
     <!--Orange Colors-->
-    <color name="orange1">#fff9f2</color>
-    <color name="orange2">#fff4e5</color>
-    <color name="orange3">#ffefd8</color>
-    <color name="orange4">#feb44c</color>
-    <color name="orange5">#ff9500</color>
+    <color name="orange1">#fefdfc</color>
+    <color name="orange2">#fff9f1</color>
+    <color name="orange3">#fff4e4</color>
+    <color name="orange5">#ffb247</color>
 
     <!--Mono Colors-->
-    <color name="mono1">#f5f5f5</color>
-    <color name="mono2">#ececec</color>
-    <color name="mono3">#e2e2e2</color>
-    <color name="mono4">#7a7a7a</color>
-    <color name="mono5">#8F8F8F</color>
+    <color name="mono1">#fdfdfd</color>
+    <color name="mono2">#f8f8f8</color>
+    <color name="mono3">#f1f1f1</color>
+    <color name="mono5">#a3a3a3</color>
 
     <!--Green Colors-->
-    <color name="green1">#f3ffee</color>
-    <color name="green2">#e7fede</color>
-    <color name="green3">#dcffce</color>
-    <color name="green4">#3edd00</color>
-    <color name="green5">#35bd00</color>
+    <color name="green1">#fcfffb</color>
+    <color name="green2">#f5fff1</color>
+    <color name="green3">#ecffe4</color>
+    <color name="green5">#2c9c00</color>
 
 
     <color name="miniSlidePlayer">@color/blue2</color>
@@ -84,7 +72,7 @@
     <color name="accent">@color/blue3</color>
     <color name="accentBorder">@color/blue1</color>
     <color name="text">@color/black</color>
-    <color name="subText">#5F5F5F</color>
+    <color name="subText">#242424</color>
     <color name="divider">#DBDBDB</color>
 
     <color name="icon">@color/black</color>

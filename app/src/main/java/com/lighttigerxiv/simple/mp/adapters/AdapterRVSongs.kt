@@ -1,5 +1,6 @@
 package com.lighttigerxiv.simple.mp.adapters
 
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
@@ -12,6 +13,8 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.gson.Gson
@@ -19,9 +22,10 @@ import com.lighttigerxiv.simple.mp.activities.ActivityAddToPlaylist
 import com.lighttigerxiv.simple.mp.others.GetSongs
 import com.lighttigerxiv.simple.mp.R
 import com.lighttigerxiv.simple.mp.Song
+import com.lighttigerxiv.simple.mp.fragments.*
 import com.lighttigerxiv.simple.mp.others.ColorFunctions
 
-class AdapterRVSongs(var songsList : ArrayList<Song> ): RecyclerView.Adapter<AdapterRVSongs.ViewHolder>() {
+class AdapterRVSongs(var songsList : ArrayList<Song>, private val fragmentManager: FragmentManager, private val showViewAlbum: Boolean, private val showViewArtist: Boolean ): RecyclerView.Adapter<AdapterRVSongs.ViewHolder>() {
 
     var currentSongPath = ""
 
@@ -52,6 +56,17 @@ class AdapterRVSongs(var songsList : ArrayList<Song> ): RecyclerView.Adapter<Ada
         val songAlbumArt = GetSongs.getSongAlbumArt(context, songID, songAlbumID)
         val songTitle = song.title
         val songArtist = song.artistName
+        val songArtistID = song.artistID
+
+        val fragmentAlbum = try{ fragmentManager.findFragmentByTag("floatingAlbum") as FragmentAlbum }
+        catch (exc: Exception){ FragmentAlbum() }
+
+        var fragmentArtist = try{ fragmentManager.findFragmentByTag("floatingArtist") as FragmentArtist }
+        catch (exc: Exception){ FragmentArtist() }
+
+        var fragmentArtistAlbum = try{ fragmentManager.findFragmentByTag("floatingArtistAlbum") as FragmentAlbum }
+        catch (exc: Exception){ FragmentAlbum() }
+
 
 
 
@@ -82,6 +97,10 @@ class AdapterRVSongs(var songsList : ArrayList<Song> ): RecyclerView.Adapter<Ada
             val popupMenu = PopupMenu( wrapper, popupView )
             popupMenu.menuInflater.inflate(R.menu.menu_more_rv_songs, popupMenu.menu )
 
+            if(!showViewAlbum)  popupMenu.menu.removeItem(R.id.menuViewAlbum)
+            if(!showViewArtist) popupMenu.menu.removeItem(R.id.menuViewArtist)
+
+
             popupMenu.setOnMenuItemClickListener {
 
                 when (it.itemId) {
@@ -96,6 +115,28 @@ class AdapterRVSongs(var songsList : ArrayList<Song> ): RecyclerView.Adapter<Ada
 
                         context.startActivity(intent)
                     }
+
+                    R.id.menuViewAlbum ->{
+
+                        val bundle = Bundle()
+                        bundle.putLong("albumID", songAlbumID)
+                        fragmentAlbum.arguments = bundle
+
+
+                        fragmentManager.beginTransaction().add( R.id.frameLayout_ActivityMain, fragmentAlbum, "floatingAlbum").commit()
+                    }
+
+                    R.id.menuViewArtist ->{
+
+                        if(fragmentArtist.isAdded) fragmentArtist = FragmentArtist() //Very Important
+
+                        val bundle = Bundle()
+                        bundle.putLong("artistID", songArtistID)
+                        bundle.putString("artistName", songArtist)
+                        fragmentArtist.arguments = bundle
+
+                        fragmentManager.beginTransaction().add( R.id.frameLayout_ActivityMain, fragmentArtist, "floatingArtist").commit()
+                    }
                 }
 
                 true
@@ -103,6 +144,72 @@ class AdapterRVSongs(var songsList : ArrayList<Song> ): RecyclerView.Adapter<Ada
 
             popupMenu.show()
         }
+
+
+        fragmentAlbum.setOnBackPressed(object : FragmentAlbum.OnBackPressed{
+            override fun onBackPressed() {
+
+                val selectedFragment = context.getSharedPreferences("selectedFragment", MODE_PRIVATE).getInt("selectedFragment", 0)
+
+                lateinit var fragment: Fragment
+
+                when(selectedFragment){
+
+                    0-> fragment = fragmentManager.findFragmentByTag("home") as FragmentHome
+                    1-> fragment = fragmentManager.findFragmentByTag("artists") as FragmentArtists
+                    2-> fragment = fragmentManager.findFragmentByTag("albums") as FragmentAlbums
+                    3-> fragment = fragmentManager.findFragmentByTag("playlists") as FragmentPlaylists
+                }
+
+                fragmentManager.beginTransaction().remove(fragmentAlbum).commit()
+                fragmentManager.beginTransaction().show(fragment).commit()
+            }
+        })
+
+
+
+        fragmentArtist.onBackPressedListener = object : FragmentArtist.OnBackPressedListener{
+            override fun onBackPressed() {
+
+                val selectedFragment = context.getSharedPreferences("selectedFragment", MODE_PRIVATE).getInt("selectedFragment", 0)
+
+                lateinit var fragment: Fragment
+
+                when(selectedFragment){
+
+                    0-> fragment = fragmentManager.findFragmentByTag("home") as FragmentHome
+                    1-> fragment = fragmentManager.findFragmentByTag("artists") as FragmentArtists
+                    2-> fragment = fragmentManager.findFragmentByTag("albums") as FragmentAlbums
+                    3-> fragment = fragmentManager.findFragmentByTag("playlists") as FragmentPlaylists
+                }
+
+                fragmentManager.beginTransaction().hide(fragmentArtist).commit()
+                fragmentManager.beginTransaction().show(fragment).commit()
+            }
+        }
+
+        fragmentArtist.onAlbumOpenedListener = object : FragmentArtist.OnAlbumOpenedListener{
+            override fun onAlbumOpened(albumID: Long) {
+
+                if(fragmentArtistAlbum.isAdded) fragmentArtistAlbum = FragmentAlbum()
+
+                val bundle = Bundle()
+                bundle.putLong( "albumID", albumID )
+                fragmentArtistAlbum.arguments = bundle
+
+
+                fragmentManager.beginTransaction().hide( fragmentArtist ).commit()
+                fragmentManager.beginTransaction().add( R.id.frameLayout_ActivityMain, fragmentArtistAlbum, "floatingArtistAlbum" ).commit()
+            }
+        }
+
+        fragmentArtistAlbum.setOnBackPressed(object : FragmentAlbum.OnBackPressed{
+            override fun onBackPressed() {
+
+                fragmentManager.beginTransaction().hide(fragmentArtistAlbum).commit()
+                fragmentManager.beginTransaction().show(fragmentArtist).commit()
+            }
+        })
     }
 
     override fun getItemCount(): Int { return songsList.size }

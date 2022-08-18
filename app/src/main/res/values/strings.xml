@@ -10,7 +10,7 @@
     <string name="CurrentlyPlaying">Currently Playing</string>
     <string name="NextSongs">Next Songs</string>
 
-    <string name="UserInterface">User Interface</string>
+    <string name="Theming">Theming</string>
 
 
     <string name="notificationChannelName">Playback</string>
@@ -19,27 +19,21 @@
 
     <string name="NoSongSelected">No song selected</string>
 
-    <string-array name="settings_themes">
-        <item>Blue</item>
-        <item>Red</item>
-        <item>Purple</item>
-        <item>Yellow</item>
-        <item>Orange</item>
-        <item>Mono</item>
-        <item>Green</item>
+    <string-array name="SettingsThemeMode">
+        <item>System Theme</item>
+        <item>Light Theme</item>
+        <item>Dark Theme</item>
     </string-array>
 
-    <string-array name="settings_themes_values">
-        <item>blue</item>
-        <item>red</item>
-        <item>purple</item>
-        <item>yellow</item>
-        <item>orange</item>
-        <item>mono</item>
-        <item>green</item>
+    <string-array name="SettingsThemeModeValues">
+        <item>system</item>
+        <item>light</item>
+        <item>dark</item>
     </string-array>
 
-    <string name="SelectTheme">Select theme</string>
+
+    <string name="Theme">Theme</string>
+    <string name="ThemeMode">Theme mode</string>
     <string name="emptyDescription">‎</string>
     <string name="threeDots">...</string>
 
@@ -96,6 +90,12 @@
 
     <string name="PlaylistName">Playlist Name</string>
     <string name="Save">Save</string>
-    <string name="RestartToApplyTheme">Restart to apply theme</string>
+    <string name="RestartToTakeEffect">Restart to take effect</string>
     <string name="Restart">Restart</string>
+
+    <string name="FilterAudioBelow">Filter audio below:</string>
+    <string name="Seconds">Seconds</string>
+
+    <string name="InsertTimeInSeconds">Insert time in seconds</string>
+    <string name="OK">OK</string>
 </resources>

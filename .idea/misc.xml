@@ -9,12 +9,20 @@
         <entry key="app/src/main/res/drawable/bottom_sheet_background.xml" value="0.2395" />
         <entry key="app/src/main/res/drawable/card_background.xml" value="0.293" />
         <entry key="app/src/main/res/drawable/card_background_round.xml" value="0.284" />
+        <entry key="app/src/main/res/drawable/card_blue_background.xml" value="0.313" />
         <entry key="app/src/main/res/drawable/card_green_background.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/card_mono_background.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/card_orange_background.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/card_purple_background.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/card_red_background.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/card_yellow_background.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/dialog_blue_background.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/dialog_green_background.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/dialog_mono_background.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/dialog_orange_background.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/dialog_purple_background.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/dialog_red_background.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/dialog_yellow_background.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.293" />
         <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.2995" />
         <entry key="app/src/main/res/drawable/icon_next_notification.xml" value="0.2" />
@@ -29,12 +37,20 @@
         <entry key="app/src/main/res/drawable/selector_menu_artists.xml" value="0.292" />
         <entry key="app/src/main/res/drawable/selector_menu_home.xml" value="0.292" />
         <entry key="app/src/main/res/drawable/selector_menu_playlists.xml" value="0.292" />
+        <entry key="app/src/main/res/drawable/theme_blue.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/theme_green.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/theme_mono.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/theme_orange.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/theme_purple.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/theme_red.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/theme_yellow.xml" value="0.2865" />
         <entry key="app/src/main/res/layout-land/fragment_album.xml" value="0.4" />
         <entry key="app/src/main/res/layout-land/fragment_artist.xml" value="0.49552772808586765" />
         <entry key="app/src/main/res/layout-land/sliding_panel.xml" value="0.4" />
         <entry key="app/src/main/res/layout/activity_add_to_playlist.xml" value="0.264" />
         <entry key="app/src/main/res/layout/activity_album.xml" value="0.264" />
         <entry key="app/src/main/res/layout/activity_album2.xml" value="0.23856348867037194" />
+        <entry key="app/src/main/res/layout/activity_floating_album_or_artist.xml" value="0.20108695652173914" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.23386062419837536" />
         <entry key="app/src/main/res/layout/activity_playback_notification_intent.xml" value="0.23386062419837536" />
         <entry key="app/src/main/res/layout/activity_queue.xml" value="0.25555555555555554" />
@@ -42,6 +58,8 @@
         <entry key="app/src/main/res/layout/bottom_sheet_add_playlist.xml" value="0.4" />
         <entry key="app/src/main/res/layout/content_activity_album.xml" value="0.1188542112013681" />
         <entry key="app/src/main/res/layout/content_fragment_album.xml" value="0.2526720820863617" />
+        <entry key="app/src/main/res/layout/dialog_preference_filter_audio.xml" value="0.4" />
+        <entry key="app/src/main/res/layout/dialog_preference_theme.xml" value="0.6" />
         <entry key="app/src/main/res/layout/fragment_album.xml" value="0.4" />
         <entry key="app/src/main/res/layout/fragment_album_new.xml" value="0.2526720820863617" />
         <entry key="app/src/main/res/layout/fragment_albums.xml" value="0.536" />
@@ -58,6 +76,7 @@
         <entry key="app/src/main/res/layout/fragment_recycler_view.xml" value="0.23685335613510047" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.23333333333333334" />
         <entry key="app/src/main/res/layout/fragment_user_playlist.xml" value="0.46687451286048326" />
+        <entry key="app/src/main/res/layout/preference_text.xml" value="0.536" />
         <entry key="app/src/main/res/layout/queu.xml" value="0.2151268115942029" />
         <entry key="app/src/main/res/layout/rv_add_to_playlist.xml" value="0.4" />
         <entry key="app/src/main/res/layout/rv_albums.xml" value="0.6308510638297873" />

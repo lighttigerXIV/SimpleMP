@@ -111,7 +111,9 @@ class FragmentArtistRecyclerView : Fragment() {
         artistSongList = ArrayList(songsList)
         artistSongList.removeIf { it.artistID != artistID }
 
-        adapterRVSongs = AdapterRVSongs(artistSongList)
+        adapterRVSongs = AdapterRVSongs(artistSongList, requireActivity().supportFragmentManager,
+            showViewAlbum = true,
+            showViewArtist = false)
         rvContent.adapter = adapterRVSongs
     }
 

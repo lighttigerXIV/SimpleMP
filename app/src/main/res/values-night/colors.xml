@@ -2,62 +2,65 @@
 <resources>
 
 
+    <!--
+
+    40 colors
+    99%Darker
+    #4
+    #5
+    Same as default color
+
+    -->
+
     <!--Blue Colors-->
-    <color name="blue1">#00060c</color>
-    <color name="blue2">#000d19</color>
-    <color name="blue3">#001426</color>
-    <color name="blue4">#005fb2</color>
-    <color name="blue5">#0079e5</color>
+    <color name="blue1">#000003</color>
+    <color name="blue2">#000827</color>
+    <color name="blue3">#000d41</color>
+    <color name="blue5">#7894FF</color>
 
     <!--Red Colors-->
-    <color name="red1">#0c0100</color>
-    <color name="red2">#190200</color>
-    <color name="red3">#260300</color>
-    <color name="red4">#7f0c00</color>
-    <color name="red5">#ff1a00</color>
+    <color name="red1">#020000</color>
+    <color name="red2">#340500</color>
+    <color name="red3">#410600</color>
+    <color name="red5">#ff5a47</color>
 
     <!--Purple Colors-->
-    <color name="purple1">#09000c</color>
-    <color name="purple2">#130019</color>
-    <color name="purple3">#1d0026</color>
-    <color name="purple4">#8a00b2</color>
-    <color name="purple5">#c600ff</color>
+    <color name="purple1">#010002</color>
+    <color name="purple2">#1e0027</color>
+    <color name="purple3">#280034</color>
+    <color name="purple5">#d647ff</color>
 
 
     <!--Yellow Colors-->
-    <color name="yellow1">#0b0a00</color>
-    <color name="yellow2">#161400</color>
-    <color name="yellow3">#221e00</color>
-    <color name="yellow4">#b8a300</color>
-    <color name="yellow5">#e6cc00</color>
+    <color name="yellow1">#020200</color>
+    <color name="yellow2">#272200</color>
+    <color name="yellow3">#342e00</color>
+    <color name="yellow5">#dec500</color>
 
     <!--Orange Colors-->
-    <color name="orange1">#0c0700</color>
-    <color name="orange2">#190e00</color>
-    <color name="orange3">#261600</color>
-    <color name="orange4">#b26800</color>
+    <color name="orange1">#020100</color>
+    <color name="orange2">#271600</color>
+    <color name="orange3">#341e00</color>
     <color name="orange5">#ff9500</color>
 
 
     <!--Mono Colors-->
     <color name="mono1">#000000</color>
-    <color name="mono2">#262626</color>
-    <color name="mono3">#323232</color>
-    <color name="mono4">#7f7f7f</color>
-    <color name="mono5">#A7A7A7</color>
+    <color name="mono2">#131313</color>
+    <color name="mono3">#2d2d2d</color>
+    <color name="mono5">#a3a3a3</color>
 
 
     <!--Green Colors-->
-    <color name="green1">#020900</color>
-    <color name="green2">#051200</color>
-    <color name="green3">#071c00</color>
-    <color name="green4">#258400</color>
-    <color name="green5">#35bd00</color>
+    <color name="green1">#000100</color>
+    <color name="green2">#0b2700</color>
+    <color name="green3">#0e3400</color>
+    <color name="green5">#2c9c00</color>
 
 
     <color name="icon">@color/white</color>
     <color name="text">@color/white</color>
-    <color name="subText">#DEDEDE</color>
+    <color name="subText">#E1E1E1</color>
     <color name="divider">#242424</color>
 
     <color name="mainPurple">#CBA9FF</color>

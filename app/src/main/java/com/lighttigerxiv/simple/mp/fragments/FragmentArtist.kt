@@ -122,6 +122,7 @@ class FragmentArtist : Fragment() {
             if( !albumsOpened ) handleAlbumsFragmentListener()
 
 
+
             TabLayoutMediator(tabLayoutContent, vpContent ) { tab, position ->
                 run {
 
@@ -186,9 +187,11 @@ class FragmentArtist : Fragment() {
         tabLayoutContent = view.findViewById(R.id.tabLayout_FragmentArtist)
         vpContent = view.findViewById(R.id.vp_FragmentArtist)
 
+        vpContent.isSaveEnabled = true
 
-        artistName = arguments!!.getString("artistName").toString()
-        artistID = arguments!!.getLong("artistID")
+
+        artistName = requireArguments().getString("artistName").toString()
+        artistID = requireArguments().getLong("artistID")
     }
 
 
@@ -381,7 +384,6 @@ class FragmentArtist : Fragment() {
                 return fragment
             }
             catch (exc: Exception){return fragment }
-
         }
     }
 }

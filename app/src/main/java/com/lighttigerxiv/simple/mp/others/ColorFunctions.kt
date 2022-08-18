@@ -38,6 +38,7 @@ class ColorFunctions {
             val theme = prefs.getString("setting_theme", "blue")
             var color = 0
 
+
             when(theme){
 
                 "blue"->{
@@ -45,7 +46,6 @@ class ColorFunctions {
                         1-> color = ContextCompat.getColor(context, R.color.blue1)
                         2-> color = ContextCompat.getColor(context, R.color.blue2)
                         3-> color = ContextCompat.getColor(context, R.color.blue3)
-                        4-> color = ContextCompat.getColor(context, R.color.blue4)
                         5-> color = ContextCompat.getColor(context, R.color.blue5)
                     }
                 }
@@ -54,7 +54,6 @@ class ColorFunctions {
                         1-> color = ContextCompat.getColor(context, R.color.red1)
                         2-> color = ContextCompat.getColor(context, R.color.red2)
                         3-> color = ContextCompat.getColor(context, R.color.red3)
-                        4-> color = ContextCompat.getColor(context, R.color.red4)
                         5-> color = ContextCompat.getColor(context, R.color.red5)
                     }
                 }
@@ -63,7 +62,6 @@ class ColorFunctions {
                         1-> color = ContextCompat.getColor(context, R.color.purple1)
                         2-> color = ContextCompat.getColor(context, R.color.purple2)
                         3-> color = ContextCompat.getColor(context, R.color.purple3)
-                        4-> color = ContextCompat.getColor(context, R.color.purple4)
                         5-> color = ContextCompat.getColor(context, R.color.purple5)
                     }
                 }
@@ -72,7 +70,6 @@ class ColorFunctions {
                         1-> color = ContextCompat.getColor(context, R.color.yellow1)
                         2-> color = ContextCompat.getColor(context, R.color.yellow2)
                         3-> color = ContextCompat.getColor(context, R.color.yellow3)
-                        4-> color = ContextCompat.getColor(context, R.color.yellow4)
                         5-> color = ContextCompat.getColor(context, R.color.yellow5)
                     }
                 }
@@ -81,7 +78,6 @@ class ColorFunctions {
                         1-> color = ContextCompat.getColor(context, R.color.orange1)
                         2-> color = ContextCompat.getColor(context, R.color.orange2)
                         3-> color = ContextCompat.getColor(context, R.color.orange3)
-                        4-> color = ContextCompat.getColor(context, R.color.orange4)
                         5-> color = ContextCompat.getColor(context, R.color.orange5)
                     }
                 }
@@ -90,7 +86,6 @@ class ColorFunctions {
                         1-> color = ContextCompat.getColor(context, R.color.mono1)
                         2-> color = ContextCompat.getColor(context, R.color.mono2)
                         3-> color = ContextCompat.getColor(context, R.color.mono3)
-                        4-> color = ContextCompat.getColor(context, R.color.mono4)
                         5-> color = ContextCompat.getColor(context, R.color.mono5)
                     }
                 }
@@ -99,7 +94,6 @@ class ColorFunctions {
                         1-> color = ContextCompat.getColor(context, R.color.green1)
                         2-> color = ContextCompat.getColor(context, R.color.green2)
                         3-> color = ContextCompat.getColor(context, R.color.green3)
-                        4-> color = ContextCompat.getColor(context, R.color.green4)
                         5-> color = ContextCompat.getColor(context, R.color.green5)
                     }
                 }

@@ -77,7 +77,7 @@ class FragmentGenrePlaylist : Fragment() {
 
             tvPlaylistName.text = playlistSongsList[0].genre
 
-            adapterRVSongs = AdapterRVSongs(playlistSongsList)
+            adapterRVSongs = AdapterRVSongs(playlistSongsList, parentFragmentManager, showViewAlbum = true, showViewArtist = true)
             rvSongs.adapter = adapterRVSongs
         }
 
@@ -95,8 +95,8 @@ class FragmentGenrePlaylist : Fragment() {
         rvSongs = view.findViewById(R.id.rvSongs_FragmentGenrePlaylist)
 
 
-        isGenrePlaylist = arguments!!.getBoolean("isGenrePlaylist", false)
-        genreID = arguments!!.getLong("genreID", 0)
+        isGenrePlaylist = requireArguments().getBoolean("isGenrePlaylist", false)
+        genreID = requireArguments().getLong("genreID", 0)
 
 
         rvSongs.layoutManager = LinearLayoutManager(fragmentContext)

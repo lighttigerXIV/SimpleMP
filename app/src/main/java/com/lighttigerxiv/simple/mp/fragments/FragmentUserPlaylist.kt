@@ -138,13 +138,20 @@ class FragmentUserPlaylist : Fragment() {
             playlist = Gson().fromJson(playlistJson, Playlist::class.java)
             songsList = playlist.playlist
 
-
             val playlistImagePath = playlist.imagePath
             val playlistName = playlist.name
             playlistID = playlist.id
 
+            if(playlist.imagePath != null)
+                sivPlaylistArt.setImageURI(Uri.parse(playlistImagePath))
 
-            sivPlaylistArt.setImageURI(Uri.parse(playlistImagePath))
+            else{
+                val playlistIcon = ContextCompat.getDrawable(fragmentContext, R.drawable.icon_playlists)!!.toBitmap()
+                sivPlaylistArt.setColorFilter(ColorFunctions.getThemeColor(fragmentContext, 5))
+                sivPlaylistArt.setImageBitmap(playlistIcon)
+            }
+
+
             tvPlaylistName.text = playlistName
 
 

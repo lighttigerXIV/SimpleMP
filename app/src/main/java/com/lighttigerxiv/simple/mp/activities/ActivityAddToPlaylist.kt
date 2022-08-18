@@ -64,8 +64,6 @@ class ActivityAddToPlaylist : AppCompatActivity() {
         val serviceIntent = Intent( applicationContext, SimpleMPService::class.java )
         bindService( serviceIntent, connection, Context.BIND_AUTO_CREATE )
 
-        getSharedPreferences("playlists", MODE_PRIVATE).edit().clear().apply()
-
 
         btBack.setOnClickListener { onBackPressed() }
         tvTitle.text = getString(R.string.SelectPlaylist)
@@ -107,9 +105,9 @@ class ActivityAddToPlaylist : AppCompatActivity() {
 
     private fun loadUserPlaylists(){
 
-        val userPLaylistsJson = getSharedPreferences("playlists", MODE_PRIVATE).getString("playlists", null)
+        val userPLaylistsJson = getSharedPreferences("playlists", MODE_PRIVATE).getString("playlists","" )
 
-        if( userPLaylistsJson != null ){
+        if( userPLaylistsJson!!.isNotEmpty() ){
 
             val jsonType = object : TypeToken<ArrayList<Playlist>>(){}.type
             userPlaylists = Gson().fromJson(userPLaylistsJson, jsonType)

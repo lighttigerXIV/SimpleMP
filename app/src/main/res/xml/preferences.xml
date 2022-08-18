@@ -2,14 +2,24 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/UserInterface">
+    <PreferenceCategory android:title="@string/Theming">
 
         <ListPreference
-            android:defaultValue="blue"
-            android:entries="@array/settings_themes"
-            android:entryValues="@array/settings_themes_values"
-            android:key="setting_theme"
+            android:defaultValue="system"
+            android:entries="@array/SettingsThemeMode"
+            android:entryValues="@array/SettingsThemeModeValues"
+            android:key="setting_themeMode"
             android:summary="%s"
-            android:title="@string/SelectTheme" />
+            android:title="@string/ThemeMode" />
+        <Preference
+            android:defaultValue="Blue"
+            android:key="setting_theme"
+            android:title="@string/Theme" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/Songs">
+        <Preference
+            android:defaultValue="60"
+            android:key="setting_filterAudio"
+            app:title="@string/FilterAudioBelow" />
     </PreferenceCategory>
 </PreferenceScreen>

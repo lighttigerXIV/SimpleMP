@@ -92,7 +92,7 @@ class ActivityQueue : AppCompatActivity() {
             }
         }
 
-        adapterRVSongs = AdapterRVSongs(filteredQueueList)
+        adapterRVSongs = AdapterRVSongs(filteredQueueList, supportFragmentManager, showViewAlbum = false, showViewArtist = false)
         rvQueue.adapter = adapterRVSongs
     }
 

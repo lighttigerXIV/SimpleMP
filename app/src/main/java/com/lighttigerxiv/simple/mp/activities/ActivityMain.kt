@@ -18,10 +18,13 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
+import androidx.preference.Preference
+import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.imageview.ShapeableImageView
 import com.lighttigerxiv.simple.mp.*
@@ -72,14 +75,18 @@ class ActivityMain : AppCompatActivity(){
     private var menuArtists: Int? = null
     private var menuAlbums: Int? = null
     private var menuPlaylists: Int? = null
+    private var deviceMiniPlayerHeight = 0
 
 
     private var fragmentHome = FragmentHome()
     private var fragmentArtists = FragmentArtists()
     private var fragmentArtist = FragmentArtist()
+    private var fragmentFloatingArtist = FragmentArtist()
     private var fragmentArtistAlbum = FragmentAlbum()
+    private var fragmentFloatingArtistAlbum = FragmentAlbum()
     private var fragmentAlbums = FragmentAlbums()
     private var fragmentAlbum = FragmentAlbum()
+    private var fragmentFloatingAlbum = FragmentAlbum()
     private var fragmentPlaylists = FragmentPlaylists()
     private var fragmentGenrePlaylist = FragmentGenrePlaylist()
     private var fragmentUserPlaylist = FragmentUserPlaylist()
@@ -106,7 +113,6 @@ class ActivityMain : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getSharedPreferences("settings", MODE_PRIVATE).edit().putString("theme", "orange").apply()
         setTheme(ColorFunctions.getTheme(applicationContext))
         setContentView(R.layout.activity_main)
         assignVariables()
@@ -178,6 +184,8 @@ class ActivityMain : AppCompatActivity(){
         menuArtists = R.id.menuArtists
         menuAlbums = R.id.menuAlbums
         menuPlaylists = R.id.menuPlaylists
+
+        deviceMiniPlayerHeight = slidingPanel.panelHeight
     }
 
 
@@ -235,9 +243,17 @@ class ActivityMain : AppCompatActivity(){
 
     private fun setupTheme(){
 
-        clMiniPlayer.setBackgroundColor(ColorFunctions.getThemeColor(applicationContext, 2))
-        clSlidePlayer.setBackgroundColor(ColorFunctions.getThemeColor(applicationContext, 1))
-        bottomNav.setBackgroundColor(ColorFunctions.getThemeColor(applicationContext, 1))
+        when( PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("setting_themeMode", "system") ){
+
+            "system"-> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            "light"-> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            "dark"-> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
+
+
+        clMiniPlayer.setBackgroundColor(ColorFunctions.getThemeColor(this, 2))
+        clSlidePlayer.setBackgroundColor(ColorFunctions.getThemeColor(this, 2))
+        bottomNav.setBackgroundColor(ColorFunctions.getThemeColor(this, 2))
     }
 
 
@@ -249,6 +265,8 @@ class ActivityMain : AppCompatActivity(){
         selectedFragment = 0
         fragmentManager.beginTransaction().add( frameLayout, fragmentHome, "home" ).commit()
         homeWasOpened = true
+
+        getSharedPreferences("selectedFragment", MODE_PRIVATE).edit().putInt("selectedFragment", selectedFragment).apply()
     }
 
 
@@ -259,20 +277,23 @@ class ActivityMain : AppCompatActivity(){
 
             override fun onPanelStateChanged( panel: View, previousState: PanelState, newState: PanelState ) {
 
+
                 if( newState == PanelState.DRAGGING ){
 
                     clMiniPlayer.visibility = View.GONE
-
+                    window.statusBarColor = ColorFunctions.getThemeColor(baseContext, 1)
                 }
                 if( newState == PanelState.COLLAPSED ){
 
                     clMiniPlayer.visibility = View.VISIBLE
-                    slidingPanel.isTouchEnabled = true
 
+                    slidingPanel.isTouchEnabled = true
+                    window.statusBarColor = ColorFunctions.getThemeColor(baseContext, 1)
                 }
                 if( newState == PanelState.EXPANDED ){
 
                     slidingPanel.isTouchEnabled = false
+                    window.statusBarColor = ColorFunctions.getThemeColor(baseContext, 2)
                 }
             }
         })
@@ -284,16 +305,35 @@ class ActivityMain : AppCompatActivity(){
         smpService.onMusicSelectedListener = object: SimpleMPService.OnMusicSelectedListener {
             override fun onMusicSelected(playList: ArrayList<Song>, position: Int) {
 
+                fragmentFloatingAlbum = try {
+                    fragmentManager.findFragmentByTag("floatingAlbum") as FragmentAlbum
+                }
+                catch (exc:Exception){FragmentAlbum()}
+
+                fragmentFloatingArtist = try{
+                    fragmentManager.findFragmentByTag("floatingArtist") as FragmentArtist
+                }
+                catch (exc: Exception){ FragmentArtist() }
+
+                fragmentFloatingArtistAlbum = try {
+                    fragmentManager.findFragmentByTag("floatingArtistAlbum") as FragmentAlbum
+                }
+                catch (exc:Exception){FragmentAlbum()}
+
+
                 if( homeWasOpened ) fragmentHome.updateCurrentSong()
                 if( albumIsOpen ) fragmentAlbum.updateCurrentSong()
+                fragmentFloatingAlbum.updateCurrentSong()
                 if( artistIsOpen ) fragmentArtist.updateCurrentSong()
                 if( artistAlbumIsOpen ) fragmentArtistAlbum.updateCurrentSong()
+                fragmentFloatingArtist.updateCurrentSong()
+                fragmentFloatingArtistAlbum.updateCurrentSong()
                 if( genrePlaylistIsOpen ) fragmentGenrePlaylist.updateCurrentSong()
                 if( userPlaylistIsOpen ) fragmentUserPlaylist.updateCurrentSong()
 
 
                 musicWasSelected = true
-                slidingPanel.panelHeight = 165
+                slidingPanel.panelHeight = deviceMiniPlayerHeight
 
                 val songID = playList[position].id
                 val songAlbumID = playList[position].albumID
@@ -347,7 +387,7 @@ class ActivityMain : AppCompatActivity(){
         tvSongSeconds.text = durationInSeconds
 
 
-        slidingPanel.panelHeight = 165
+        slidingPanel.panelHeight = deviceMiniPlayerHeight
     }
 
 
@@ -508,6 +548,9 @@ class ActivityMain : AppCompatActivity(){
 
                 }
             }
+
+            getSharedPreferences("selectedFragment", MODE_PRIVATE).edit().putInt("selectedFragment", selectedFragment).apply()
+
             true
         }
     }
@@ -515,12 +558,36 @@ class ActivityMain : AppCompatActivity(){
 
     private fun hideAllFragments(){
 
+
+        fragmentFloatingAlbum = try{
+            fragmentManager.findFragmentByTag("floatingAlbum") as FragmentAlbum
+        } catch (exc: Exception){
+            FragmentAlbum()
+        }
+
+        fragmentFloatingArtist = try{
+            fragmentManager.findFragmentByTag("floatingArtist") as FragmentArtist
+        } catch (exc: Exception){
+            FragmentArtist()
+        }
+
+        fragmentFloatingArtistAlbum = try{
+            fragmentManager.findFragmentByTag("floatingArtistAlbum") as FragmentAlbum
+        } catch (exc: Exception){
+            FragmentAlbum()
+        }
+
+
+
         if( homeWasOpened ) fragmentManager.beginTransaction().hide( fragmentHome ).commit()
         if( artistsWasOpened ) fragmentManager.beginTransaction().hide( fragmentArtists ).commit()
         if( artistIsOpen ) fragmentManager.beginTransaction().hide( fragmentArtist ).commit()
         if( artistAlbumIsOpen ) fragmentManager.beginTransaction().hide( fragmentArtistAlbum ).commit()
+        fragmentManager.beginTransaction().hide(fragmentFloatingArtist).commit()
+        fragmentManager.beginTransaction().hide(fragmentFloatingArtistAlbum).commit()
         if( albumsWasOpened ) fragmentManager.beginTransaction().hide(fragmentAlbums).commit()
         if( albumIsOpen ) fragmentManager.beginTransaction().hide( fragmentAlbum ).commit()
+        fragmentManager.beginTransaction().hide( fragmentFloatingAlbum ).commit()
         if( playlistsWasOpened ) fragmentManager.beginTransaction().hide( fragmentPlaylists ).commit()
         if( genrePlaylistIsOpen ) fragmentManager.beginTransaction().hide( fragmentGenrePlaylist ).commit()
         if( userPlaylistIsOpen ) fragmentManager.beginTransaction().hide( fragmentUserPlaylist ).commit()

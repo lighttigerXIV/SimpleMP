@@ -80,12 +80,13 @@
                 android:ems="10"
                 android:gravity="center"
                 android:hint="@string/PlaylistName"
+                android:importantForAutofill="no"
                 android:inputType="textPersonName"
+                android:textColorHint="@color/subText"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sivArt_FragmentUserPlaylist"
-                android:importantForAutofill="no" />
+                app:layout_constraintTop_toBottomOf="@+id/sivArt_FragmentUserPlaylist" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 

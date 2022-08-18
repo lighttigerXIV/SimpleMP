@@ -8,6 +8,8 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Size
+import androidx.preference.Preference
+import androidx.preference.PreferenceManager
 import com.lighttigerxiv.simple.mp.R
 import com.lighttigerxiv.simple.mp.Song
 
@@ -60,8 +62,8 @@ class GetSongs {
 
                             val song = Song( id, songPath, title, albumName , albumID , duration, artistName, artistID, year,  genreID, genre )
 
-                            if( duration > 60000 )
-                                songsList.add( song )
+                            val filterDuration = PreferenceManager.getDefaultSharedPreferences(context).getInt("setting_filterAudio", 60) * 1000
+                            if( duration > filterDuration ) songsList.add( song )
                         }
                         while (cursor.moveToNext())
                     }

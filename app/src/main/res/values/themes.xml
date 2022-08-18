@@ -72,10 +72,11 @@
         <item name="backgroundColor">@color/blue1</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="floatingActionButtonStyle">@style/BlueFloatinButtons</item>
+        <item name="alertDialogTheme">@style/BlueDialog</item>
     </style>
 
     <style name="BlueFloatinButtons" parent="Widget.Design.FloatingActionButton">
-        <item name="backgroundTint">@color/blue4</item>
+        <item name="backgroundTint">@color/blue5</item>
         <item name="tint">@color/white</item>
     </style>
 
@@ -92,7 +93,7 @@
     <style name="BlueDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="colorPrimary">@color/blue5</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:windowBackground">@color/blue1</item>
+        <item name="android:windowBackground">@drawable/dialog_blue_background</item>
     </style>
 
 
@@ -109,10 +110,11 @@
         <item name="backgroundColor">@color/red1</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="floatingActionButtonStyle">@style/RedFloatinButtons</item>
+        <item name="alertDialogTheme">@style/RedDialog</item>
     </style>
 
     <style name="RedFloatinButtons" parent="Widget.Design.FloatingActionButton">
-        <item name="backgroundTint">@color/red4</item>
+        <item name="backgroundTint">@color/red5</item>
         <item name="tint">@color/white</item>
     </style>
 
@@ -129,7 +131,7 @@
     <style name="RedDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="colorPrimary">@color/red5</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:windowBackground">@color/red1</item>
+        <item name="android:windowBackground">@drawable/dialog_red_background</item>
     </style>
 
 
@@ -147,10 +149,11 @@
         <item name="backgroundColor">@color/purple1</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="floatingActionButtonStyle">@style/PurpleFloatingButtons</item>
+        <item name="alertDialogTheme">@style/PurpleDialog</item>
     </style>
 
     <style name="PurpleFloatingButtons" parent="Widget.Design.FloatingActionButton">
-        <item name="backgroundTint">@color/purple4</item>
+        <item name="backgroundTint">@color/purple5</item>
         <item name="tint">@color/white</item>
     </style>
 
@@ -167,7 +170,7 @@
     <style name="PurpleDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="colorPrimary">@color/purple5</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:windowBackground">@color/purple1</item>
+        <item name="android:windowBackground">@drawable/dialog_purple_background</item>
     </style>
 
     <!--Yellow Themes-->
@@ -183,10 +186,11 @@
         <item name="backgroundColor">@color/yellow1</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="floatingActionButtonStyle">@style/YellowFloatingButtons</item>
+        <item name="alertDialogTheme">@style/YellowDialog</item>
     </style>
 
     <style name="YellowFloatingButtons" parent="Widget.Design.FloatingActionButton">
-        <item name="backgroundTint">@color/yellow4</item>
+        <item name="backgroundTint">@color/yellow5</item>
         <item name="tint">@color/white</item>
     </style>
 
@@ -203,7 +207,7 @@
     <style name="YellowDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="colorPrimary">@color/yellow5</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:windowBackground">@color/yellow1</item>
+        <item name="android:windowBackground">@drawable/dialog_yellow_background</item>
     </style>
 
 
@@ -220,10 +224,11 @@
         <item name="backgroundColor">@color/orange1</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="floatingActionButtonStyle">@style/OrangeFloatingButtons</item>
+        <item name="alertDialogTheme">@style/OrangeDialog</item>
     </style>
 
     <style name="OrangeFloatingButtons" parent="Widget.Design.FloatingActionButton">
-        <item name="backgroundTint">@color/orange4</item>
+        <item name="backgroundTint">@color/orange5</item>
         <item name="tint">@color/white</item>
     </style>
 
@@ -240,7 +245,7 @@
     <style name="OrangeDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="colorPrimary">@color/orange5</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:windowBackground">@color/orange1</item>
+        <item name="android:windowBackground">@drawable/dialog_orange_background</item>
     </style>
 
 
@@ -257,10 +262,11 @@
         <item name="backgroundColor">@color/mono1</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="floatingActionButtonStyle">@style/MonoFloatingButtons</item>
+        <item name="alertDialogTheme">@style/MonoDialog</item>
     </style>
 
     <style name="MonoFloatingButtons" parent="Widget.Design.FloatingActionButton">
-        <item name="backgroundTint">@color/mono4</item>
+        <item name="backgroundTint">@color/mono5</item>
         <item name="tint">@color/white</item>
     </style>
 
@@ -277,7 +283,7 @@
     <style name="MonoDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="colorPrimary">@color/mono5</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:windowBackground">@color/mono1</item>
+        <item name="android:windowBackground">@drawable/dialog_mono_background</item>
     </style>
 
 
@@ -294,10 +300,11 @@
         <item name="backgroundColor">@color/green1</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="floatingActionButtonStyle">@style/GreenFloatingButtons</item>
+        <item name="alertDialogTheme">@style/GreenDialog</item>
     </style>
 
     <style name="GreenFloatingButtons" parent="Widget.Design.FloatingActionButton">
-        <item name="backgroundTint">@color/green4</item>
+        <item name="backgroundTint">@color/green5</item>
         <item name="tint">@color/white</item>
     </style>
 
@@ -314,7 +321,7 @@
     <style name="GreenDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="colorPrimary">@color/green5</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:windowBackground">@color/green1</item>
+        <item name="android:windowBackground">@drawable/dialog_green_background</item>
     </style>
 
 </resources>

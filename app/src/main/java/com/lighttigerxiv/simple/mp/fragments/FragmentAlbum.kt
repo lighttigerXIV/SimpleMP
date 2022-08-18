@@ -86,7 +86,7 @@ class FragmentAlbum : Fragment() {
         songsList.removeIf { it.albumID != albumID }
 
 
-        adapterRVSongs = AdapterRVSongs(songsList)
+        adapterRVSongs = AdapterRVSongs(songsList, parentFragmentManager, showViewAlbum = false, showViewArtist = true)
         rvSongs.adapter = adapterRVSongs
 
 
@@ -136,7 +136,7 @@ class FragmentAlbum : Fragment() {
         ivAlbumArt = view.findViewById(R.id.albumArt_FragmentAlbum)
         rvSongs = view.findViewById(R.id.rvSongs_FragmentAlbum)
 
-        albumID = arguments!!.getLong( "albumID" )
+        albumID = requireArguments().getLong( "albumID" )
 
 
         rvSongs.layoutManager = LinearLayoutManager(fragmentContext)

@@ -85,7 +85,7 @@ class FragmentHome : Fragment() {
         try{
             assignVariables( view )
 
-            setupColors()
+            setupThemes()
 
             if(savedInstanceState != null) restoreLifecycle(savedInstanceState)
 
@@ -146,7 +146,7 @@ class FragmentHome : Fragment() {
 
             songsList = Gson().fromJson(songsListJson, jsonType)
 
-            adapterRVSongs = AdapterRVSongs(adapterSongsList)
+            adapterRVSongs = AdapterRVSongs(adapterSongsList, parentFragmentManager, showViewAlbum = true, showViewArtist = true)
             rvSongs.adapter = adapterRVSongs
 
             handleMusicClicked()
@@ -154,7 +154,7 @@ class FragmentHome : Fragment() {
     }
 
 
-    private fun setupColors(){
+    private fun setupThemes(){
 
         clMain.setBackgroundColor(ColorFunctions.getThemeColor(fragmentContext, 1))
         etSearch.background = ColorFunctions.getEditTextBackground(fragmentContext)
@@ -165,7 +165,7 @@ class FragmentHome : Fragment() {
 
         songsList = GetSongs.getSongsList(fragmentContext, true)
 
-        adapterRVSongs = AdapterRVSongs(songsList)
+        adapterRVSongs = AdapterRVSongs(songsList, parentFragmentManager, showViewAlbum = true, showViewArtist = true)
         rvSongs.adapter = adapterRVSongs
 
         songsLoaded = true
