@@ -19,7 +19,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lighttigerxiv.simple.mp.others.GetSongs
 import com.lighttigerxiv.simple.mp.R
-import com.lighttigerxiv.simple.mp.RVSpacerHorizontal
 import com.lighttigerxiv.simple.mp.Song
 import com.lighttigerxiv.simple.mp.adapters.AdapterRVAlbums
 import com.lighttigerxiv.simple.mp.others.ColorFunctions
@@ -88,8 +87,6 @@ class FragmentAlbums : Fragment() {
 
         else
             rvAlbums.layoutManager = GridLayoutManager( fragmentContext, 4 )
-
-        rvAlbums.addItemDecoration( RVSpacerHorizontal( 10 ) )
     }
 
 
