@@ -38,7 +38,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout
 
 class ActivityMain : AppCompatActivity(){
 
-    //Testing Gita
+    //Testing GitLab and GitHub
 
     //UI and Context
     private lateinit var bottomNav: BottomNavigationView
