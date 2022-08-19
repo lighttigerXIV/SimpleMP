@@ -59,6 +59,7 @@
 
 
     <color name="icon">@color/white</color>
+    <color name="accent">#121212</color>
     <color name="text">@color/white</color>
     <color name="subText">#E1E1E1</color>
     <color name="divider">#242424</color>

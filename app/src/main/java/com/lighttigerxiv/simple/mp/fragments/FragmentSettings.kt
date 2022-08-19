@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.preference.*
 import com.google.android.material.snackbar.Snackbar
+import com.lighttigerxiv.simple.mp.activities.ActivityAboutPage
 import com.lighttigerxiv.simple.mp.R
 import com.lighttigerxiv.simple.mp.activities.ActivityMain
 import com.lighttigerxiv.simple.mp.others.ColorFunctions
@@ -38,6 +39,7 @@ class FragmentSettings : PreferenceFragmentCompat() {
         val themeModePreference: ListPreference? = findPreference("setting_themeMode")
         val themePreferences: Preference? = findPreference("setting_theme")
         val filterAudioBelowPreference: Preference? = findPreference("setting_filterAudio")
+        val aboutPreference: Preference? = findPreference("setting_about")
 
 
         themeModePreference?.setOnPreferenceChangeListener { _, newValue ->
@@ -63,6 +65,12 @@ class FragmentSettings : PreferenceFragmentCompat() {
             onSettingClickedListener?.onSettingClicked("setting_filterAudio")
             true
         }
+
+        aboutPreference?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+
+            onSettingClickedListener?.onSettingClicked("setting_about")
+            true
+        }
     }
 
 
@@ -74,6 +82,7 @@ class FragmentSettings : PreferenceFragmentCompat() {
         val themePreference: Preference? = findPreference("setting_theme")
         val filterAudioPreference: Preference? = findPreference("setting_filterAudio")
         val limitAudioVolumePreference: SwitchPreference? = findPreference("setting_limitAudioVolume")
+        val aboutPreference: Preference? = findPreference("setting_about")
 
 
         //Inserts summary in the preferences
@@ -96,6 +105,9 @@ class FragmentSettings : PreferenceFragmentCompat() {
 
         limitAudioVolumePreference!!.icon = ContextCompat.getDrawable(context, R.drawable.icon_volume_regular)
         limitAudioVolumePreference.icon!!.setTintList(ColorStateList.valueOf(ColorFunctions.getThemeColor(context, 5)))
+
+        aboutPreference!!.icon = ContextCompat.getDrawable(context, R.drawable.icon_about_regular)
+        aboutPreference.icon!!.setTintList(ColorStateList.valueOf(ColorFunctions.getThemeColor(context, 5)))
 
 
         onSettingClickedListener = object : OnSettingClickedListener{
@@ -165,6 +177,7 @@ class FragmentSettings : PreferenceFragmentCompat() {
                         val etSeconds = dialogView.findViewById<EditText>(R.id.etSeconds_DialogFilterAudio)
 
                         etSeconds.setText(PreferenceManager.getDefaultSharedPreferences( context ).getInt("setting_filterAudio", 60).toString())
+                        etSeconds.background = ColorFunctions.getEditTextBackground(context)
 
                         AlertDialog.Builder(context, ColorFunctions.getDialogTheme(context))
                             .setView(dialogView)
@@ -187,6 +200,8 @@ class FragmentSettings : PreferenceFragmentCompat() {
                             }
                             .show()
                     }
+
+                    "setting_about"-> startActivity(Intent(context, ActivityAboutPage::class.java ))
                 }
             }
         }
@@ -209,6 +224,7 @@ class FragmentSettings : PreferenceFragmentCompat() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
+        //TO-DO: Restore opened dialogs
 
     }
 }

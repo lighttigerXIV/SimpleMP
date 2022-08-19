@@ -66,7 +66,7 @@
         android:layout_height="30dp"
         android:layout_marginBottom="5dp"
         android:contentDescription="@string/emptyDescription"
-        android:src="@drawable/icon_info_regular"
+        android:src="@drawable/icon_about_regular"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/tvNoPlaylistFound_FragmentPlaylistsRecyclerview"
         app:layout_constraintEnd_toEndOf="@+id/tvNoPlaylistFound_FragmentPlaylistsRecyclerview"

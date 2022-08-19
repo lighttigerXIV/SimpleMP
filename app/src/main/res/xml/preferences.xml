@@ -27,4 +27,10 @@
             android:summary="@string/IfEnabledLimitsVolumeTo70"
             android:title="@string/LimitAudioVolume" />
     </PreferenceCategory>
+    <PreferenceCategory app:title="@string/About">
+        <Preference
+            android:key="setting_about"
+            android:title="@string/About"
+            app:summary="@string/OpenAboutPage" />
+    </PreferenceCategory>
 </PreferenceScreen>

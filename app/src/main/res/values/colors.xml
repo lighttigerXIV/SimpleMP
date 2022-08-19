@@ -69,7 +69,7 @@
     <color name="mainPurple">#9953FF</color>
     <color name="darkMainPurple">#55308C</color>
     <color name="background">@color/blue1</color>
-    <color name="accent">@color/blue3</color>
+    <color name="accent">#FFFFFF</color>
     <color name="accentBorder">@color/blue1</color>
     <color name="text">@color/black</color>
     <color name="subText">#242424</color>

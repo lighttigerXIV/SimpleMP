@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clMain_ActivityAboutPage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ActivityAboutPage" >
+
+    <include
+        android:id="@+id/toolbar_ActivityAboutPage"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/svContent_ActivityAboutPage"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_ActivityAboutPage">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clContent_ActivityAboutPage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvVersion_ActivityAboutPage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Version"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvProjectSource_ActivityAboutPage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/ProjectSource"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/version_ActivityAboutPage" />
+
+            <TextView
+                android:id="@+id/version_ActivityAboutPage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/AppVersion"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvVersion_ActivityAboutPage" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clGitHub_ActivityAboutPage"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/card"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvProjectSource_ActivityAboutPage">
+
+                <ImageView
+                    android:id="@+id/ivGitHub_ActivityAboutPage"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
+                    android:contentDescription="@string/emptyDescription"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/icon_github"
+                    app:tint="@color/icon" />
+
+                <TextView
+                    android:id="@+id/tvGitHub_ActivityAboutPage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/GitHub"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/ivGitHub_ActivityAboutPage"
+                    app:layout_constraintTop_toTopOf="@+id/ivGitHub_ActivityAboutPage" />
+
+                <TextView
+                    android:id="@+id/tvGetSourceOnGitHub_ActivityAboutPage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:singleLine="true"
+                    android:text="@string/GetTheProjectSourceInGitHub"
+                    app:layout_constraintBottom_toBottomOf="@+id/ivGitHub_ActivityAboutPage"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tvGitHub_ActivityAboutPage" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clGitLab_ActivityAboutPage"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/card"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/clGitHub_ActivityAboutPage">
+
+                <ImageView
+                    android:id="@+id/ivGitLab_ActivityAboutPage"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
+                    android:contentDescription="@string/emptyDescription"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/icon_gitlab" />
+
+                <TextView
+                    android:id="@+id/tvGitLab_ActivityAboutPage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/GitLab"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/ivGitLab_ActivityAboutPage"
+                    app:layout_constraintTop_toTopOf="@+id/ivGitLab_ActivityAboutPage" />
+
+                <TextView
+                    android:id="@+id/tvGetSourceOnGiLab_ActivityAboutPage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:singleLine="true"
+                    android:text="@string/GetTheProjectSourceInGitLab"
+                    app:layout_constraintBottom_toBottomOf="@+id/ivGitLab_ActivityAboutPage"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tvGitLab_ActivityAboutPage" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
