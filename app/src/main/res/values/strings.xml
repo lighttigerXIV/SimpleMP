@@ -33,7 +33,7 @@
 
 
     <string name="Theme">Theme</string>
-    <string name="ThemeMode">Theme mode</string>
+    <string name="ThemeMode">Theme Mode</string>
     <string name="emptyDescription">‎</string>
     <string name="threeDots">...</string>
 
@@ -49,7 +49,10 @@
     <string name="pauseSong">Pause Song</string>
 
     <string name="Songs">Songs</string>
+    <string name="Audio">Audio</string>
     <string name="Albums">Albums</string>
+    <string name="LimitAudioVolume">Limit Audio Volume</string>
+    <string name="IfEnabledLimitsVolumeTo70">If enabled limits volume to 70%</string>
 
     <string name="Settings">Settings</string>
     <string name="SortByAscendent">Sort By Ascendent</string>
@@ -93,7 +96,7 @@
     <string name="RestartToTakeEffect">Restart to take effect</string>
     <string name="Restart">Restart</string>
 
-    <string name="FilterAudioBelow">Filter audio below:</string>
+    <string name="FilterAudioBelow">Filter Audio Below:</string>
     <string name="Seconds">Seconds</string>
 
     <string name="InsertTimeInSeconds">Insert time in seconds</string>

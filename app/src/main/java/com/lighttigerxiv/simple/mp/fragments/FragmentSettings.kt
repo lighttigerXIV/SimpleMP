@@ -11,10 +11,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.preference.ListPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
+import androidx.preference.*
 import com.google.android.material.snackbar.Snackbar
 import com.lighttigerxiv.simple.mp.R
 import com.lighttigerxiv.simple.mp.activities.ActivityMain
@@ -41,7 +38,6 @@ class FragmentSettings : PreferenceFragmentCompat() {
         val themeModePreference: ListPreference? = findPreference("setting_themeMode")
         val themePreferences: Preference? = findPreference("setting_theme")
         val filterAudioBelowPreference: Preference? = findPreference("setting_filterAudio")
-
 
 
         themeModePreference?.setOnPreferenceChangeListener { _, newValue ->
@@ -77,6 +73,7 @@ class FragmentSettings : PreferenceFragmentCompat() {
         val themeModePreference: ListPreference? = findPreference("setting_themeMode")
         val themePreference: Preference? = findPreference("setting_theme")
         val filterAudioPreference: Preference? = findPreference("setting_filterAudio")
+        val limitAudioVolumePreference: SwitchPreference? = findPreference("setting_limitAudioVolume")
 
 
         //Inserts summary in the preferences
@@ -96,6 +93,9 @@ class FragmentSettings : PreferenceFragmentCompat() {
 
         filterAudioPreference!!.icon = ContextCompat.getDrawable(context, R.drawable.icon_filter_regular)
         filterAudioPreference.icon!!.setTintList(ColorStateList.valueOf(ColorFunctions.getThemeColor(context, 5)))
+
+        limitAudioVolumePreference!!.icon = ContextCompat.getDrawable(context, R.drawable.icon_volume_regular)
+        limitAudioVolumePreference.icon!!.setTintList(ColorStateList.valueOf(ColorFunctions.getThemeColor(context, 5)))
 
 
         onSettingClickedListener = object : OnSettingClickedListener{

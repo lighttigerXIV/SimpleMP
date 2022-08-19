@@ -16,10 +16,15 @@
             android:key="setting_theme"
             android:title="@string/Theme" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/Songs">
+    <PreferenceCategory android:title="@string/Audio">
         <Preference
             android:defaultValue="60"
             android:key="setting_filterAudio"
             app:title="@string/FilterAudioBelow" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="setting_limitAudioVolume"
+            android:summary="@string/IfEnabledLimitsVolumeTo70"
+            android:title="@string/LimitAudioVolume" />
     </PreferenceCategory>
 </PreferenceScreen>

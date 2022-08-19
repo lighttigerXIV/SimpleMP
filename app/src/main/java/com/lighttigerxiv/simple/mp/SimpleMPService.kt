@@ -13,6 +13,8 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
+import androidx.preference.Preference
+import androidx.preference.PreferenceManager
 import com.lighttigerxiv.simple.mp.activities.ActivityMain
 import com.lighttigerxiv.simple.mp.others.GetSongs
 import com.lighttigerxiv.simple.mp.services.*
@@ -291,9 +293,11 @@ class SimpleMPService: Service() {
 
         currentSongPath = songPath
 
+        val isAudioLimited = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("setting_limitAudioVolume", true)
 
         mediaPlayer.reset()
         mediaPlayer.setDataSource(songPath)
+        if(isAudioLimited) mediaPlayer.setVolume(0.07F, 0.07F)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
 
