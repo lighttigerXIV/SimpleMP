@@ -33,10 +33,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/blue5"
+        android:elevation="0dp"
         android:padding="10dp"
         android:text="@string/Create"
         android:textAllCaps="false"
-        android:textColor="@color/blue2"
+        android:textColor="@color/white"
         app:cornerRadius="999dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etPlaylistName_BottomSheetAddPlaylist" />

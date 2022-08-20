@@ -53,6 +53,7 @@
         <entry key="app/src/main/res/layout/activity_add_to_playlist.xml" value="0.264" />
         <entry key="app/src/main/res/layout/activity_album.xml" value="0.264" />
         <entry key="app/src/main/res/layout/activity_album2.xml" value="0.23856348867037194" />
+        <entry key="app/src/main/res/layout/activity_first_setup.xml" value="0.30416666666666664" />
         <entry key="app/src/main/res/layout/activity_floating_album_or_artist.xml" value="0.20108695652173914" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.23386062419837536" />
         <entry key="app/src/main/res/layout/activity_playback_notification_intent.xml" value="0.23386062419837536" />
