@@ -113,6 +113,17 @@ class ActivityMain : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        val firstTimeSetup = getSharedPreferences("firstTimeSetup", MODE_PRIVATE).getBoolean("firstTimeSetup", true)
+
+        if( firstTimeSetup ){
+
+            startActivity(Intent(applicationContext, ActivitySetup::class.java))
+            finish()
+        }
+
+
         setTheme(ColorFunctions.getTheme(applicationContext))
         setContentView(R.layout.activity_main)
         assignVariables()

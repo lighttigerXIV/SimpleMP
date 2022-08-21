@@ -40,14 +40,22 @@
         <entry key="app/src/main/res/drawable/selector_menu_home.xml" value="0.292" />
         <entry key="app/src/main/res/drawable/selector_menu_playlists.xml" value="0.292" />
         <entry key="app/src/main/res/drawable/theme_blue.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/theme_blue_selected.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/theme_green.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/theme_green_selected.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/theme_mono.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/theme_mono_selected.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/theme_orange.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/theme_orange_selected.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/theme_purple.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/theme_purple_selected.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/theme_red.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/theme_red_selected.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/theme_yellow.xml" value="0.2865" />
+        <entry key="app/src/main/res/drawable/theme_yellow_selected.xml" value="0.2865" />
         <entry key="app/src/main/res/layout-land/fragment_album.xml" value="0.4" />
         <entry key="app/src/main/res/layout-land/fragment_artist.xml" value="0.49552772808586765" />
+        <entry key="app/src/main/res/layout-land/fragment_setup_two.xml" value="0.2570052539404553" />
         <entry key="app/src/main/res/layout-land/sliding_panel.xml" value="0.4" />
         <entry key="app/src/main/res/layout/activity_about_page.xml" value="0.5386029411764706" />
         <entry key="app/src/main/res/layout/activity_add_to_playlist.xml" value="0.264" />
@@ -63,12 +71,13 @@
         <entry key="app/src/main/res/layout/content_activity_album.xml" value="0.1188542112013681" />
         <entry key="app/src/main/res/layout/content_fragment_album.xml" value="0.2526720820863617" />
         <entry key="app/src/main/res/layout/dialog_preference_filter_audio.xml" value="0.4" />
-        <entry key="app/src/main/res/layout/dialog_preference_theme.xml" value="0.6" />
+        <entry key="app/src/main/res/layout/dialog_preference_theme.xml" value="0.536" />
         <entry key="app/src/main/res/layout/fragment_album.xml" value="0.4" />
         <entry key="app/src/main/res/layout/fragment_album_new.xml" value="0.2526720820863617" />
         <entry key="app/src/main/res/layout/fragment_albums.xml" value="0.536" />
         <entry key="app/src/main/res/layout/fragment_artist.xml" value="0.26036767849508335" />
         <entry key="app/src/main/res/layout/fragment_artists.xml" value="0.4618410700236035" />
+        <entry key="app/src/main/res/layout/fragment_fagment_setup_one.xml" value="0.30572916666666666" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.2556648140230868" />
         <entry key="app/src/main/res/layout/fragment_genre_playlist.xml" value="0.25609234715690465" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.4" />
@@ -79,6 +88,8 @@
         <entry key="app/src/main/res/layout/fragment_queue_list.xml" value="0.4" />
         <entry key="app/src/main/res/layout/fragment_recycler_view.xml" value="0.23685335613510047" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.23333333333333334" />
+        <entry key="app/src/main/res/layout/fragment_setup_three.xml" value="0.4" />
+        <entry key="app/src/main/res/layout/fragment_setup_two.xml" value="0.30572916666666666" />
         <entry key="app/src/main/res/layout/fragment_user_playlist.xml" value="0.46687451286048326" />
         <entry key="app/src/main/res/layout/preference_text.xml" value="0.536" />
         <entry key="app/src/main/res/layout/queu.xml" value="0.2151268115942029" />

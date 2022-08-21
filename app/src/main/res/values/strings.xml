@@ -85,4 +85,14 @@
     <string name="GetTheProjectSourceInGitHub">Get the project source on GitHub</string>
     <string name="GitLab">GitLab</string>
     <string name="GetTheProjectSourceInGitLab">Get the project source on GitLab</string>
+    <string name="WelcomeToSimpleMP">Welcome to SimpleMP</string>
+    <string name="Next">Next</string>
+    <string name="Back">Back</string>
+    <string name="StoragePermission">Storage Permission</string>
+    <string name="PleaseEnableStorage">Please enable storage permission in order to read the music files.</string>
+    <string name="Grant">Grant</string>
+    <string name="Granted">Granted</string>
+    <string name="PleaseEnableStoragePermission">Please enable storage permission</string>
+    <string name="Finish">Finish</string>
+    <string name="SelectYourFavoriteColor">Select your favorite color</string>
 </resources>
