@@ -24,6 +24,20 @@ class ActivitySettings : AppCompatActivity() {
 
         clMain.setBackgroundColor(ColorFunctions.getThemeColor(this, 1))
         btBack.setOnClickListener { onBackPressed() }
-        supportFragmentManager.beginTransaction().replace(R.id.frameLayout_ActivitySettings, FragmentSettings()).commit()
+
+
+        if(savedInstanceState != null){
+
+            val fragmentSettings = supportFragmentManager.findFragmentByTag("settings") as FragmentSettings
+            supportFragmentManager.beginTransaction().show(fragmentSettings).commit()
+        }
+        else
+            supportFragmentManager.beginTransaction().add(R.id.frameLayout_ActivitySettings, FragmentSettings(), "settings").commit()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putBoolean("restore", true)
     }
 }

@@ -11,6 +11,13 @@
             android:key="setting_themeMode"
             android:summary="%s"
             android:title="@string/ThemeMode" />
+        <ListPreference
+            android:defaultValue="color"
+            android:entries="@array/SettingsDarkMode"
+            android:entryValues="@array/SettingsDarkModeValues"
+            android:key="setting_darkMode"
+            android:summary="%s"
+            android:title="@string/DarkMode"/>
         <Preference
             android:defaultValue="Blue"
             android:key="setting_theme"

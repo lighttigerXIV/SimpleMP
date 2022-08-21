@@ -13,7 +13,6 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
-import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 import com.lighttigerxiv.simple.mp.activities.ActivityMain
 import com.lighttigerxiv.simple.mp.others.GetSongs
@@ -540,7 +539,6 @@ class SimpleMPService: Service() {
 
 
         notification.actions[2] = Notification.Action( playPauseIcon, "Play Music", pendingPlayPauseIntent )
-
 
 
         startForeground( 2, notification )

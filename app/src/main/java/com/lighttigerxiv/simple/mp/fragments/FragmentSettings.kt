@@ -21,11 +21,8 @@ import java.util.*
 
 class FragmentSettings : PreferenceFragmentCompat() {
 
-    /*
     interface OnSettingChangedListener{fun onSettingChanged(setting: String)}
     private var onSettingChangedListener: OnSettingChangedListener? = null
-
-     */
 
     interface OnSettingClickedListener{fun onSettingClicked(setting: String)}
     private var onSettingClickedListener: OnSettingClickedListener? = null
@@ -37,6 +34,7 @@ class FragmentSettings : PreferenceFragmentCompat() {
 
         setPreferencesFromResource(R.xml.preferences, rootKey)
         val themeModePreference: ListPreference? = findPreference("setting_themeMode")
+        val darkModePreference: ListPreference? = findPreference("setting_darkMode")
         val themePreferences: Preference? = findPreference("setting_theme")
         val filterAudioBelowPreference: Preference? = findPreference("setting_filterAudio")
         val aboutPreference: Preference? = findPreference("setting_about")
@@ -51,6 +49,12 @@ class FragmentSettings : PreferenceFragmentCompat() {
                 "dark"-> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
 
+            true
+        }
+
+        darkModePreference?.setOnPreferenceChangeListener { _, _ ->
+
+            onSettingChangedListener?.onSettingChanged("setting_darkMode")
             true
         }
 
@@ -79,6 +83,7 @@ class FragmentSettings : PreferenceFragmentCompat() {
 
         val context = view.context
         val themeModePreference: ListPreference? = findPreference("setting_themeMode")
+        val darkModePreference: ListPreference? = findPreference("setting_darkMode")
         val themePreference: Preference? = findPreference("setting_theme")
         val filterAudioPreference: Preference? = findPreference("setting_filterAudio")
         val limitAudioVolumePreference: SwitchPreference? = findPreference("setting_limitAudioVolume")
@@ -97,6 +102,9 @@ class FragmentSettings : PreferenceFragmentCompat() {
         themeModePreference!!.icon = ContextCompat.getDrawable(context, R.drawable.icon_theme_mode_regular)
         themeModePreference.icon!!.setTintList(ColorStateList.valueOf(ColorFunctions.getThemeColor(context, 5)))
 
+        darkModePreference!!.icon = ContextCompat.getDrawable(context, R.drawable.icon_moon_regular)
+        darkModePreference.icon!!.setTintList(ColorStateList.valueOf(ColorFunctions.getThemeColor(context, 5)))
+
         themePreference!!.icon = ContextCompat.getDrawable( context, R.drawable.icon_theme_regular)
         themePreference.icon!!.setTintList(ColorStateList.valueOf(ColorFunctions.getThemeColor(context, 5)))
 
@@ -106,8 +114,19 @@ class FragmentSettings : PreferenceFragmentCompat() {
         limitAudioVolumePreference!!.icon = ContextCompat.getDrawable(context, R.drawable.icon_volume_regular)
         limitAudioVolumePreference.icon!!.setTintList(ColorStateList.valueOf(ColorFunctions.getThemeColor(context, 5)))
 
-        aboutPreference!!.icon = ContextCompat.getDrawable(context, R.drawable.icon_about_regular)
+        aboutPreference!!.icon = ContextCompat.getDrawable(context, R.drawable.icon_info_regular)
         aboutPreference.icon!!.setTintList(ColorStateList.valueOf(ColorFunctions.getThemeColor(context, 5)))
+
+
+        onSettingChangedListener = object : OnSettingChangedListener{
+            override fun onSettingChanged(setting: String) {
+
+                when(setting){
+
+                    "setting_darkMode"-> showRestartSnack(view)
+                }
+            }
+        }
 
 
         onSettingClickedListener = object : OnSettingClickedListener{

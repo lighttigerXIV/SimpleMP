@@ -20,6 +20,14 @@
         <item>light</item>
         <item>dark</item>
     </string-array>
+    <string-array name="SettingsDarkMode">
+        <item>Color</item>
+        <item>Oled</item>
+    </string-array>
+    <string-array name="SettingsDarkModeValues">
+        <item>color</item>
+        <item>oled</item>
+    </string-array>
     <string name="Theme">Theme</string>
     <string name="ThemeMode">Theme Mode</string>
     <string name="emptyDescription">‎</string>
@@ -95,4 +103,7 @@
     <string name="PleaseEnableStoragePermission">Please enable storage permission</string>
     <string name="Finish">Finish</string>
     <string name="SelectYourFavoriteColor">Select your favorite color</string>
+    <string name="DarkMode">Dark Mode</string>
+    <string name="DarkModeString">False</string>
+    <string name="ThisIsFeelingEmpty">This is feeling empty</string>
 </resources>

@@ -12,6 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +34,8 @@ class FragmentAlbums : Fragment() {
     private lateinit var etSearch: EditText
     private lateinit var ibClearSearch: ImageButton
     private lateinit var rvAlbums: RecyclerView
+    private lateinit var ivCricket: ImageView
+    private lateinit var tvThisIsFeelingEmpty: TextView
     private lateinit var albumsList: ArrayList<Song>
     private lateinit var onAlbumOpenedListener: OnAlbumOpenedListener
 
@@ -78,6 +82,8 @@ class FragmentAlbums : Fragment() {
         etSearch = view.findViewById(R.id.etSearch_FragmentAlbums)
         ibClearSearch = view.findViewById(R.id.ibClearSearch_FragmentAlbums)
         rvAlbums = fragmentView.findViewById(R.id.rvAlbums_FragmentAlbums)
+        ivCricket = view.findViewById(R.id.ivCricket_FragmentAlbums)
+        tvThisIsFeelingEmpty = view.findViewById(R.id.tvThisIsFeelingEmpty_FragmentAlbums)
 
 
         val deviceOrientation = fragmentContext.resources.configuration.orientation
@@ -106,6 +112,11 @@ class FragmentAlbums : Fragment() {
             adapterRVAlbums = AdapterRVAlbums(adapterAlbumsList)
             rvAlbums.adapter = adapterRVAlbums
 
+            if(albumsList.size == 0){
+                ivCricket.visibility = View.VISIBLE
+                tvThisIsFeelingEmpty.visibility = View.VISIBLE
+            }
+
             handleAlbumClicked()
         }
     }
@@ -127,6 +138,11 @@ class FragmentAlbums : Fragment() {
 
         adapterRVAlbums = AdapterRVAlbums( albumsList )
         rvAlbums.adapter = adapterRVAlbums
+
+        if(albumsList.size == 0){
+            ivCricket.visibility = View.VISIBLE
+            tvThisIsFeelingEmpty.visibility = View.VISIBLE
+        }
 
         handleAlbumClicked()
 

@@ -3,6 +3,7 @@ package com.lighttigerxiv.simple.mp.fragments
 import android.annotation.SuppressLint
 import android.content.*
 import android.content.Context.MODE_PRIVATE
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.IBinder
 import android.text.Editable
@@ -36,9 +37,10 @@ class FragmentHome : Fragment() {
     private lateinit var ibClearSearch: ImageButton
     private lateinit var ivMenu: ImageView
     private lateinit var rvSongs: RecyclerView
+    private lateinit var ivCricket: ImageView
+    private lateinit var tvThisIsFeelingEmpty: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var fabShuffle: FloatingActionButton
-
     private lateinit var songsList: ArrayList<Song>
 
 
@@ -100,6 +102,7 @@ class FragmentHome : Fragment() {
             handleMenu()
             handleFabShuffle()
             handleMusicClicked()
+            handleCricketClick()
         }
         catch ( exc: Exception ){}
     }
@@ -119,11 +122,13 @@ class FragmentHome : Fragment() {
         fragmentView = view
         fragmentContext = fragmentView.context
         clMain = view.findViewById(R.id.clMain_FragmentHome)
-        etSearch = fragmentView.findViewById(R.id.etSearch_FragmentHome)
+        etSearch = view.findViewById(R.id.etSearch_FragmentHome)
         ibClearSearch = view.findViewById(R.id.ibClearSearch_FragmentHome)
-        ivMenu = fragmentView.findViewById(R.id.ivMenu_FragmentHome)
-        rvSongs = fragmentView.findViewById(R.id.rvSongs_FragmentHome)
-        progressBar = fragmentView.findViewById(R.id.progressBar_FragmentHome)
+        ivMenu = view.findViewById(R.id.ivMenu_FragmentHome)
+        rvSongs = view.findViewById(R.id.rvSongs_FragmentHome)
+        ivCricket = view.findViewById(R.id.ivCricket_FragmentHome)
+        tvThisIsFeelingEmpty = view.findViewById(R.id.tvThisIsFeelingEmpty_FragmentHome)
+        progressBar = view.findViewById(R.id.progressBar_FragmentHome)
         fabShuffle = view.findViewById(R.id.fabShuffle_FragmentHome)
 
 
@@ -149,6 +154,12 @@ class FragmentHome : Fragment() {
             adapterRVSongs = AdapterRVSongs(adapterSongsList, parentFragmentManager, showViewAlbum = true, showViewArtist = true)
             rvSongs.adapter = adapterRVSongs
 
+            if(songsList.size == 0){
+                ivCricket.visibility = View.VISIBLE
+                tvThisIsFeelingEmpty.visibility = View.VISIBLE
+                fabShuffle.visibility = View.GONE
+            }
+
             handleMusicClicked()
         }
     }
@@ -168,7 +179,24 @@ class FragmentHome : Fragment() {
         adapterRVSongs = AdapterRVSongs(songsList, parentFragmentManager, showViewAlbum = true, showViewArtist = true)
         rvSongs.adapter = adapterRVSongs
 
+        if(songsList.size == 0){
+            ivCricket.visibility = View.VISIBLE
+            tvThisIsFeelingEmpty.visibility = View.VISIBLE
+            fabShuffle.visibility = View.GONE
+        }
+
         songsLoaded = true
+    }
+
+
+    private fun handleCricketClick(){
+
+        ivCricket.setOnClickListener {
+
+            val mp = MediaPlayer.create(fragmentContext, R.raw.cricket_sound)
+            mp.setVolume(0.06F, 0.06F)
+            mp.start()
+        }
     }
 
 

@@ -22,7 +22,7 @@ data class ResponseAudioDB(
         val strArtistFanart4: String,
         val strArtistLogo: String,
         val strArtistStripped: Any,
-        val strArtistThumb: String,
+        val strArtistThumb: String?,
         val strArtistWideThumb: String,
         val strBiographyCN: String,
         val strBiographyDE: String,

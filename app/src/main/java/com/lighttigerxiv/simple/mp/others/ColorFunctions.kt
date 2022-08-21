@@ -1,7 +1,6 @@
 package com.lighttigerxiv.simple.mp.others
 
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
@@ -36,8 +35,11 @@ class ColorFunctions {
 
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             val theme = prefs.getString("setting_theme", "blue")
+            val darkMode = prefs.getString("setting_darkMode", "color")
+            val darkModeString = context.getString(R.string.DarkModeString)
             var color = 0
 
+            if(darkMode == "oled" && intensity == 1 && darkModeString == "True") return ContextCompat.getColor(context, R.color.black)
 
             when(theme){
 

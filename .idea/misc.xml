@@ -94,9 +94,9 @@
         <entry key="app/src/main/res/layout/preference_text.xml" value="0.536" />
         <entry key="app/src/main/res/layout/queu.xml" value="0.2151268115942029" />
         <entry key="app/src/main/res/layout/rv_add_to_playlist.xml" value="0.4" />
-        <entry key="app/src/main/res/layout/rv_albums.xml" value="0.6308510638297873" />
-        <entry key="app/src/main/res/layout/rv_artists.xml" value="0.536" />
-        <entry key="app/src/main/res/layout/rv_playlists.xml" value="0.2556648140230868" />
+        <entry key="app/src/main/res/layout/rv_albums.xml" value="0.30572916666666666" />
+        <entry key="app/src/main/res/layout/rv_artists.xml" value="0.30572916666666666" />
+        <entry key="app/src/main/res/layout/rv_playlists.xml" value="0.30572916666666666" />
         <entry key="app/src/main/res/layout/rv_songs.xml" value="0.536" />
         <entry key="app/src/main/res/layout/rv_text.xml" value="0.4" />
         <entry key="app/src/main/res/layout/sliding_panel.xml" value="0.264" />

@@ -242,30 +242,49 @@ class FragmentArtist : Fragment() {
                             }
                             else{
 
-                                try{
-                                    val artistImageURL = responseAudioDB.artists[0].strArtistThumb
-                                    Glide.with(fragmentContext)
-                                        .asBitmap()
-                                        .load(artistImageURL)
-                                        .into(object : CustomTarget<Bitmap>(){
-                                            override fun onResourceReady( resource: Bitmap, transition: Transition<in Bitmap>? ) {
+                                if(responseAudioDB.artists[0].strArtistThumb == null){
 
-                                                ivArtistImage.setImageBitmap( resource )
+                                    val defaultArtistDrawable = ContextCompat.getDrawable(fragmentContext, R.drawable.icon_person_regular)
+                                    ivArtistImage.setColorFilter(ContextCompat.getColor(fragmentContext, R.color.icon))
+                                    ivArtistImage.setImageDrawable(defaultArtistDrawable)
 
-                                                val baos = ByteArrayOutputStream()
-                                                resource.compress(Bitmap.CompressFormat.PNG, 50, baos)
-                                                val b = baos.toByteArray()
-                                                val encodedImage = Base64.encodeToString(b, Base64.DEFAULT)
-
-                                                spArtists.edit().putString(artistID.toString(), encodedImage).apply()
-
-                                                artistImageLoaded = true
-                                            }
-
-                                            override fun onLoadCleared(placeholder: Drawable?) {}
-                                        })
+                                    artistImageLoaded = true
                                 }
-                                catch (exc: Exception){}
+                                else{
+
+                                    try{
+
+                                        val artistImageURL = responseAudioDB.artists[0].strArtistThumb
+                                        Glide.with(fragmentContext)
+                                            .asBitmap()
+                                            .load(artistImageURL)
+                                            .into(object : CustomTarget<Bitmap>(){
+                                                override fun onResourceReady( resource: Bitmap, transition: Transition<in Bitmap>? ) {
+
+                                                    ivArtistImage.setImageBitmap( resource )
+
+                                                    val baos = ByteArrayOutputStream()
+                                                    resource.compress(Bitmap.CompressFormat.PNG, 50, baos)
+                                                    val b = baos.toByteArray()
+                                                    val encodedImage = Base64.encodeToString(b, Base64.DEFAULT)
+
+                                                    spArtists.edit().putString(artistID.toString(), encodedImage).apply()
+
+                                                    artistImageLoaded = true
+                                                }
+
+                                                override fun onLoadCleared(placeholder: Drawable?) {}
+                                            })
+                                    }
+                                    catch (exc: Exception){
+
+                                        val defaultArtistDrawable = ContextCompat.getDrawable(fragmentContext, R.drawable.icon_person_regular)
+                                        ivArtistImage.setColorFilter(ContextCompat.getColor(fragmentContext, R.color.icon))
+                                        ivArtistImage.setImageDrawable(defaultArtistDrawable)
+
+                                        artistImageLoaded = true
+                                    }
+                                }
                             }
                         }
                     }

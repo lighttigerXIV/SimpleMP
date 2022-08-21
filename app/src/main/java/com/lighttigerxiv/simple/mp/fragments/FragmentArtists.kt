@@ -3,6 +3,7 @@ package com.lighttigerxiv.simple.mp.fragments
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
@@ -33,6 +35,8 @@ class FragmentArtists : Fragment() {
     private lateinit var etSearch: EditText
     private lateinit var ibClearSearch: ImageButton
     private lateinit var rvArtists: RecyclerView
+    private lateinit var ivCricket: ImageView
+    private lateinit var tvThisIsFeelingEmpty: TextView
 
 
     //Others
@@ -79,6 +83,8 @@ class FragmentArtists : Fragment() {
         etSearch = view.findViewById(R.id.etSearch_FragmentArtists)
         ibClearSearch = view.findViewById(R.id.ibClearSearch_FragmentArtists)
         rvArtists = view.findViewById(R.id.rvArtists_FragmentArtists)
+        ivCricket = view.findViewById(R.id.ivCricket_FragmentArtists)
+        tvThisIsFeelingEmpty = view.findViewById(R.id.tvThisIsFeelingEmpty_FragmentArtists)
 
 
         val deviceOrientation = fragmentContext.resources.configuration.orientation
@@ -107,6 +113,11 @@ class FragmentArtists : Fragment() {
             adapterRVArtists = AdapterRVArtists(adapterArtistList)
             rvArtists.adapter = adapterRVArtists
 
+            if(artistList.size == 0){
+                ivCricket.visibility = View.VISIBLE
+                tvThisIsFeelingEmpty.visibility = View.VISIBLE
+            }
+
             handleArtistClicked()
         }
     }
@@ -130,6 +141,11 @@ class FragmentArtists : Fragment() {
         adapterRVArtists = AdapterRVArtists(artistList)
         rvArtists.adapter = adapterRVArtists
         handleArtistClicked()
+
+        if(artistList.size == 0){
+            ivCricket.visibility = View.VISIBLE
+            tvThisIsFeelingEmpty.visibility = View.VISIBLE
+        }
 
         artistsLoaded = true
     }
