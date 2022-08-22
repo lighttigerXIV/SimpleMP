@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
+    <color name="black">#000000</color>
     <!--
 
     40 colors
@@ -16,7 +16,7 @@
     <color name="blue1">#000003</color>
     <color name="blue2">#000827</color>
     <color name="blue3">#000d41</color>
-    <color name="blue5">#7894FF</color>
+    <color name="blue5">#4B70FF</color>
 
     <!--Red Colors-->
     <color name="red1">#020000</color>
@@ -28,7 +28,7 @@
     <color name="purple1">#010002</color>
     <color name="purple2">#1e0027</color>
     <color name="purple3">#280034</color>
-    <color name="purple5">#d647ff</color>
+    <color name="purple5">#DB5CFF</color>
 
 
     <!--Yellow Colors-->
@@ -48,7 +48,7 @@
     <color name="mono1">#000000</color>
     <color name="mono2">#131313</color>
     <color name="mono3">#2d2d2d</color>
-    <color name="mono5">#a3a3a3</color>
+    <color name="mono5">#999999</color>
 
 
     <!--Green Colors-->

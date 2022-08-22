@@ -20,7 +20,7 @@
     <color name="blue1">#fcfdfe</color>
     <color name="blue2">#f1f4ff</color>
     <color name="blue3">#e4eaff</color>
-    <color name="blue5">#476dff</color>
+    <color name="blue5">#0035FF</color>
 
 
     <!--Red Colors-->
@@ -48,13 +48,13 @@
     <color name="orange1">#fefdfc</color>
     <color name="orange2">#fff9f1</color>
     <color name="orange3">#fff4e4</color>
-    <color name="orange5">#ffb247</color>
+    <color name="orange5">#D77D00</color>
 
     <!--Mono Colors-->
     <color name="mono1">#fdfdfd</color>
     <color name="mono2">#f8f8f8</color>
     <color name="mono3">#f1f1f1</color>
-    <color name="mono5">#a3a3a3</color>
+    <color name="mono5">#545454</color>
 
     <!--Green Colors-->
     <color name="green1">#fcfffb</color>

@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:text="@string/PleaseEnableStorage"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/tvGrant_FragmentSetupTwo"
                     app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +78,6 @@
                     android:id="@+id/tvGrant_FragmentSetupTwo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
                     android:text="@string/Grant"
                     android:textColor="@color/blue5"
                     android:textSize="16sp"
@@ -86,6 +85,15 @@
                     app:layout_constraintBottom_toBottomOf="@+id/tvGrantSorage_FragmentSetupTwo"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tvGrantSorage_FragmentSetupTwo" />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="?android:attr/listDivider"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tvGrantSorage_FragmentSetupTwo"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
