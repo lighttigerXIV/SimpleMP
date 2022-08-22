@@ -117,6 +117,7 @@ class FragmentUserPlaylist : Fragment() {
 
     private fun setupTheme(){
 
+
         clMain.setBackgroundColor(ColorFunctions.getThemeColor(fragmentContext, 1))
         etPlaylistName.background = ColorFunctions.getEditTextBackground(fragmentContext)
     }
