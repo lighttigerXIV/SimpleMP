@@ -31,6 +31,7 @@ import com.google.gson.reflect.TypeToken
 import com.lighttigerxiv.simple.mp.*
 import com.lighttigerxiv.simple.mp.others.ColorFunctions
 import com.lighttigerxiv.simple.mp.others.GetSongs
+import com.lighttigerxiv.simple.mp.services.SimpleMPService
 
 
 class FragmentUserPlaylist : Fragment() {

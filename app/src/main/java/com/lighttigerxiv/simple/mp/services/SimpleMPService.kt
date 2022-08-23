@@ -1,4 +1,4 @@
-package com.lighttigerxiv.simple.mp
+package com.lighttigerxiv.simple.mp.services
 
 import android.app.*
 import android.content.*
@@ -14,9 +14,10 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
 import androidx.preference.PreferenceManager
+import com.lighttigerxiv.simple.mp.R
+import com.lighttigerxiv.simple.mp.Song
 import com.lighttigerxiv.simple.mp.activities.ActivityMain
 import com.lighttigerxiv.simple.mp.others.GetSongs
-import com.lighttigerxiv.simple.mp.services.*
 
 
 class SimpleMPService: Service() {
@@ -296,7 +297,14 @@ class SimpleMPService: Service() {
 
         mediaPlayer.reset()
         mediaPlayer.setDataSource(songPath)
-        if(isAudioLimited) mediaPlayer.setVolume(0.07F, 0.07F)
+
+        when(isAudioLimited){
+
+            true-> mediaPlayer.setVolume(0.08F, 0.08F)
+            false-> mediaPlayer.setVolume(0.1F, 0.1F)
+        }
+
+
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
 
@@ -342,10 +350,10 @@ class SimpleMPService: Service() {
                     .setShowActionsInCompactView(1, 2, 3)
                 )
                 .setSmallIcon(R.drawable.icon)
-                .addAction( R.drawable.icon_x, "Stop Player", pendingStopIntent )
-                .addAction( R.drawable.icon_previous_notification, "Previous Music", pendingPreviousSongIntent )
-                .addAction( R.drawable.icon_pause_notification, "Play Pause Music", pendingPlayPauseIntent )
-                .addAction( R.drawable.icon_next_notification, "Next Music", pendingSkipSongIntent )
+                .addAction(R.drawable.icon_x, "Stop Player", pendingStopIntent )
+                .addAction(R.drawable.icon_previous_notification, "Previous Music", pendingPreviousSongIntent )
+                .addAction(R.drawable.icon_pause_notification, "Play Pause Music", pendingPlayPauseIntent )
+                .addAction(R.drawable.icon_next_notification, "Next Music", pendingSkipSongIntent )
                 .build()
 
 
@@ -571,10 +579,10 @@ class SimpleMPService: Service() {
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    interface OnMusicSelectedListener{ fun onMusicSelected( playList: ArrayList<Song>, position: Int ) }
+    interface OnMusicSelectedListener{ fun onMusicSelected(playList: ArrayList<Song>, position: Int ) }
 
 
-    interface OnMusicSelectedListenerToQueue{ fun onMusicSelected( playList: ArrayList<Song>, position: Int ) }
+    interface OnMusicSelectedListenerToQueue{ fun onMusicSelected(playList: ArrayList<Song>, position: Int ) }
 
 
     interface OnPlaylistsAdded{ fun onPlaylistAdded() }

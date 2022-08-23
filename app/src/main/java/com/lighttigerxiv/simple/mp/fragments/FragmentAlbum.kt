@@ -21,6 +21,7 @@ import com.lighttigerxiv.simple.mp.*
 import com.lighttigerxiv.simple.mp.adapters.AdapterRVSongs
 import com.lighttigerxiv.simple.mp.others.ColorFunctions
 import com.lighttigerxiv.simple.mp.others.GetSongs
+import com.lighttigerxiv.simple.mp.services.SimpleMPService
 
 
 class FragmentAlbum : Fragment() {

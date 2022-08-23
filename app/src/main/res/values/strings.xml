@@ -44,7 +44,7 @@
     <string name="Audio">Audio</string>
     <string name="Albums">Albums</string>
     <string name="LimitAudioVolume">Limit Audio Volume</string>
-    <string name="IfEnabledLimitsVolumeTo70">If enabled limits volume to 70%</string>
+    <string name="IfEnabledLimitsVolumeTo80">If enabled limits volume to 80%</string>
     <string name="Settings">Settings</string>
     <string name="SortByAscendent">Sort By Ascendent</string>
     <string name="SortByDescendent">Sort By Descendent</string>

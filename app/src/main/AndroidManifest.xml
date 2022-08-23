@@ -49,7 +49,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".SimpleMPService" />
+        <service android:name=".services.SimpleMPService" />
         <service android:name=".services.ActionsService" />
 
         <receiver

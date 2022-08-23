@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.IBinder
@@ -23,7 +22,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
-import androidx.preference.Preference
 import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.imageview.ShapeableImageView
@@ -31,6 +29,7 @@ import com.lighttigerxiv.simple.mp.*
 import com.lighttigerxiv.simple.mp.fragments.*
 import com.lighttigerxiv.simple.mp.others.ColorFunctions
 import com.lighttigerxiv.simple.mp.others.GetSongs
+import com.lighttigerxiv.simple.mp.services.SimpleMPService
 import com.sothree.slidinguppanel.PanelSlideListener
 import com.sothree.slidinguppanel.PanelState
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -124,7 +123,7 @@ class ActivityMain : AppCompatActivity(){
         }
 
 
-        setTheme(ColorFunctions.getTheme(applicationContext))
+        setTheme(ColorFunctions.getTheme(this))
         setContentView(R.layout.activity_main)
         assignVariables()
         setupTheme()
@@ -674,13 +673,15 @@ class ActivityMain : AppCompatActivity(){
 
     private fun handleMusicShuffled(){
 
+        val context = this
+
         smpService.onMusicShuffleToggledListener = object : SimpleMPService.OnMusicShuffleToggledListener {
             override fun onMusicShuffleToggled(state: Boolean) {
 
                 when ( state ){
 
-                    true-> ivShuffleSlidePlayer.setColorFilter( ColorFunctions.getThemeColor(applicationContext, 5) )
-                    false-> ivShuffleSlidePlayer.setColorFilter( ContextCompat.getColor( applicationContext, R.color.icon) )
+                    true-> ivShuffleSlidePlayer.setColorFilter( ColorFunctions.getThemeColor( context, 5) )
+                    false-> ivShuffleSlidePlayer.setColorFilter( ContextCompat.getColor( context, R.color.icon) )
                 }
             }
         }
@@ -761,12 +762,12 @@ class ActivityMain : AppCompatActivity(){
 
             if( smpService.musicShuffled ){
 
-                ivShuffleSlidePlayer.setColorFilter( ColorFunctions.getThemeColor(applicationContext, 5) )
+                ivShuffleSlidePlayer.setColorFilter( ColorFunctions.getThemeColor(this, 5) )
             }
 
             if( smpService.onRepeatMode ){
 
-                ivLoopSongSlidePlayer.setColorFilter( ColorFunctions.getThemeColor(applicationContext, 5) )
+                ivLoopSongSlidePlayer.setColorFilter( ColorFunctions.getThemeColor(this, 5) )
             }
 
             if( slidingPanel.panelState == PanelState.EXPANDED ){

@@ -5,12 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.res.ColorStateList
-import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,13 +24,14 @@ import com.google.gson.reflect.TypeToken
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.drawable.toDrawable
 import androidx.core.view.ViewCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.lighttigerxiv.simple.mp.*
 import com.lighttigerxiv.simple.mp.others.ColorFunctions
 import com.lighttigerxiv.simple.mp.others.GetSongs
+import com.lighttigerxiv.simple.mp.services.SimpleMPService
+
 class ActivityAddToPlaylist : AppCompatActivity() {
 
     //Main
