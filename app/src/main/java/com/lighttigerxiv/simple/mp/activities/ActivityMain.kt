@@ -1041,6 +1041,7 @@ class ActivityMain : AppCompatActivity(){
     }
 
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
 
         if( slidingPanel.panelState == PanelState.EXPANDED )

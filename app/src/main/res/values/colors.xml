@@ -6,35 +6,25 @@
 
 
 
-    <!--
-    Website for the colors: https://pinetools.com/lighten-color
-
-    #99 light
-    #39
-    #38
-    #26
-
-    -->
-
     <!--Blue Colors-->
-    <color name="blue1">#fcfdfe</color>
-    <color name="blue2">#f1f4ff</color>
-    <color name="blue3">#e4eaff</color>
-    <color name="blue5">#0035FF</color>
+    <color name="blue1">#e6f4ff</color>
+    <color name="blue2">#cce9ff</color>
+    <color name="blue3">#b3deff</color>
+    <color name="blue5">#0091ff</color>
 
 
     <!--Red Colors-->
-    <color name="red1">#fffcfc</color>
-    <color name="red2">#fff3f1</color>
-    <color name="red3">#ffe7e4</color>
-    <color name="red5">#ff5a47</color>
+    <color name="red1">#ffe8e6</color>
+    <color name="red2">#ffd1cc</color>
+    <color name="red3">#ffbab3</color>
+    <color name="red5">#ff1a00</color>
 
 
     <!--Purple Colors-->
-    <color name="purple1">#fefcff</color>
-    <color name="purple2">#fcf1ff</color>
-    <color name="purple3">#f9e4ff</color>
-    <color name="purple5">#d647ff</color>
+    <color name="purple1">#f9e6ff</color>
+    <color name="purple2">#f4ccff</color>
+    <color name="purple3">#eeb3ff</color>
+    <color name="purple5">#c800ff</color>
 
 
     <!--Yellow Colors-->

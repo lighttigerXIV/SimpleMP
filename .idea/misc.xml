@@ -33,6 +33,7 @@
         <entry key="app/src/main/res/drawable/icon_playlists.xml" value="0.2865" />
         <entry key="app/src/main/res/drawable/icon_previous_notification.xml" value="0.294" />
         <entry key="app/src/main/res/drawable/icon_stop_notification.xml" value="0.294" />
+        <entry key="app/src/main/res/drawable/icon_x.xml" value="0.128" />
         <entry key="app/src/main/res/drawable/navigation_bar_background.xml" value="0.292" />
         <entry key="app/src/main/res/drawable/rv_divider.xml" value="0.293" />
         <entry key="app/src/main/res/drawable/selector_menu_albums.xml" value="0.292" />

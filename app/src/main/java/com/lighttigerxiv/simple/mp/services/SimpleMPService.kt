@@ -407,7 +407,7 @@ class SimpleMPService: Service() {
 
         override fun onReceive(p0: Context?, p1: Intent?) {
 
-            pauseMusic(p0!!)
+            if(isMusicPlaying()) pauseMusic(p0!!)
         }
     }
 
